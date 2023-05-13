@@ -1,2 +1,2 @@
 # sgm_du_gu_we
-Football app
+Football app of SGM Durchhausen/Gunningen/Weigheim.
