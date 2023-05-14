@@ -1,1 +1,1 @@
-const int kTimer = 10;
+const int kTimer = 5;

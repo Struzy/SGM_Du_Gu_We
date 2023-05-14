@@ -1,0 +1,1 @@
+const double kDividerThickness = 3.0;
