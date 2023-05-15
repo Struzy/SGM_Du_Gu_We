@@ -24,113 +24,130 @@ class MainScreen extends StatelessWidget {
           padding: const EdgeInsets.all(
             kPadding,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Hero(
-                tag: 'sgm_du_gu_we',
-                child: CircleAvatar(
-                  radius: kRadius,
-                  backgroundImage: AssetImage(
-                    'images/sgm_du_gu_we.PNG',
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: kBoxHeight + 40.0,
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pushNamed(context, LoginScreen.id);
-                },
-                icon: const Icon(
-                  Icons.login,
-                  color: Colors.black,
-                  size: kIcon,
-                ),
-                label: const Text(
-                  'Anmelden',
-                ),
-              ),
-              const SizedBox(
-                height: kBoxHeight,
-              ),
-              const Text(
-                'Noch kein Nutzer? Jetzt registrieren!',
-              ),
-              const SizedBox(
-                height: kBoxHeight,
-              ),
-              ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.pushNamed(context, RegistrationScreen.id);
-                },
-                icon: const Icon(
-                  Icons.app_registration,
-                  color: Colors.black,
-                  size: kIcon,
-                ),
-                label: const Text(
-                  'Registrieren',
-                ),
-              ),
-              const SizedBox(
-                height: kBoxHeight,
-              ),
-              const Text(
-                'Besuchen Sie uns auch auf',
-              ),
-              const SizedBox(
-                height: kBoxHeight,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    height: kContainerHeight,
-                    width: kContainerWidth,
-                    child: const Image(
-                      image: NetworkImage(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1024px-Instagram_logo_2022.svg.png',
-                      ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const Hero(
+                  tag: 'logo',
+                  child: CircleAvatar(
+                    radius: kRadius,
+                    backgroundImage: AssetImage(
+                      'images/sgm_du_gu_we.PNG',
                     ),
                   ),
-                  const SizedBox(
-                    width: kBoxWidth,
+                ),
+                const SizedBox(
+                  height: kBoxHeight + 40.0,
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      LoginScreen.id,
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.login,
+                    color: Colors.black,
+                    size: kIcon,
                   ),
-                  Container(
-                    alignment: AlignmentDirectional.bottomCenter,
-                    height: kContainerHeight,
-                    width: kContainerWidth,
-                    child: const Image(
-                      image: NetworkImage(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Facebook_Home_logo_old.svg/1024px-Facebook_Home_logo_old.svg.png',
+                  label: const Text(
+                    'Anmelden',
+                  ),
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                const Text(
+                  'Noch kein Nutzer? Jetzt registrieren!',
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      RegistrationScreen.id,
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.app_registration,
+                    color: Colors.black,
+                    size: kIcon,
+                  ),
+                  label: const Text(
+                    'Registrieren',
+                  ),
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                const Text(
+                  'Besuchen Sie uns auch auf',
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      height: kContainerHeight,
+                      width: kContainerWidth,
+                      child: const Image(
+                        image: NetworkImage(
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1024px-Instagram_logo_2022.svg.png',
+                        ),
                       ),
                     ),
+                    const SizedBox(
+                      width: kBoxWidth,
+                    ),
+                    Container(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      height: kContainerHeight,
+                      width: kContainerWidth,
+                      child: const Image(
+                        image: NetworkImage(
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Facebook_Home_logo_old.svg/1024px-Facebook_Home_logo_old.svg.png',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                const Divider(
+                  thickness: kDividerThickness,
+                  color: Colors.black54,
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                Text(
+                  'Copyright © $month/$year',
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: kBoxHeight,
-              ),
-              const Divider(
-                thickness: kDividerThickness,
-                color: Colors.black54,
-              ),
-              const SizedBox(
-                height: kBoxHeight,
-              ),
-              Text(
-                'Copyright © $month/$year',
-              ),
-              const Text(
-                'SGM Durchhausen/Gunningen/Weigheim',
-              ),
-              const Text(
-                'All Rights Reserved.',
-              ),
-            ],
+                ),
+                const Text(
+                  'SGM Durchhausen/Gunningen/Weigheim',
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                const Text(
+                  'All Rights Reserved.',
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

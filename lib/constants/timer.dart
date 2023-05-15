@@ -1,1 +1,2 @@
-const int kTimer = 5;
+const int kTimerAnimation = 5;
+const int kTimerEmailVerification = 3;

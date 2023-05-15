@@ -23,7 +23,7 @@ class SplashScreenState extends State<SplashScreen> {
     super.initState();
     timer = Timer(
       const Duration(
-        seconds: kTimer,
+        seconds: kTimerAnimation,
       ),
       () => Navigator.pushNamed(
         context,

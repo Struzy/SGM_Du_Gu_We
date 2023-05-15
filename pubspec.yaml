@@ -30,6 +30,10 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   lottie: ^2.3.2
+  firebase_core: ^2.12.0
+  firebase_auth: ^4.6.0
+  cloud_firestore: ^4.7.0
+  modal_progress_hud_nsn: ^0.3.0
   flutter:
     sdk: flutter
 

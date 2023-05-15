@@ -1,6 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/screens/email_verification_screen.dart';
+import 'package:sgm_du_gu_we/screens/home_screen.dart';
 import 'package:sgm_du_gu_we/screens/login_screen.dart';
-
 import 'package:sgm_du_gu_we/screens/main_screen.dart';
 import 'package:sgm_du_gu_we/screens/registration_screen.dart';
 import 'package:sgm_du_gu_we/screens/splash_screen.dart';
@@ -9,9 +11,17 @@ import 'constants/elevated_button.dart';
 import 'constants/font_family.dart';
 import 'constants/font_size.dart';
 
-void main() => runApp(
-      const SGMDuGuWe(),
-    );
+/*void main() => runApp(
+      SGMDuGuWe(),
+    );*/
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(
+    SGMDuGuWe(),
+  );
+}
 
 class SGMDuGuWe extends StatelessWidget {
   const SGMDuGuWe({super.key});
@@ -68,8 +78,11 @@ class SGMDuGuWe extends StatelessWidget {
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
-        RegistrationScreen.id: (context) => RegistrationScreen(),
-        LoginScreen.id: (context) => LoginScreen(),
+        RegistrationScreen.id: (context) => const RegistrationScreen(),
+        LoginScreen.id: (context) => const LoginScreen(),
+        EmailVerificationScreen.id: (context) =>
+            const EmailVerificationScreen(),
+        HomeScreen.id: (context) => const HomeScreen(),
       },
     );
   }

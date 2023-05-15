@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "785053102637",
+    "project_id": "sgm-duguwe",
+    "storage_bucket": "sgm-duguwe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785053102637:android:f89d7a1c61f303b1727ea4",
+        "android_client_info": {
+          "package_name": "com.sgmduguwe.sgm_du_gu_we"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785053102637-8b8hsr9kavn44lb5p6vlj1b7utnn2env.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnOKl18AsK_K3tP7Oogul-aYS1fC0xrt8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785053102637-8b8hsr9kavn44lb5p6vlj1b7utnn2env.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
