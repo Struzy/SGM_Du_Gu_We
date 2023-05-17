@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/font_size.dart';
+import 'package:sgm_du_gu_we/screens/first_squad_league_screen.dart';
+import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
+import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_family.dart';
@@ -7,10 +10,17 @@ import '../constants/padding.dart';
 import '../services/authentication_service.dart';
 import 'main_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   static const String id = 'home_screen';
+
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +38,18 @@ class HomeScreen extends StatelessWidget {
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const <Widget>[
-                  Text(
+                children: <Widget>[
+                  const Text(
                     'Herzlich willkommen bei der',
                     style: TextStyle(
                       fontSize: kFontsizeSubtitle,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Text(
+                  const Text(
                     'SGM',
                     style: TextStyle(
                       fontFamily: kPacifico,
@@ -47,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Durchhausen',
                     style: TextStyle(
                       fontFamily: kPacifico,
@@ -55,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Gunningen',
                     style: TextStyle(
                       fontFamily: kPacifico,
@@ -63,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
+                  const Text(
                     'Weigheim',
                     style: TextStyle(
                       fontFamily: kPacifico,
@@ -71,41 +81,53 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Text(
+                  const Text(
                     'Durchhausen/Gunningen:',
                     style: TextStyle(
                       fontSize: kFontsizeSubtitle,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Image(
-                    image: NetworkImage(
-                      'https://images.media.fussball.de/userfiles/n/E/W/anvdDGNaRVzrCCDy2r5T70_t3.jpg',
-                    ),
+                  Image.network(
+                    'https://images.media.fussball.de/userfiles/n/E/W/anvdDGNaRVzrCCDy2r5T70_t3.jpg',
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        isLoading = false;
+                        return child;
+                      }
+                      return const CircularProgressIndicator();
+                    },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kBoxHeight + 20.0,
                   ),
-                  Text(
+                  const Text(
                     'Weigheim:',
                     style: TextStyle(
                       fontSize: kFontsizeSubtitle,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Image(
-                    image: NetworkImage(
-                      'https://images.media.fussball.de/userfiles/w/e/K/sVNqBzZhx5ySXy1Fjc9i10_t3.jpg',
-                    ),
+                  Image.network(
+                    'https://images.media.fussball.de/userfiles/w/e/K/sVNqBzZhx5ySXy1Fjc9i10_t3.jpg',
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        isLoading = false;
+                        return child;
+                      }
+                      return const CircularProgressIndicator();
+                    },
                   ),
                 ],
               ),
@@ -118,6 +140,8 @@ class HomeScreen extends StatelessWidget {
 }
 
 class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({super.key});
+
   @override
   Widget build(BuildContext context) => Drawer(
         child: SingleChildScrollView(
@@ -205,6 +229,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, FirstSquadLeagueScreen.id);
           },
         ),
         ListTile(
@@ -214,6 +239,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, SecondSquadLeagueScreen.id);
           },
         ),
         ListTile(
@@ -368,7 +394,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, MainScreen.id);
+            Navigator.pushNamed(context, ImprintScreen.id);
           },
         ),
         const Divider(
@@ -381,12 +407,32 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
-            AuthenticationService.signOut(context: context);
-            // TODO: Abfrage, ob man sich wirklich abmelden will
-            Navigator.pushNamed(context, MainScreen.id);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Erfolgreich abgemeldet'),
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Abmelden'),
+                content: const Text('Wollen Sie sich wirklich abmelden?'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, 'JA');
+                      AuthenticationService.signOut(context: context);
+                      Navigator.pushNamed(context, MainScreen.id);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Erfolgreich abgemeldet'),
+                        ),
+                      );
+                    },
+                    child: const Text('JA'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, 'NEIN');
+                    },
+                    child: const Text('NEIN'),
+                  ),
+                ],
               ),
             );
           },

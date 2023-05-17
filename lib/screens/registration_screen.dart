@@ -71,12 +71,8 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.email,
-                          color: Colors.black,
                         ),
                         hintText: 'E-Mail eingeben',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                       ),
                     ),
                     const SizedBox(
@@ -94,12 +90,8 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.password,
-                          color: Colors.black,
                         ),
                         hintText: 'Passwort eingeben',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                       ),
                     ),
                     const SizedBox(
@@ -117,12 +109,8 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.repeat,
-                          color: Colors.black,
                         ),
                         hintText: 'Passwort bestätigen',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                       ),
                     ),
                     const SizedBox(
@@ -152,29 +140,43 @@ class RegistrationScreenState extends State<RegistrationScreen> {
   // Register user as well as handle potentially occurring exceptions
   Future<void> registerUser() async {
     {
-      if (password == confirmPassword) {
-        setState(() {
-          isLoading = true;
-          showSpinner = true;
-        });
-        await AuthenticationService.signUp(
+      if (email != '' && password != '' && confirmPassword != '') {
+        if (password == confirmPassword) {
+          setState(() {
+            isLoading = true;
+            showSpinner = true;
+          });
+          await AuthenticationService.signUp(
             userEmail: email,
             password: password,
-            context: context
-        );
+            context: context,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Given passwords do not correspond',
+              ),
+            ),
+          );
+        }
+        if (FirebaseAuth.instance.currentUser != null) {
+          Navigator.pushNamed(
+            context,
+            EmailVerificationScreen.id,
+          );
+        }
+        setState(() {
+          isLoading = false;
+          showSpinner = false;
+        });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Given passwords do not correspond',
+              'Email and/or password cannot be empty',
             ),
           ),
-        );
-      }
-      if (FirebaseAuth.instance.currentUser != null) {
-        Navigator.pushNamed(
-          context,
-          EmailVerificationScreen.id,
         );
       }
       setState(() {

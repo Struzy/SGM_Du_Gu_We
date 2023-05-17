@@ -8,13 +8,33 @@ import '../constants/divider_thickness.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   static const String id = 'main_screen';
 
+  @override
+  MainScreenState createState() => MainScreenState();
+}
+
+class MainScreenState extends State<MainScreen> {
+  bool isLoading = true;
+
   static final year = DateTime.now().year;
   static final month = DateTime.now().month;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(
+        const Duration(
+          seconds: 2,
+        ), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +117,16 @@ class MainScreen extends StatelessWidget {
                       alignment: AlignmentDirectional.bottomCenter,
                       height: kContainerHeight,
                       width: kContainerWidth,
-                      child: const Image(
-                        image: NetworkImage(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1024px-Instagram_logo_2022.svg.png',
-                        ),
+                      child: Image.network(
+                        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1024px-Instagram_logo_2022.svg.png',
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            isLoading = false;
+                            return child;
+                          }
+                          return const CircularProgressIndicator();
+                        },
                       ),
                     ),
                     const SizedBox(
@@ -110,10 +136,16 @@ class MainScreen extends StatelessWidget {
                       alignment: AlignmentDirectional.bottomCenter,
                       height: kContainerHeight,
                       width: kContainerWidth,
-                      child: const Image(
-                        image: NetworkImage(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Facebook_Home_logo_old.svg/1024px-Facebook_Home_logo_old.svg.png',
-                        ),
+                      child: Image.network(
+                        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Facebook_Home_logo_old.svg/1024px-Facebook_Home_logo_old.svg.png',
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            isLoading = false;
+                            return child;
+                          }
+                          return const CircularProgressIndicator();
+                        },
                       ),
                     ),
                   ],

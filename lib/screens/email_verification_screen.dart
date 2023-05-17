@@ -79,8 +79,8 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
                   height: kBoxHeight + 20.0,
                 ),
                 const CircularProgressIndicator(
-                  backgroundColor: kSGMColorRed,
-                  color: kSGMColorGreen,
+                  backgroundColor: kSGMColorGreenLight,
+                  color: Colors.blue,
                 ),
                 const SizedBox(
                   height: kBoxHeight,

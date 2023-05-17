@@ -68,12 +68,8 @@ class LoginScreenState extends State<LoginScreen> {
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.email,
-                          color: Colors.black,
                         ),
                         hintText: 'E-Mail eingeben',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                       ),
                     ),
                     const SizedBox(
@@ -91,12 +87,8 @@ class LoginScreenState extends State<LoginScreen> {
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.password,
-                          color: Colors.black,
                         ),
                         hintText: 'Passwort eingeben',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                        ),
                       ),
                     ),
                     const SizedBox(
@@ -125,30 +117,49 @@ class LoginScreenState extends State<LoginScreen> {
 
   // Register user as well as handle potentially occurring exceptions
   Future<void> loginUser() async {
-    setState(() {
-      isLoading = true;
-      showSpinner = true;
-    });
-    await AuthenticationService.signIn(
+    if (email != '' && password != '') {
+      setState(() {
+        isLoading = true;
+        showSpinner = true;
+      });
+      await AuthenticationService.signIn(
         userEmail: email,
         password: password,
-        context: context
-    );
-    if (FirebaseAuth.instance.currentUser != null &&
-        FirebaseAuth.instance.currentUser!.emailVerified) {
-      Navigator.pushNamed(
-        context,
-        HomeScreen.id,
+        context: context,
       );
+      if (FirebaseAuth.instance.currentUser != null &&
+          FirebaseAuth.instance.currentUser!.emailVerified) {
+        Navigator.pushNamed(
+          context,
+          HomeScreen.id,
+        );
+        setState(() {
+          isLoading = false;
+          showSpinner = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Erfolgreich angemeldet'),
+          ),
+        );
+      } else {
+        Navigator.pushNamed(
+          context,
+          EmailVerificationScreen.id,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email has not been validated yet'),
+          ),
+        );
+      }
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Erfolgreich angemeldet'),
+          content: Text(
+            'Email and/or password cannot be empty',
+          ),
         ),
-      );
-    } else {
-      Navigator.pushNamed(
-        context,
-        EmailVerificationScreen.id,
       );
     }
     setState(() {
