@@ -47,12 +47,23 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Hero(
+                    Hero(
                       tag: 'logo',
                       child: CircleAvatar(
                         radius: kRadius * 1.2,
-                        backgroundImage: AssetImage(
-                          'images/sgm_du_gu_we.PNG',
+                        child: ClipOval(
+                          child: Image.network(
+                            'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/App%20Icon%2Fsgm_du_gu_we.PNG?alt=media&token=b532fa33-870a-4e75-b3d9-2dbf0e7a43f0',
+                            fit: BoxFit.cover,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                isLoading = false;
+                                return child;
+                              }
+                              return const CircularProgressIndicator();
+                            },
+                          ),
                         ),
                       ),
                     ),

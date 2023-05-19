@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/font_size.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_league_screen.dart';
+import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
+import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
 import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
+import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
+import 'package:sgm_du_gu_we/screens/second_squad_screen.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_family.dart';
@@ -173,16 +177,23 @@ class NavigationDrawer extends StatelessWidget {
             ),
             Text(
               'Manuel Struzyna',
-              style: TextStyle(fontSize: 28, color: Colors.white),
+              style: TextStyle(
+                fontSize: 28,
+                color: Colors.white,
+              ),
             ),
             Text(
               'manuel.struzyna@outlook.de',
-              style: TextStyle(fontSize: 16, color: Colors.white),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
             ),
           ],
         ),
       );
 
+// TODO: Baarpokal
   Widget buildMenuItems(BuildContext context) => Column(children: [
         ListTile(
           leading: const Icon(Icons.home),
@@ -191,7 +202,6 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, HomeScreen.id);
           },
         ),
         ListTile(
@@ -201,6 +211,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, FootballClubScreen.id);
           },
         ),
         ListTile(
@@ -210,7 +221,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, MainScreen.id);
+            Navigator.pushNamed(context, FirstSquadScreen.id);
           },
         ),
         ListTile(
@@ -220,6 +231,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, SecondSquadScreen.id);
           },
         ),
         ListTile(
@@ -263,7 +275,7 @@ class NavigationDrawer extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.sports),
           title: const Text(
-            'Nominerungen',
+            'Nominierungen',
           ),
           onTap: () {
             Navigator.pop(context);
@@ -294,6 +306,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, PenaltyCatalogScreen.id);
           },
         ),
         ListTile(

@@ -50,13 +50,13 @@ class SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Lottie.asset(
-                  'animations/${getLottieFileName(1)}.json',
+                Lottie.network(
+                  getLottieFile(1),
                   width: kWidth,
                   height: kHeight,
                 ),
-                Lottie.asset(
-                  'animations/${getLottieFileName(3)}.json',
+                Lottie.network(
+                  getLottieFile(3),
                   width: kWidth,
                   height: kHeight,
                 ),
@@ -70,17 +70,17 @@ class SplashScreenState extends State<SplashScreen> {
 
   // Set a list of names for the lottie files which to choose the desired one
   // from
-  String getLottieFileName(int number) {
-    List<String> lottieFileNames = [
-      'football-easter-egg',
-      'footballer',
-      'football-team-players',
-      'loading_text',
-      'soccer-empty-state',
-      'soccer-player',
-      'soccer-player-kick-on-the-ball',
+  String getLottieFile(int number) {
+    List<String> lottieFiles = [
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Animationen%2Ffootball-easter-egg.json?alt=media&token=5141b8a4-4135-4b6e-bb8e-ec47ff2a102f',
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Animationen%2Ffootballer.json?alt=media&token=02bac5a9-812e-4769-b02b-da4434f07cbc',
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Animationen%2Ffootball-team-players.json?alt=media&token=d8795dbd-f1f5-46c1-87fc-f567ac52b444',
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Animationen%2Floading_text.json?alt=media&token=e3fb8fa5-2c45-4f4c-99b6-12857843c933',
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Animationen%2Fsoccer-empty-state.json?alt=media&token=9898562a-0e5c-4f12-8da4-ac002393272e',
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Animationen%2Fsoccer-player.json?alt=media&token=01bdc6a4-d633-479d-a072-fe00a8fb1a7a',
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Animationen%2Fsoccer-player-kick-on-the-ball.json?alt=media&token=00065f90-70ea-4294-9931-2895a468e3ca',
     ];
 
-    return lottieFileNames[number];
+    return lottieFiles[number];
   }
 }

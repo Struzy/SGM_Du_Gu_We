@@ -2,12 +2,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/screens/email_verification_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_league_screen.dart';
+import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
+import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
 import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
 import 'package:sgm_du_gu_we/screens/login_screen.dart';
 import 'package:sgm_du_gu_we/screens/main_screen.dart';
+import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
 import 'package:sgm_du_gu_we/screens/registration_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
+import 'package:sgm_du_gu_we/screens/second_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/splash_screen.dart';
 import 'constants/color.dart';
 import 'constants/elevated_button.dart';
@@ -23,7 +27,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    SGMDuGuWe(),
+    const SGMDuGuWe(),
   );
 }
 
@@ -99,6 +103,10 @@ class SGMDuGuWe extends StatelessWidget {
         FirstSquadLeagueScreen.id: (context) => const FirstSquadLeagueScreen(),
         SecondSquadLeagueScreen.id: (context) =>
             const SecondSquadLeagueScreen(),
+        FootballClubScreen.id: (context) => const FootballClubScreen(),
+        FirstSquadScreen.id: (context) => const FirstSquadScreen(),
+        SecondSquadScreen.id: (context) => const SecondSquadScreen(),
+        PenaltyCatalogScreen.id: (context) => const PenaltyCatalogScreen(),
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/constants/color.dart';
 import 'package:sgm_du_gu_we/screens/login_screen.dart';
 import 'package:sgm_du_gu_we/screens/registration_screen.dart';
 import '../constants/box_size.dart';
@@ -48,12 +49,25 @@ class MainScreenState extends State<MainScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Hero(
+                Hero(
                   tag: 'logo',
                   child: CircleAvatar(
                     radius: kRadius,
-                    backgroundImage: AssetImage(
-                      'images/sgm_du_gu_we.PNG',
+                    child: ClipOval(
+                      child: Image.network(
+                        'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/App%20Icon%2Fsgm_du_gu_we.PNG?alt=media&token=b532fa33-870a-4e75-b3d9-2dbf0e7a43f0',
+                        fit: BoxFit.cover,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            isLoading = false;
+                            return child;
+                          }
+                          return const CircularProgressIndicator(
+                            color: kSGMColorGreen,
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -117,16 +131,19 @@ class MainScreenState extends State<MainScreen> {
                       alignment: AlignmentDirectional.bottomCenter,
                       height: kContainerHeight,
                       width: kContainerWidth,
-                      child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1024px-Instagram_logo_2022.svg.png',
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            isLoading = false;
-                            return child;
-                          }
-                          return const CircularProgressIndicator();
-                        },
+                      child: ClipOval(
+                        child: Image.network(
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1024px-Instagram_logo_2022.svg.png',
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              isLoading = false;
+                              return child;
+                            }
+                            return const CircularProgressIndicator();
+                          },
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -136,16 +153,19 @@ class MainScreenState extends State<MainScreen> {
                       alignment: AlignmentDirectional.bottomCenter,
                       height: kContainerHeight,
                       width: kContainerWidth,
-                      child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Facebook_Home_logo_old.svg/1024px-Facebook_Home_logo_old.svg.png',
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            isLoading = false;
-                            return child;
-                          }
-                          return const CircularProgressIndicator();
-                        },
+                      child: ClipOval(
+                        child: Image.network(
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Facebook_Home_logo_old.svg/1024px-Facebook_Home_logo_old.svg.png',
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext context, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              isLoading = false;
+                              return child;
+                            }
+                            return const CircularProgressIndicator();
+                          },
+                        ),
                       ),
                     ),
                   ],
