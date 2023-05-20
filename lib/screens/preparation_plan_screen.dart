@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import '../constants/padding.dart';
 
-class PenaltyCatalogScreen extends StatefulWidget {
-  const PenaltyCatalogScreen({super.key});
+class PreparationPlanScreen extends StatefulWidget {
+  const PreparationPlanScreen({super.key});
 
-  static const String id = 'penalty_catalog_screen';
+  static const String id = 'preparation_plan_screen';
 
   @override
-  PenaltyCatalogScreenState createState() => PenaltyCatalogScreenState();
+  PreparationPlanScreenState createState() => PreparationPlanScreenState();
 }
 
-class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
+class PreparationPlanScreenState extends State<PreparationPlanScreen> {
   bool isLoading = true;
 
   @override
@@ -18,7 +18,7 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Strafenkatalog'),
+          title: const Text('Vorbereitungsplan'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(
@@ -27,7 +27,7 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
           child: Center(
             child: Image.network(
               fit: BoxFit.cover,
-              'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Strafenkatalog%2Fpenalty_catalog.PNG?alt=media&token=4e970b3a-d993-4b2f-9f01-d5e7870a8dbb',
+              'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Vorbereitungsplan%2Fpreparation_plan.PNG?alt=media&token=43011017-dc96-4e69-93be-b2e3d042fe10',
               loadingBuilder: (BuildContext context, Widget child,
                   ImageChunkEvent? loadingProgress) {
                 if (loadingProgress == null) {

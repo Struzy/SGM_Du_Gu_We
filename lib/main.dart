@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/screens/baar_cup_screen.dart';
+import 'package:sgm_du_gu_we/screens/chat_screen.dart';
 import 'package:sgm_du_gu_we/screens/email_verification_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
@@ -7,12 +9,17 @@ import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
 import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
 import 'package:sgm_du_gu_we/screens/login_screen.dart';
+import 'package:sgm_du_gu_we/screens/lyrics_screen.dart';
 import 'package:sgm_du_gu_we/screens/main_screen.dart';
+import 'package:sgm_du_gu_we/screens/miscellaneous_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
+import 'package:sgm_du_gu_we/screens/player_statistics_screen.dart';
+import 'package:sgm_du_gu_we/screens/preparation_plan_screen.dart';
 import 'package:sgm_du_gu_we/screens/registration_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/splash_screen.dart';
+import 'package:sgm_du_gu_we/screens/sprinkle_plan_screen.dart';
 import 'constants/color.dart';
 import 'constants/elevated_button.dart';
 import 'constants/font_family.dart';
@@ -90,7 +97,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: HomeScreen.id,
+      initialRoute: MainScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
@@ -107,6 +114,13 @@ class SGMDuGuWe extends StatelessWidget {
         FirstSquadScreen.id: (context) => const FirstSquadScreen(),
         SecondSquadScreen.id: (context) => const SecondSquadScreen(),
         PenaltyCatalogScreen.id: (context) => const PenaltyCatalogScreen(),
+        SprinklePlanScreen.id: (context) => const SprinklePlanScreen(),
+        PreparationPlanScreen.id: (context) => const PreparationPlanScreen(),
+        LyricsScreen.id: (context) => const LyricsScreen(),
+        MiscellaneousScreen.id: (context) => const MiscellaneousScreen(),
+        BaarCupScreen.id: (context) => const BaarCupScreen(),
+        PlayerStatisticsScreen.id: (context) => const PlayerStatisticsScreen(),
+        ChatScreen.id: (context) => const ChatScreen(),
       },
     );
   }

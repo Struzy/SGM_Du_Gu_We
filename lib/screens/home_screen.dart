@@ -5,14 +5,21 @@ import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
 import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
+import 'package:sgm_du_gu_we/screens/player_statistics_screen.dart';
+import 'package:sgm_du_gu_we/screens/preparation_plan_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_screen.dart';
+import 'package:sgm_du_gu_we/screens/sprinkle_plan_screen.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_family.dart';
 import '../constants/padding.dart';
 import '../services/authentication_service.dart';
+import 'baar_cup_screen.dart';
+import 'chat_screen.dart';
+import 'lyrics_screen.dart';
 import 'main_screen.dart';
+import 'miscellaneous_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,7 +37,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: NavigationDrawer(),
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Hauptmenü'),
         ),
@@ -193,7 +200,6 @@ class NavigationDrawer extends StatelessWidget {
         ),
       );
 
-// TODO: Baarpokal
   Widget buildMenuItems(BuildContext context) => Column(children: [
         ListTile(
           leading: const Icon(Icons.home),
@@ -254,13 +260,24 @@ class NavigationDrawer extends StatelessWidget {
             Navigator.pushNamed(context, SecondSquadLeagueScreen.id);
           },
         ),
+    ListTile(
+      leading: const Icon(Icons.sports),
+      title: const Text(
+        'Kreisliga B2 Schwarzwald',
+      ),
+      onTap: () {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, SecondSquadLeagueScreen.id);
+      },
+    ),
         ListTile(
           leading: const Icon(Icons.sports),
           title: const Text(
-            'Trainingsbeteiligung',
+            'Baarpokal',
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, BaarCupScreen.id);
           },
         ),
         ListTile(
@@ -304,7 +321,7 @@ class NavigationDrawer extends StatelessWidget {
           title: const Text(
             'Strafenkatalog',
           ),
-          onTap: () {
+          onTap: () async {
             Navigator.pop(context);
             Navigator.pushNamed(context, PenaltyCatalogScreen.id);
           },
@@ -316,6 +333,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, PreparationPlanScreen.id);
           },
         ),
         ListTile(
@@ -325,6 +343,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, SprinklePlanScreen.id);
           },
         ),
         ListTile(
@@ -355,12 +374,13 @@ class NavigationDrawer extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.contact_mail),
+          leading: const Icon(Icons.lyrics),
           title: const Text(
             'Liedtexte',
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, LyricsScreen.id);
           },
         ),
         ListTile(
@@ -375,10 +395,11 @@ class NavigationDrawer extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.sports),
           title: const Text(
-            'Ewige Spielerliste',
+            'Spielerstatistik',
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, PlayerStatisticsScreen.id);
           },
         ),
         ListTile(
@@ -388,7 +409,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, MainScreen.id);
+            Navigator.pushNamed(context, ChatScreen.id);
           },
         ),
         ListTile(
@@ -398,6 +419,16 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.miscellaneous_services),
+          title: const Text(
+            'Sonstiges',
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, MiscellaneousScreen.id);
           },
         ),
         ListTile(

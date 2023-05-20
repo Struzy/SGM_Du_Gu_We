@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sgm_du_gu_we">
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
    <application
         android:label="SGM Du/Gu/We"
         android:name="${applicationName}"

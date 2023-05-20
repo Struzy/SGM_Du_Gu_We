@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import '../constants/padding.dart';
 
-class PenaltyCatalogScreen extends StatefulWidget {
-  const PenaltyCatalogScreen({super.key});
+class SprinklePlanScreen extends StatefulWidget {
+  const SprinklePlanScreen({super.key});
 
-  static const String id = 'penalty_catalog_screen';
+  static const String id = 'sprinkle_plan_screen';
 
   @override
-  PenaltyCatalogScreenState createState() => PenaltyCatalogScreenState();
+  SprinklePlanScreenState createState() => SprinklePlanScreenState();
 }
 
-class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
+class SprinklePlanScreenState extends State<SprinklePlanScreen> {
   bool isLoading = true;
 
   @override
@@ -18,7 +18,7 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Strafenkatalog'),
+          title: const Text('Abstreuplan'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(
@@ -27,7 +27,7 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
           child: Center(
             child: Image.network(
               fit: BoxFit.cover,
-              'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Strafenkatalog%2Fpenalty_catalog.PNG?alt=media&token=4e970b3a-d993-4b2f-9f01-d5e7870a8dbb',
+              'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Abstreuplan%2Fsprinkle_plan.PNG?alt=media&token=0768b914-ba49-4620-8c9a-ac7a9070be63',
               loadingBuilder: (BuildContext context, Widget child,
                   ImageChunkEvent? loadingProgress) {
                 if (loadingProgress == null) {

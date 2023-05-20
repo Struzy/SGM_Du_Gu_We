@@ -133,7 +133,7 @@ class MainScreenState extends State<MainScreen> {
                       width: kContainerWidth,
                       child: ClipOval(
                         child: Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/1024px-Instagram_logo_2022.svg.png',
+                          'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Logos%2FInstagram_logo_2022.svg.png?alt=media&token=4f08d604-3f98-4455-a0b2-3a12160053d0',
                           fit: BoxFit.cover,
                           loadingBuilder: (BuildContext context, Widget child,
                               ImageChunkEvent? loadingProgress) {
@@ -155,7 +155,7 @@ class MainScreenState extends State<MainScreen> {
                       width: kContainerWidth,
                       child: ClipOval(
                         child: Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Facebook_Home_logo_old.svg/1024px-Facebook_Home_logo_old.svg.png',
+                          'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Logos%2FFacebook_Home_logo_old.svg.png?alt=media&token=3082cfd9-1614-4bd9-8637-463a5e6d7806',
                           fit: BoxFit.cover,
                           loadingBuilder: (BuildContext context, Widget child,
                               ImageChunkEvent? loadingProgress) {
