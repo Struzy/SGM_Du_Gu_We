@@ -5,6 +5,7 @@ import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
 import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
+import 'package:sgm_du_gu_we/screens/penalty_screen.dart';
 import 'package:sgm_du_gu_we/screens/player_statistics_screen.dart';
 import 'package:sgm_du_gu_we/screens/preparation_plan_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
@@ -305,6 +306,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, PenaltyScreen.id);
           },
         ),
         ListTile(
@@ -464,7 +466,7 @@ class NavigationDrawer extends StatelessWidget {
                       Navigator.pushNamed(context, MainScreen.id);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Erfolgreich abgemeldet'),
+                          content: Text('Erfolgreich abgemeldet.'),
                         ),
                       );
                     },

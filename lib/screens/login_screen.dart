@@ -150,7 +150,7 @@ class LoginScreenState extends State<LoginScreen> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Erfolgreich angemeldet'),
+            content: Text('Erfolgreich angemeldet.'),
           ),
         );
       } else {
@@ -160,7 +160,7 @@ class LoginScreenState extends State<LoginScreen> {
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Email has not been validated yet'),
+            content: Text('E-Mail wurde noch nicht verifiziert.'),
           ),
         );
       }
@@ -168,7 +168,7 @@ class LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Email and/or password cannot be empty',
+            'E-Mail und/oder Passwort darf nicht leer sein.',
           ),
         ),
       );

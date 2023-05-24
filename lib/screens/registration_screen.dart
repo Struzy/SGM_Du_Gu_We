@@ -166,7 +166,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
-                'Given passwords do not correspond',
+                'Passwörter stimmen nicht überein.',
               ),
             ),
           );
@@ -185,7 +185,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Email and/or password cannot be empty',
+              'E-Mail und/oder Passwort darf nicht leer sein.',
             ),
           ),
         );

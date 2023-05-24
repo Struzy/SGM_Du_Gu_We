@@ -13,6 +13,7 @@ import 'package:sgm_du_gu_we/screens/lyrics_screen.dart';
 import 'package:sgm_du_gu_we/screens/main_screen.dart';
 import 'package:sgm_du_gu_we/screens/miscellaneous_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
+import 'package:sgm_du_gu_we/screens/penalty_screen.dart';
 import 'package:sgm_du_gu_we/screens/player_statistics_screen.dart';
 import 'package:sgm_du_gu_we/screens/preparation_plan_screen.dart';
 import 'package:sgm_du_gu_we/screens/registration_screen.dart';
@@ -97,7 +98,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: MainScreen.id,
+      initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
@@ -121,6 +122,7 @@ class SGMDuGuWe extends StatelessWidget {
         BaarCupScreen.id: (context) => const BaarCupScreen(),
         PlayerStatisticsScreen.id: (context) => const PlayerStatisticsScreen(),
         ChatScreen.id: (context) => const ChatScreen(),
+        PenaltyScreen.id: (context) => const PenaltyScreen(),
       },
     );
   }
