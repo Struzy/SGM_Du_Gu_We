@@ -21,6 +21,7 @@ import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/splash_screen.dart';
 import 'package:sgm_du_gu_we/screens/sprinkle_plan_screen.dart';
+import 'package:sgm_du_gu_we/screens/squad_screen.dart';
 import 'constants/color.dart';
 import 'constants/elevated_button.dart';
 import 'constants/font_family.dart';
@@ -98,7 +99,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: SplashScreen.id,
+      initialRoute: LoginScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
@@ -123,6 +124,7 @@ class SGMDuGuWe extends StatelessWidget {
         PlayerStatisticsScreen.id: (context) => const PlayerStatisticsScreen(),
         ChatScreen.id: (context) => const ChatScreen(),
         PenaltyScreen.id: (context) => const PenaltyScreen(),
+        SquadScreen.id: (context) => const SquadScreen(),
       },
     );
   }

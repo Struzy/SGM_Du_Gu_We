@@ -11,6 +11,7 @@ import 'package:sgm_du_gu_we/screens/preparation_plan_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/second_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/sprinkle_plan_screen.dart';
+import 'package:sgm_du_gu_we/screens/squad_screen.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_family.dart';
@@ -224,6 +225,16 @@ class NavigationDrawer extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.person),
           title: const Text(
+            'Kader',
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, SquadScreen.id);
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: const Text(
             '1. Mannschaft',
           ),
           onTap: () {
@@ -261,16 +272,16 @@ class NavigationDrawer extends StatelessWidget {
             Navigator.pushNamed(context, SecondSquadLeagueScreen.id);
           },
         ),
-    ListTile(
-      leading: const Icon(Icons.sports),
-      title: const Text(
-        'Kreisliga B2 Schwarzwald',
-      ),
-      onTap: () {
-        Navigator.pop(context);
-        Navigator.pushNamed(context, SecondSquadLeagueScreen.id);
-      },
-    ),
+        ListTile(
+          leading: const Icon(Icons.sports),
+          title: const Text(
+            'Kreisliga B2 Schwarzwald',
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, SecondSquadLeagueScreen.id);
+          },
+        ),
         ListTile(
           leading: const Icon(Icons.sports),
           title: const Text(

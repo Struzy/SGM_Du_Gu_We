@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/classes/Player.dart';
 import 'package:sgm_du_gu_we/classes/player_list.dart';
-import '../constants/circle_avatar.dart';
-import '../constants/color.dart';
 import '../constants/padding.dart';
 
 class PenaltyScreen extends StatefulWidget {
@@ -48,8 +46,8 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                 ),
                 title: Text(
                     '${players[index].surname}, ${players[index].forename}'),
-                subtitle: Text('Einsätze: ${players[index].appearances}'),
-                trailing: const Icon(Icons.arrow_forward),
+                //subtitle: Text('Einsätze: ${players[index].appearances}'),
+                //trailing: const Icon(Icons.arrow_forward),
                 onLongPress: () {
                   // TODO: Handle when icon has been longly pressed
                 },
