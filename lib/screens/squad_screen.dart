@@ -92,9 +92,13 @@ class SquadScreenState extends State<SquadScreen> {
     if (searchQuery.isNotEmpty) {
       filteredPlayers = players
           .where(
-            (player) => player.surname.contains(
-              searchQuery,
-            ),
+            (player) =>
+                player.surname.contains(
+                  searchQuery,
+                ) ||
+                player.forename.contains(
+                  searchQuery,
+                ),
           )
           .toList();
     } else {
