@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sgm_du_gu_we/classes/Player.dart';
-import 'package:sgm_du_gu_we/classes/player_list.dart';
+import '../classes/penalty.dart';
+import '../constants/color.dart';
+import '../constants/elevated_button.dart';
 import '../constants/padding.dart';
+
+bool isLoading = true;
 
 class PenaltyScreen extends StatefulWidget {
   const PenaltyScreen({super.key});
@@ -13,12 +17,8 @@ class PenaltyScreen extends StatefulWidget {
 }
 
 class PenaltyScreenState extends State<PenaltyScreen> {
-  bool isLoading = true;
-
   @override
   Widget build(BuildContext context) {
-    List<Player> players = getPlayers();
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -28,41 +28,121 @@ class PenaltyScreenState extends State<PenaltyScreen> {
           padding: const EdgeInsets.all(
             kPadding,
           ),
-          child: ListView.builder(
-            itemCount: players.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                leading: Image.network(
-                  players[index].profilePicture,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      isLoading = false;
-                      return child;
-                    }
-                    return const CircularProgressIndicator();
-                  },
-                ),
-                title: Text(
-                    '${players[index].surname}, ${players[index].forename}'),
-                //subtitle: Text('Einsätze: ${players[index].appearances}'),
-                //trailing: const Icon(Icons.arrow_forward),
-                onLongPress: () {
-                  // TODO: Handle when icon has been longly pressed
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              StreamBuilder<List<Penalty>>(
+                stream: readPenalties(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Beim Laden der Einträge ist ein Fehler aufgetreten.',
+                        ),
+                      ),
+                    );
+                  }
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    final penalties = snapshot.data!;
+
+                    return Expanded(
+                      child: ListView(
+                        children: penalties
+                            .map(buildUser)
+                            .toList(),
+                      ),
+                    );
+                  }
                 },
-              );
-            },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  FloatingActionButton(
+                    onPressed: () {},
+                    foregroundColor: Colors.black,
+                    backgroundColor: kSGMColorRed,
+                    elevation: kElevation,
+                    child: const Icon(
+                      Icons.add,
+                    ),
+                  )
+                ],
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  // Get all the players
-  List<Player> getPlayers() {
-    PlayerList playerList = PlayerList();
+  // Create penalty
+  Future createPenalty(
+      {required String profilePicture,
+      required String date,
+      required String surname,
+      required String forename,
+      required String offense,
+      required String amount,
+      required String isPayed}) async {
+    final docPenalty = FirebaseFirestore.instance.collection('penalties').doc();
 
-    return playerList.playerList;
+    final penalty = Penalty(
+        profilePicture: profilePicture,
+        date: date,
+        surname: surname,
+        forename: forename,
+        offense: offense,
+        amount: amount,
+        isPayed: isPayed);
+
+    final json = penalty.toJson();
+
+    await docPenalty.set(json);
   }
+
+  // Read all penalties
+  Stream<List<Penalty>> readPenalties() => FirebaseFirestore.instance
+      .collection('penalties')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.docs.map((doc) => Penalty.fromJson(doc.data())).toList());
 }
+Widget buildUser(Penalty penalty) => ListTile(
+  leading: Image.network(
+    penalty.profilePicture,
+    fit: BoxFit.cover,
+    loadingBuilder: (BuildContext context, Widget child,
+        ImageChunkEvent? loadingProgress) {
+      if (loadingProgress == null) {
+        isLoading = false;
+        return child;
+      }
+      return const CircularProgressIndicator();
+    },
+  ),
+  title: Text(
+    '${penalty.surname}, ${penalty.forename}',
+  ),
+  subtitle: Text(
+    penalty.date,
+  ),
+  trailing: IconButton(
+    icon: const Icon(
+      Icons.more_vert,
+    ),
+    onPressed: () {
+      showModalBottomSheet(
+        context: context,
+        builder: builder,
+      );
+    },
+  ),
+);
+//toIso8601String()

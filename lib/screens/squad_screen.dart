@@ -43,7 +43,7 @@ class SquadScreenState extends State<SquadScreen> {
                   icon: Icon(
                     Icons.search,
                   ),
-                  hintText: 'Kader nach Nachnamen durchsuchen...',
+                  hintText: 'Kader durchsuchen...',
                 ),
                 onChanged: (value) {
                   filterPlayers(value);

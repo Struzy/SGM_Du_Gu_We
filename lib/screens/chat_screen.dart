@@ -4,7 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
-import '../constants/icon_size.dart';
+import '../constants/box_size.dart';
+import '../constants/elevated_button.dart';
 import '../constants/padding.dart';
 
 final firestore = FirebaseFirestore.instance;
@@ -35,7 +36,6 @@ class ChatScreenState extends State<ChatScreen> {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
-            leading: null,
             title: AnimatedTextKit(
               animatedTexts: [
                 TypewriterAnimatedText(
@@ -43,14 +43,7 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
               ],
             ),
-            actions: <Widget>[
-              IconButton(
-                onPressed: getMessagesStream,
-                icon: const Icon(
-                  Icons.close,
-                ),
-              ),
-            ],
+            actions: <Widget>[],
           ),
           body: Padding(
             padding: const EdgeInsets.all(
@@ -66,8 +59,8 @@ class ChatScreenState extends State<ChatScreen> {
                     decoration: const BoxDecoration(
                       border: Border(
                         top: BorderSide(
-                          color: kSGMColorGreen,
-                          width: 2.0,
+                          color: Colors.black54,
+                          width: 3.0,
                         ),
                       ),
                     ),
@@ -76,19 +69,23 @@ class ChatScreenState extends State<ChatScreen> {
                       children: <Widget>[
                         Expanded(
                           child: TextField(
+                            maxLines: null,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                            ),
                             controller: messageTextController,
                             onChanged: (value) {
                               messageText = value;
                             },
                             decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 20.0),
                               hintText: 'Nachricht',
-                              border: InputBorder.none,
                             ),
                           ),
                         ),
-                        ElevatedButton.icon(
+                        const SizedBox(
+                          width: kBoxWidth,
+                        ),
+                        FloatingActionButton(
                           onPressed: () {
                             messageTextController.clear();
                             firestore.collection('messages').add({
@@ -96,13 +93,11 @@ class ChatScreenState extends State<ChatScreen> {
                               'sender': loggedInUser.email,
                             });
                           },
-                          icon: const Icon(
+                          foregroundColor: Colors.black,
+                          backgroundColor: kSGMColorGreen,
+                          elevation: kElevation,
+                          child: const Icon(
                             Icons.send,
-                            color: Colors.black,
-                            size: kIcon,
-                          ),
-                          label: const Text(
-                            'Senden',
                           ),
                         ),
                       ],

@@ -108,7 +108,7 @@ class LoginScreenState extends State<LoginScreen> {
                     ElevatedButton.icon(
                       onPressed: loginUser,
                       icon: const Icon(
-                        Icons.app_registration,
+                        Icons.login,
                         color: Colors.black,
                         size: kIcon,
                       ),
