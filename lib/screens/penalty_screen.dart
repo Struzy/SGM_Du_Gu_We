@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../classes/penalty.dart';
+import '../classes/player_list.dart';
+import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/elevated_button.dart';
+import '../constants/font_size.dart';
+import '../constants/icon_size.dart';
 import '../constants/padding.dart';
 
 bool isLoading = true;
@@ -40,12 +45,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
           icon: const Icon(
             Icons.more_vert,
           ),
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) => const AddPenalty(),
-            );
-          },
+          onPressed: () {},
         ),
       );
 
@@ -97,7 +97,20 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => SingleChildScrollView(
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: const AddPenalty(),
+                          ),
+                        ),
+                      );
+                    },
                     foregroundColor: Colors.black,
                     backgroundColor: kSGMColorRed,
                     elevation: kElevation,
@@ -161,25 +174,206 @@ class PenaltyScreenState extends State<PenaltyScreen> {
   }
 }
 
-class AddPenalty extends StatelessWidget {
+class AddPenalty extends StatefulWidget {
   const AddPenalty({super.key});
+
+  @override
+  AddPenaltyState createState() => AddPenaltyState();
+}
+
+class AddPenaltyState extends State<AddPenalty> {
+  TextEditingController dateInput = TextEditingController();
+
+  String dropdownValueSurnames = getPlayers('surname').first;
+  String dropdownValueForenames = getPlayers('forename').first;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xff394E36),
+      color: const Color(
+        0xff394E36,
+      ),
       child: Container(
+        padding: const EdgeInsets.all(
+          kPadding,
+        ),
         decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(
-                20.0,
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(
+              20.0,
+            ),
+            topRight: Radius.circular(
+              20.0,
+            ),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text(
+              'Strafe hinzufügen',
+              style: TextStyle(
+                fontSize: kFontsizeSubtitle,
+                fontWeight: FontWeight.bold,
               ),
-              topRight: Radius.circular(
-                20.0,
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            TextField(
+              controller: dateInput,
+              autofocus: true,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black54,
               ),
-            )),
+              onChanged: (value) {},
+              decoration: const InputDecoration(
+                icon: Icon(Icons.calendar_today),
+                hintText: 'Datum eingeben',
+              ),
+              readOnly: true,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(
+                    DateTime.now().year,
+                  ),
+                  lastDate: DateTime(
+                    2100,
+                  ),
+                );
+
+                if (pickedDate != null) {
+                  String formattedDate =
+                      DateFormat('dd.MM.yyyy').format(pickedDate);
+
+                  setState(() {
+                    dateInput.text = formattedDate;
+                  });
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Es wurde kein Datum ausgewählt.',
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            DropdownButton<String>(
+              value: dropdownValueSurnames,
+              elevation: kElevation.toInt(),
+              items: getPlayers('surname')
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownValueSurnames = value!;
+                });
+              },
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            DropdownButton<String>(
+              value: dropdownValueForenames,
+              elevation: kElevation.toInt(),
+              items: getPlayers('forename')
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownValueForenames = value!;
+                });
+              },
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            TextField(
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black54,
+              ),
+              onChanged: (value) {},
+              decoration: const InputDecoration(
+                hintText: 'Vergehen eingeben',
+              ),
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            TextField(
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black54,
+              ),
+              onChanged: (value) {},
+              decoration: const InputDecoration(
+                hintText: 'Betrag eingeben',
+              ),
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            ElevatedButton.icon(
+              onPressed: addPenalty,
+              icon: const Icon(
+                Icons.add,
+                color: Colors.black,
+                size: kIcon,
+              ),
+              label: const Text(
+                'Hinzufügen',
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
+  // Add penalty to list
+  void addPenalty() {}
+}
+
+// Get desired list for the dropdown menu item
+List<String> getPlayers(String attribute) {
+  PlayerList playerList = PlayerList();
+  List<String> list = [];
+
+  switch (attribute) {
+    case 'surname':
+      for (var player in playerList.playerList) {
+        list.add(player.surname);
+      }
+      break;
+
+    case 'forename':
+      for (var player in playerList.playerList) {
+        list.add(player.forename);
+      }
+      break;
+  }
+
+  return list;
 }

@@ -69,6 +69,7 @@ class ChatScreenState extends State<ChatScreen> {
                       children: <Widget>[
                         Expanded(
                           child: TextField(
+                            autocorrect: true,
                             maxLines: null,
                             style: const TextStyle(
                               color: Colors.black54,
