@@ -17,6 +17,40 @@ class PenaltyScreen extends StatefulWidget {
 }
 
 class PenaltyScreenState extends State<PenaltyScreen> {
+  Widget buildUser(Penalty penalty) => ListTile(
+        leading: Image.network(
+          penalty.profilePicture,
+          fit: BoxFit.cover,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              isLoading = false;
+              return child;
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
+        title: Text(
+          '${penalty.surname}, ${penalty.forename}',
+        ),
+        subtitle: Text(
+          penalty.date,
+        ),
+        trailing: IconButton(
+          icon: const Icon(
+            Icons.more_vert,
+          ),
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) => const AddPenalty(),
+            );
+          },
+        ),
+      );
+
+//toIso8601String()
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -53,9 +87,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
 
                     return Expanded(
                       child: ListView(
-                        children: penalties
-                            .map(buildUser)
-                            .toList(),
+                        children: penalties.map(buildUser).toList(),
                       ),
                     );
                   }
@@ -113,36 +145,41 @@ class PenaltyScreenState extends State<PenaltyScreen> {
       .snapshots()
       .map((snapshot) =>
           snapshot.docs.map((doc) => Penalty.fromJson(doc.data())).toList());
+
+  // Update penalty
+  void updatePenalty() {
+    final penalty = FirebaseFirestore.instance.collection('penalties').doc();
+    penalty.update({
+      'forename': 'Manuel',
+    });
+  }
+
+  // Delete penalty
+  void deletePenalty() {
+    final penalty = FirebaseFirestore.instance.collection('penalties').doc();
+    penalty.delete();
+  }
 }
-Widget buildUser(Penalty penalty) => ListTile(
-  leading: Image.network(
-    penalty.profilePicture,
-    fit: BoxFit.cover,
-    loadingBuilder: (BuildContext context, Widget child,
-        ImageChunkEvent? loadingProgress) {
-      if (loadingProgress == null) {
-        isLoading = false;
-        return child;
-      }
-      return const CircularProgressIndicator();
-    },
-  ),
-  title: Text(
-    '${penalty.surname}, ${penalty.forename}',
-  ),
-  subtitle: Text(
-    penalty.date,
-  ),
-  trailing: IconButton(
-    icon: const Icon(
-      Icons.more_vert,
-    ),
-    onPressed: () {
-      showModalBottomSheet(
-        context: context,
-        builder: builder,
-      );
-    },
-  ),
-);
-//toIso8601String()
+
+class AddPenalty extends StatelessWidget {
+  const AddPenalty({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xff394E36),
+      child: Container(
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(
+                20.0,
+              ),
+              topRight: Radius.circular(
+                20.0,
+              ),
+            )),
+      ),
+    );
+  }
+}
