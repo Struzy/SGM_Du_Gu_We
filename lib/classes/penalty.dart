@@ -1,37 +1,33 @@
 class Penalty {
   Penalty({
-    required this.profilePicture,
+    this.id = '',
     required this.date,
-    required this.surname,
-    required this.forename,
+    required this.name,
     required this.offense,
     required this.amount,
     required this.isPayed,
   });
 
-  String profilePicture;
-  String date;
-  String surname;
-  String forename;
-  String offense;
-  String amount;
-  String isPayed;
+  final String id;
+  final String date;
+  final String name;
+  final String offense;
+  final String amount;
+  bool isPayed = false;
 
   Map<String, dynamic> toJson() => {
-        'profilePicture': profilePicture,
+        'id': id,
         'date': date,
-        'surname': surname,
-        'forename': forename,
+        'name': name,
         'offense': offense,
         'amount': amount,
         'isPayed': isPayed,
       };
 
   static Penalty fromJson(Map<String, dynamic> json) => Penalty(
-        profilePicture: json['profilePicture'],
+        id: json['id'],
         date: json['date'],
-        surname: json['surname'],
-        forename: json['forename'],
+        name: json['name'],
         offense: json['offense'],
         amount: json['amount'],
         isPayed: json['isPayed'],

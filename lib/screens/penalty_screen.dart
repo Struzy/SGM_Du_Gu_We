@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sgm_du_gu_we/classes/offense.dart';
+import '../classes/amount.dart';
 import '../classes/penalty.dart';
 import '../classes/player_list.dart';
 import '../constants/box_size.dart';
@@ -22,21 +24,10 @@ class PenaltyScreen extends StatefulWidget {
 }
 
 class PenaltyScreenState extends State<PenaltyScreen> {
-  Widget buildUser(Penalty penalty) => ListTile(
-        leading: Image.network(
-          penalty.profilePicture,
-          fit: BoxFit.cover,
-          loadingBuilder: (BuildContext context, Widget child,
-              ImageChunkEvent? loadingProgress) {
-            if (loadingProgress == null) {
-              isLoading = false;
-              return child;
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
+  Widget buildUser(Penalty penalty) =>
+      ListTile(
         title: Text(
-          '${penalty.surname}, ${penalty.forename}',
+          penalty.name,
         ),
         subtitle: Text(
           penalty.date,
@@ -45,11 +36,26 @@ class PenaltyScreenState extends State<PenaltyScreen> {
           icon: const Icon(
             Icons.more_vert,
           ),
-          onPressed: () {},
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) =>
+                  SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery
+                            .of(context)
+                            .viewInsets
+                            .bottom,
+                      ),
+                      child: const ,
+                    ),
+                  ),
+            );
+          },
         ),
       );
-
-//toIso8601String()
 
   @override
   Widget build(BuildContext context) {
@@ -101,14 +107,18 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (context) => SingleChildScrollView(
-                          child: Container(
-                            padding: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                        builder: (context) =>
+                            SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  bottom: MediaQuery
+                                      .of(context)
+                                      .viewInsets
+                                      .bottom,
+                                ),
+                                child: const AddPenalty(),
+                              ),
                             ),
-                            child: const AddPenalty(),
-                          ),
-                        ),
                       );
                     },
                     foregroundColor: Colors.black,
@@ -126,52 +136,6 @@ class PenaltyScreenState extends State<PenaltyScreen> {
       ),
     );
   }
-
-  // Create penalty
-  Future createPenalty(
-      {required String profilePicture,
-      required String date,
-      required String surname,
-      required String forename,
-      required String offense,
-      required String amount,
-      required String isPayed}) async {
-    final docPenalty = FirebaseFirestore.instance.collection('penalties').doc();
-
-    final penalty = Penalty(
-        profilePicture: profilePicture,
-        date: date,
-        surname: surname,
-        forename: forename,
-        offense: offense,
-        amount: amount,
-        isPayed: isPayed);
-
-    final json = penalty.toJson();
-
-    await docPenalty.set(json);
-  }
-
-  // Read all penalties
-  Stream<List<Penalty>> readPenalties() => FirebaseFirestore.instance
-      .collection('penalties')
-      .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => Penalty.fromJson(doc.data())).toList());
-
-  // Update penalty
-  void updatePenalty() {
-    final penalty = FirebaseFirestore.instance.collection('penalties').doc();
-    penalty.update({
-      'forename': 'Manuel',
-    });
-  }
-
-  // Delete penalty
-  void deletePenalty() {
-    final penalty = FirebaseFirestore.instance.collection('penalties').doc();
-    penalty.delete();
-  }
 }
 
 class AddPenalty extends StatefulWidget {
@@ -182,10 +146,11 @@ class AddPenalty extends StatefulWidget {
 }
 
 class AddPenaltyState extends State<AddPenalty> {
-  TextEditingController dateInput = TextEditingController();
+  TextEditingController controllerDate = TextEditingController();
 
-  String dropdownValueSurnames = getPlayers('surname').first;
-  String dropdownValueForenames = getPlayers('forename').first;
+  String dropdownValueNames = getNames().first;
+  String dropdownValueOffenses = getOffenses().first;
+  String dropdownValueAmounts = getAmounts().first;
 
   @override
   Widget build(BuildContext context) {
@@ -222,7 +187,7 @@ class AddPenaltyState extends State<AddPenalty> {
               height: kBoxHeight,
             ),
             TextField(
-              controller: dateInput,
+              controller: controllerDate,
               autofocus: true,
               textAlign: TextAlign.center,
               style: const TextStyle(
@@ -239,7 +204,9 @@ class AddPenaltyState extends State<AddPenalty> {
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime(
-                    DateTime.now().year,
+                    DateTime
+                        .now()
+                        .year,
                   ),
                   lastDate: DateTime(
                     2100,
@@ -248,10 +215,10 @@ class AddPenaltyState extends State<AddPenalty> {
 
                 if (pickedDate != null) {
                   String formattedDate =
-                      DateFormat('dd.MM.yyyy').format(pickedDate);
+                  DateFormat('dd.MM.yyyy').format(pickedDate);
 
                   setState(() {
-                    dateInput.text = formattedDate;
+                    controllerDate.text = formattedDate;
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -268,10 +235,9 @@ class AddPenaltyState extends State<AddPenalty> {
               height: kBoxHeight,
             ),
             DropdownButton<String>(
-              value: dropdownValueSurnames,
+              value: dropdownValueNames,
               elevation: kElevation.toInt(),
-              items: getPlayers('surname')
-                  .map<DropdownMenuItem<String>>((String value) {
+              items: getNames().map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(
@@ -281,7 +247,7 @@ class AddPenaltyState extends State<AddPenalty> {
               }).toList(),
               onChanged: (String? value) {
                 setState(() {
-                  dropdownValueSurnames = value!;
+                  dropdownValueNames = value!;
                 });
               },
             ),
@@ -289,10 +255,33 @@ class AddPenaltyState extends State<AddPenalty> {
               height: kBoxHeight,
             ),
             DropdownButton<String>(
-              value: dropdownValueForenames,
+              value: dropdownValueOffenses,
               elevation: kElevation.toInt(),
-              items: getPlayers('forename')
-                  .map<DropdownMenuItem<String>>((String value) {
+              items:
+              getOffenses().map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownValueOffenses = value!;
+                });
+              },
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            DropdownButton<String>(
+              value: dropdownValueAmounts,
+              elevation: kElevation.toInt(),
+              items: getAmounts().map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(
@@ -302,41 +291,24 @@ class AddPenaltyState extends State<AddPenalty> {
               }).toList(),
               onChanged: (String? value) {
                 setState(() {
-                  dropdownValueForenames = value!;
+                  dropdownValueAmounts = value!;
                 });
               },
             ),
             const SizedBox(
               height: kBoxHeight,
             ),
-            TextField(
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black54,
-              ),
-              onChanged: (value) {},
-              decoration: const InputDecoration(
-                hintText: 'Vergehen eingeben',
-              ),
-            ),
-            const SizedBox(
-              height: kBoxHeight,
-            ),
-            TextField(
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black54,
-              ),
-              onChanged: (value) {},
-              decoration: const InputDecoration(
-                hintText: 'Betrag eingeben',
-              ),
-            ),
-            const SizedBox(
-              height: kBoxHeight,
-            ),
             ElevatedButton.icon(
-              onPressed: addPenalty,
+              onPressed: () {
+                createPenalty(
+                  date: controllerDate.text,
+                  name: dropdownValueNames,
+                  offense: dropdownValueOffenses,
+                  amount: dropdownValueAmounts,
+                  isPayed: false,
+                );
+                Navigator.pop(context);
+              },
               icon: const Icon(
                 Icons.add,
                 color: Colors.black,
@@ -351,29 +323,83 @@ class AddPenaltyState extends State<AddPenalty> {
       ),
     );
   }
-
-  // Add penalty to list
-  void addPenalty() {}
 }
 
-// Get desired list for the dropdown menu item
-List<String> getPlayers(String attribute) {
+// Get players for the dropdown menu item
+List<String> getNames() {
   PlayerList playerList = PlayerList();
   List<String> list = [];
 
-  switch (attribute) {
-    case 'surname':
-      for (var player in playerList.playerList) {
-        list.add(player.surname);
-      }
-      break;
-
-    case 'forename':
-      for (var player in playerList.playerList) {
-        list.add(player.forename);
-      }
-      break;
+  for (var player in playerList.playerList) {
+    list.add(player.name);
   }
 
   return list;
+}
+
+// Get offenses for the dropdown menu item
+List<String> getOffenses() {
+  Offense offenses = Offense();
+  List<String> list = [];
+
+  for (var offense in offenses.offensesList) {
+    list.add(offense);
+  }
+
+  return list;
+}
+
+// Get offenses for the dropdown menu item
+List<String> getAmounts() {
+  Amount amounts = Amount();
+  List<String> list = [];
+
+  for (var amount in amounts.amountsList) {
+    list.add(amount);
+  }
+
+  return list;
+}
+
+// Create penalty
+Future createPenalty({required String date,
+  required String name,
+  required String offense,
+  required String amount,
+  required bool isPayed}) async {
+  final docPenalty = FirebaseFirestore.instance.collection('penalties').doc();
+
+  final penalty = Penalty(
+      id: docPenalty.id,
+      date: date,
+      name: name,
+      offense: offense,
+      amount: amount,
+      isPayed: isPayed);
+
+  final json = penalty.toJson();
+
+  await docPenalty.set(json);
+}
+
+// Read all penalties
+Stream<List<Penalty>> readPenalties() =>
+    FirebaseFirestore.instance
+        .collection('penalties')
+        .snapshots()
+        .map((snapshot) =>
+        snapshot.docs.map((doc) => Penalty.fromJson(doc.data())).toList());
+
+// Update penalty
+void updatePenalty() {
+  final penalty = FirebaseFirestore.instance.collection('penalties').doc();
+  penalty.update({
+    'forename': 'Manuel',
+  });
+}
+
+// Delete penalty
+void deletePenalty() {
+  final penalty = FirebaseFirestore.instance.collection('penalties').doc();
+  penalty.delete();
 }

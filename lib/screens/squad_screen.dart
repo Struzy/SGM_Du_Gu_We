@@ -72,7 +72,7 @@ class SquadScreenState extends State<SquadScreen> {
                         },
                       ),
                       title: Text(
-                        '${player.surname}, ${player.forename}',
+                        player.name,
                       ),
                     );
                   },
@@ -91,15 +91,9 @@ class SquadScreenState extends State<SquadScreen> {
   void filterPlayers(String searchQuery) {
     if (searchQuery.isNotEmpty) {
       filteredPlayers = players
-          .where(
-            (player) =>
-                player.surname.contains(
-                  searchQuery,
-                ) ||
-                player.forename.contains(
-                  searchQuery,
-                ),
-          )
+          .where((player) => player.name.contains(
+                searchQuery,
+              ))
           .toList();
     } else {
       filteredPlayers = List<Player>.from(players);
