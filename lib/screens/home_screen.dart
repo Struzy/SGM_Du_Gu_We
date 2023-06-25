@@ -3,7 +3,9 @@ import 'package:sgm_du_gu_we/constants/font_size.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
+import 'package:sgm_du_gu_we/screens/gallery_screen.dart';
 import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
+import 'package:sgm_du_gu_we/screens/media_player_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_screen.dart';
 import 'package:sgm_du_gu_we/screens/player_statistics_screen.dart';
@@ -366,6 +368,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, MediaPlayerScreen.id);
           },
         ),
         ListTile(
@@ -384,6 +387,7 @@ class NavigationDrawer extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, GalleryScreen.id);
           },
         ),
         ListTile(

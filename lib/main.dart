@@ -6,11 +6,13 @@ import 'package:sgm_du_gu_we/screens/email_verification_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
+import 'package:sgm_du_gu_we/screens/gallery_screen.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
 import 'package:sgm_du_gu_we/screens/imprint_screen.dart';
 import 'package:sgm_du_gu_we/screens/login_screen.dart';
 import 'package:sgm_du_gu_we/screens/lyrics_screen.dart';
 import 'package:sgm_du_gu_we/screens/main_screen.dart';
+import 'package:sgm_du_gu_we/screens/media_player_screen.dart';
 import 'package:sgm_du_gu_we/screens/miscellaneous_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_screen.dart';
@@ -99,7 +101,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: SplashScreen.id,
+      initialRoute: MediaPlayerScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
@@ -125,6 +127,8 @@ class SGMDuGuWe extends StatelessWidget {
         ChatScreen.id: (context) => const ChatScreen(),
         PenaltyScreen.id: (context) => const PenaltyScreen(),
         SquadScreen.id: (context) => const SquadScreen(),
+        GalleryScreen.id: (context) => const GalleryScreen(),
+        MediaPlayerScreen.id: (context) => const MediaPlayerScreen(),
       },
     );
   }

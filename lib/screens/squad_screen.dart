@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/classes/Player.dart';
 import 'package:sgm_du_gu_we/classes/player_list.dart';
+import 'package:sgm_du_gu_we/constants/circle_avatar.dart';
 import '../constants/box_size.dart';
+import '../constants/color.dart';
+import '../constants/divider_thickness.dart';
+import '../constants/font_family.dart';
+import '../constants/font_size.dart';
 import '../constants/padding.dart';
 
 List<Player> players = getPlayers();
@@ -59,6 +64,17 @@ class SquadScreenState extends State<SquadScreen> {
                     final player = filteredPlayers[index];
 
                     return ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SquadDetailScreen(
+                              profilePicture: player.profilePicture,
+                              name: player.name,
+                            ),
+                          ),
+                        );
+                      },
                       leading: Image.network(
                         player.profilePicture,
                         fit: BoxFit.cover,
@@ -109,4 +125,76 @@ List<Player> getPlayers() {
   PlayerList playerList = PlayerList();
 
   return playerList.playerList;
+}
+
+class SquadDetailScreen extends StatelessWidget {
+  SquadDetailScreen(
+      {super.key, required this.profilePicture, required this.name});
+
+  final String profilePicture;
+  final String name;
+
+  bool isLoading = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Spielerinformationen',
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(
+            kPadding,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: kRadius,
+                  child: ClipOval(
+                    child: Image.network(
+                      profilePicture,
+                      width: kRadius * 2,
+                      height: kRadius * 2,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          isLoading = false;
+                          return child;
+                        }
+                        return const CircularProgressIndicator(
+                          color: kSGMColorGreen,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontFamily: kPacifico,
+                    fontSize: kFontsizeTitle,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                  width: 150.0,
+                  child: Divider(
+                    thickness: kDividerThickness,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
