@@ -20,8 +20,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  String email = '';
-  String password = '';
+  late String email;
+  late String password;
   bool isLoading = false;
   bool showSpinner = false;
 
@@ -52,14 +52,7 @@ class LoginScreenState extends State<LoginScreen> {
                           child: Image.network(
                             'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/App%20Icon%2Fsgm_du_gu_we.PNG?alt=media&token=b532fa33-870a-4e75-b3d9-2dbf0e7a43f0',
                             fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                isLoading = false;
-                                return child;
-                              }
-                              return const CircularProgressIndicator();
-                            },
+                            loadingBuilder: loadingBuilder,
                           ),
                         ),
                       ),
@@ -73,9 +66,7 @@ class LoginScreenState extends State<LoginScreen> {
                       style: const TextStyle(
                         color: Colors.black,
                       ),
-                      onChanged: (value) {
-                        email = value;
-                      },
+                      onChanged: (value) => email = value,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.email,
@@ -92,9 +83,7 @@ class LoginScreenState extends State<LoginScreen> {
                       style: const TextStyle(
                         color: Colors.black,
                       ),
-                      onChanged: (value) {
-                        password = value;
-                      },
+                      onChanged: (value) => password = value,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.password,
@@ -128,54 +117,77 @@ class LoginScreenState extends State<LoginScreen> {
 
   // Register user as well as handle potentially occurring exceptions
   Future<void> loginUser() async {
-    if (email != '' && password != '') {
+    setState(() {
+      isLoading = true;
+      showSpinner = true;
+    });
+    final user = await AuthenticationService.signIn(
+      userEmail: email,
+      password: password,
+      context: context,
+    );
+    if (user == null) {
       setState(() {
-        isLoading = true;
-        showSpinner = true;
+        isLoading = false;
+        showSpinner = false;
       });
-      await AuthenticationService.signIn(
-        userEmail: email,
-        password: password,
-        context: context,
+    } else if (user.emailVerified == false) {
+      navigateToEMailVerificationScreen();
+      setState(() {
+        isLoading = false;
+        showSpinner = false;
+      });
+      showSnackBar(
+        'E-Mail wurde noch nicht verifiziert.',
       );
-      if (FirebaseAuth.instance.currentUser != null &&
-          FirebaseAuth.instance.currentUser!.emailVerified) {
-        Navigator.pushNamed(
-          context,
-          HomeScreen.id,
-        );
-        setState(() {
-          isLoading = false;
-          showSpinner = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Erfolgreich angemeldet.'),
-          ),
-        );
-      } else {
-        Navigator.pushNamed(
-          context,
-          EmailVerificationScreen.id,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('E-Mail wurde noch nicht verifiziert.'),
-          ),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'E-Mail und/oder Passwort darf nicht leer sein.',
-          ),
-        ),
+    } else if (user.emailVerified) {
+      navigateToHomeScreen();
+      setState(() {
+        isLoading = false;
+        showSpinner = false;
+      });
+      showSnackBar(
+        'Erfolgreich angemeldet.',
       );
     }
-    setState(() {
+  }
+
+  // Navigate to email verification screen
+  void navigateToEMailVerificationScreen() {
+    Navigator.pushNamed(
+      context,
+      EmailVerificationScreen.id,
+    );
+  }
+
+  // Navigate to home screen
+  void navigateToHomeScreen() {
+    Navigator.pushNamed(
+      context,
+      HomeScreen.id,
+    );
+  }
+
+  // Loading builder
+  Widget loadingBuilder(
+      BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+    if (loadingProgress == null) {
       isLoading = false;
-      showSpinner = false;
-    });
+      return child;
+    }
+    return const CircularProgressIndicator(
+      color: kSGMColorGreen,
+    );
+  }
+
+  // Show snack bar
+  void showSnackBar(String snackBarText) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          snackBarText,
+        ),
+      ),
+    );
   }
 }

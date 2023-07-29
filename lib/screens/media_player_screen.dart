@@ -2,9 +2,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:sgm_du_gu_we/classes/song_list.dart';
+import 'package:sgm_du_gu_we/models/song_list.dart';
 import 'package:sgm_du_gu_we/constants/padding.dart';
-import '../classes/song.dart';
+import '../models/song.dart';
+import '../widgets/navigation_drawer.dart';
 
 class MediaPlayerScreen extends StatefulWidget {
   const MediaPlayerScreen({super.key});
@@ -37,6 +38,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text(
             'Media Player',
@@ -47,20 +49,20 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
             kPadding,
           ),
           child: ListView.builder(
-            itemCount: songs.length,
+            //itemCount: songs.length,
             itemBuilder: (context, index) {
-              final song = songs[index];
+              //final song = songs[index];
               return ListTile(
-                leading: CachedNetworkImage(
-                  imageUrl: song.coverPath,
-                  placeholder: (context, url) =>
-                      const CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => const Icon(
-                    Icons.error,
-                  ),
-                ),
-                title: Text(song.title,),
-                onTap: () => playSong(song.songPath),
+                //leading: CachedNetworkImage(
+                  //imageUrl: song.coverPath,
+                  //placeholder: (context, url) =>
+                  //const CircularProgressIndicator(),
+                  //errorWidget: (context, url, error) => const Icon(
+                    //Icons.error,
+                  //),
+                //),
+                //title: Text(song.title,),
+                //onTap: () => playSong(song.songPath),
               );
             },
           ),
@@ -137,16 +139,16 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
 
   // Skip to next song
   Future<void> skipToNextSong() async {
-    int currentIndex = songList.indexOf(currentSong);
-    if (currentIndex < songList.length - 1) {
-      String nextSong = songList[currentIndex + 1];
-      await playSong(nextSong);
-    } else {
+    //int currentIndex = songList.indexOf(currentSong);
+    //if (currentIndex < songList.length - 1) {
+      //String nextSong = songList[currentIndex + 1];
+      //await playSong(nextSong);
+    } //else {
       // If it's the last song, stop playing
-      stopSong();
+      //stopSong();
     }
-  }
-}
+  //}
+//}
 
 // Get all the songs
 List<Song> loadSongs() {

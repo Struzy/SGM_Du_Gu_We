@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../widgets/navigation_drawer.dart';
+
 class SecondSquadScreen extends StatefulWidget {
   const SecondSquadScreen({super.key});
 
@@ -17,6 +19,7 @@ class SecondSquadScreenState extends State<SecondSquadScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('2. Mannschaft'),
         ),

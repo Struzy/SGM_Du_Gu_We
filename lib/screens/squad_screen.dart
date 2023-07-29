@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sgm_du_gu_we/classes/Player.dart';
-import 'package:sgm_du_gu_we/classes/player_list.dart';
+import 'package:sgm_du_gu_we/models/Player.dart';
+import 'package:sgm_du_gu_we/models/player_list.dart';
 import 'package:sgm_du_gu_we/constants/circle_avatar.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
@@ -8,6 +8,7 @@ import '../constants/divider_thickness.dart';
 import '../constants/font_family.dart';
 import '../constants/font_size.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 List<Player> players = getPlayers();
 List<Player> filteredPlayers = List<Player>.from(players);
@@ -29,6 +30,7 @@ class SquadScreenState extends State<SquadScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Kader'),
         ),

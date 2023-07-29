@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 class BaarCupScreen extends StatefulWidget {
   const BaarCupScreen({super.key});
@@ -17,6 +18,7 @@ class BaarCupScreenState extends State<BaarCupScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Baarpokal 2023'),
         ),

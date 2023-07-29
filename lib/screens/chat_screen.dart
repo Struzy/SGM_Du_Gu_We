@@ -1,12 +1,12 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 final firestore = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
@@ -35,6 +35,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          drawer: const NavigationDrawer(),
           appBar: AppBar(
             title: AnimatedTextKit(
               animatedTexts: [

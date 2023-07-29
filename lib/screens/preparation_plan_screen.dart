@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../constants/color.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 class PreparationPlanScreen extends StatefulWidget {
   const PreparationPlanScreen({super.key});
@@ -17,6 +19,7 @@ class PreparationPlanScreenState extends State<PreparationPlanScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Vorbereitungsplan'),
         ),
@@ -28,18 +31,23 @@ class PreparationPlanScreenState extends State<PreparationPlanScreen> {
             child: Image.network(
               fit: BoxFit.cover,
               'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Vorbereitungsplan%2Fpreparation_plan.PNG?alt=media&token=43011017-dc96-4e69-93be-b2e3d042fe10',
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) {
-                  isLoading = false;
-                  return child;
-                }
-                return const CircularProgressIndicator();
-              },
+              loadingBuilder: loadingBuilder,
             ),
           ),
         ),
       ),
+    );
+  }
+
+  // Loading builder
+  Widget loadingBuilder(BuildContext context, Widget child,
+      ImageChunkEvent? loadingProgress) {
+    if (loadingProgress == null) {
+      isLoading = false;
+      return child;
+    }
+    return const CircularProgressIndicator(
+      color: kSGMColorGreen,
     );
   }
 }

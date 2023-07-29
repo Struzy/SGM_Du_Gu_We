@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 class SprinklePlanScreen extends StatefulWidget {
   const SprinklePlanScreen({super.key});
@@ -17,6 +18,7 @@ class SprinklePlanScreenState extends State<SprinklePlanScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Abstreuplan'),
         ),

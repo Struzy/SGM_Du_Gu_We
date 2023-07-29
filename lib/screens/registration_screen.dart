@@ -20,9 +20,9 @@ class RegistrationScreen extends StatefulWidget {
 
 class RegistrationScreenState extends State<RegistrationScreen> {
   final auth = FirebaseAuth.instance;
-  String email = '';
-  String password = '';
-  String confirmPassword = '';
+  late String email;
+  late String password;
+  late String confirmPassword;
   bool isLoading = false;
   bool showSpinner = false;
 
@@ -55,14 +55,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                           child: Image.network(
                             'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/App%20Icon%2Fsgm_du_gu_we.PNG?alt=media&token=b532fa33-870a-4e75-b3d9-2dbf0e7a43f0',
                             fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                isLoading = false;
-                                return child;
-                              }
-                              return const CircularProgressIndicator();
-                            },
+                            loadingBuilder: loadingBuilder,
                           ),
                         ),
                       ),
@@ -76,9 +69,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       style: const TextStyle(
                         color: Colors.black,
                       ),
-                      onChanged: (value) {
-                        email = value;
-                      },
+                      onChanged: (value) => email = value,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.email,
@@ -95,9 +86,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       style: const TextStyle(
                         color: Colors.black,
                       ),
-                      onChanged: (value) {
-                        password = value;
-                      },
+                      onChanged: (value) => password = value,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.password,
@@ -114,9 +103,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       style: const TextStyle(
                         color: Colors.black,
                       ),
-                      onChanged: (value) {
-                        confirmPassword = value;
-                      },
+                      onChanged: (value) => confirmPassword = value,
                       decoration: const InputDecoration(
                         icon: Icon(
                           Icons.repeat,
@@ -151,49 +138,64 @@ class RegistrationScreenState extends State<RegistrationScreen> {
   // Register user as well as handle potentially occurring exceptions
   Future<void> registerUser() async {
     {
-      if (email != '' && password != '' && confirmPassword != '') {
-        if (password == confirmPassword) {
-          setState(() {
-            isLoading = true;
-            showSpinner = true;
-          });
-          await AuthenticationService.signUp(
-            userEmail: email,
-            password: password,
-            context: context,
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Passwörter stimmen nicht überein.',
-              ),
-            ),
-          );
-        }
-        if (FirebaseAuth.instance.currentUser != null) {
-          Navigator.pushNamed(
-            context,
-            EmailVerificationScreen.id,
-          );
-        }
+      if (password == confirmPassword) {
         setState(() {
-          isLoading = false;
-          showSpinner = false;
+          isLoading = true;
+          showSpinner = true;
         });
+        final newUser = await AuthenticationService.signUp(
+          userEmail: email,
+          password: password,
+          context: context,
+        );
+        if (newUser == null) {
+          setState(() {
+            isLoading = false;
+            showSpinner = false;
+          });
+        } else {
+          navigateToEMailVerificationScreen();
+          setState(() {
+            isLoading = false;
+            showSpinner = false;
+          });
+        }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'E-Mail und/oder Passwort darf nicht leer sein.',
-            ),
-          ),
+        showSnackBar(
+          'Passwörter stimmen nicht überein.',
         );
       }
-      setState(() {
-        isLoading = false;
-        showSpinner = false;
-      });
     }
+  }
+
+  // Navigate to email verification screen
+  void navigateToEMailVerificationScreen() {
+    Navigator.pushNamed(
+      context,
+      EmailVerificationScreen.id,
+    );
+  }
+
+  // Loading builder
+  Widget loadingBuilder(
+      BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+    if (loadingProgress == null) {
+      isLoading = false;
+      return child;
+    }
+    return const CircularProgressIndicator(
+      color: kSGMColorGreen,
+    );
+  }
+
+  // Show snack bar
+  void showSnackBar(String snackBarText) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          snackBarText,
+        ),
+      ),
+    );
   }
 }

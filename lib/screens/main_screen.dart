@@ -21,21 +21,12 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   bool isLoading = true;
 
-  static final year = DateTime.now().year;
-  static final month = DateTime.now().month;
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(
-        const Duration(
-          seconds: 2,
-        ), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
-  }
+  static final year = DateTime
+      .now()
+      .year;
+  static final month = DateTime
+      .now()
+      .month;
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +48,7 @@ class MainScreenState extends State<MainScreen> {
                       child: Image.network(
                         'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/App%20Icon%2Fsgm_du_gu_we.PNG?alt=media&token=b532fa33-870a-4e75-b3d9-2dbf0e7a43f0',
                         fit: BoxFit.cover,
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            isLoading = false;
-                            return child;
-                          }
-                          return const CircularProgressIndicator(
-                            color: kSGMColorGreen,
-                          );
-                        },
+                        loadingBuilder: loadingBuilder,
                       ),
                     ),
                   ),
@@ -75,12 +57,7 @@ class MainScreenState extends State<MainScreen> {
                   height: kBoxHeight + 40.0,
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      LoginScreen.id,
-                    );
-                  },
+                  onPressed: navigateToLoginScreen,
                   icon: const Icon(
                     Icons.login,
                     color: Colors.black,
@@ -100,12 +77,7 @@ class MainScreenState extends State<MainScreen> {
                   height: kBoxHeight,
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      RegistrationScreen.id,
-                    );
-                  },
+                  onPressed: navigateToRegistrationScreen,
                   icon: const Icon(
                     Icons.app_registration,
                     color: Colors.black,
@@ -135,14 +107,7 @@ class MainScreenState extends State<MainScreen> {
                         child: Image.network(
                           'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Logos%2FInstagram_logo_2022.svg.png?alt=media&token=4f08d604-3f98-4455-a0b2-3a12160053d0',
                           fit: BoxFit.cover,
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) {
-                              isLoading = false;
-                              return child;
-                            }
-                            return const CircularProgressIndicator();
-                          },
+                          loadingBuilder: loadingBuilder,
                         ),
                       ),
                     ),
@@ -157,14 +122,7 @@ class MainScreenState extends State<MainScreen> {
                         child: Image.network(
                           'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Logos%2FFacebook_Home_logo_old.svg.png?alt=media&token=3082cfd9-1614-4bd9-8637-463a5e6d7806',
                           fit: BoxFit.cover,
-                          loadingBuilder: (BuildContext context, Widget child,
-                              ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) {
-                              isLoading = false;
-                              return child;
-                            }
-                            return const CircularProgressIndicator();
-                          },
+                          loadingBuilder: loadingBuilder,
                         ),
                       ),
                     ),
@@ -203,6 +161,34 @@ class MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  // Navigate to registration screen
+  void navigateToRegistrationScreen() {
+    Navigator.pushNamed(
+      context,
+      RegistrationScreen.id,
+    );
+  }
+
+  // Navigate to login screen
+  void navigateToLoginScreen() {
+    Navigator.pushNamed(
+      context,
+      LoginScreen.id,
+    );
+  }
+
+  // Loading builder
+  Widget loadingBuilder(BuildContext context, Widget child,
+      ImageChunkEvent? loadingProgress) {
+    if (loadingProgress == null) {
+      isLoading = false;
+      return child;
+    }
+    return const CircularProgressIndicator(
+      color: kSGMColorGreen,
     );
   }
 }

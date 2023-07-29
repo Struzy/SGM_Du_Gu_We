@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:sgm_du_gu_we/classes/album_list.dart';
-import '../classes/album.dart';
+import 'package:sgm_du_gu_we/models/album_list.dart';
+import '../models/album.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 List<Album> albums = getAlbums();
 
@@ -20,6 +21,7 @@ class GalleryScreenState extends State<GalleryScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text(
             'Galerie',

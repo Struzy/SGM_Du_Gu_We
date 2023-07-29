@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/box_size.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 class LyricsScreen extends StatefulWidget {
   const LyricsScreen({super.key});
@@ -18,6 +19,7 @@ class LyricsScreenState extends State<LyricsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Liedtexte'),
         ),

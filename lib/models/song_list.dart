@@ -1,4 +1,4 @@
-import 'package:sgm_du_gu_we/classes/song.dart';
+import 'package:sgm_du_gu_we/models/song.dart';
 
 class SongList {
   List<Song> songList = [

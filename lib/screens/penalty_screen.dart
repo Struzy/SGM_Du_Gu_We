@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sgm_du_gu_we/classes/offense.dart';
-import '../classes/amount.dart';
-import '../classes/penalty.dart';
-import '../classes/player_list.dart';
+import 'package:sgm_du_gu_we/models/offense.dart';
+import '../models/amount.dart';
+import '../models/penalty.dart';
+import '../models/player_list.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/elevated_button.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
+import '../widgets/navigation_drawer.dart';
 
 bool isLoading = true;
 
@@ -61,6 +62,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        drawer: const NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Offene Strafen'),
         ),
