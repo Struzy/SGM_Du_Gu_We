@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sgm_du_gu_we/constants/api_key.dart';
-import 'package:sgm_du_gu_we/constants/font_size.dart';
-import 'package:sgm_du_gu_we/constants/location.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:sgm_du_gu_we/screens/weather_detail_screen.dart';
 import 'package:sgm_du_gu_we/services/weather_service.dart';
-import '../constants/box_size.dart';
-import '../constants/font_family.dart';
 import '../constants/padding.dart';
-import '../constants/divider_thickness.dart';
-import '../widgets/navigation_drawer.dart';
+import '../constants/spin_kit_double_bounce.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -19,183 +15,24 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class WeatherScreenState extends State<WeatherScreen> {
-
-  // Durchhausen
-  String cityNameDu = 'Durchhausen';
-  String weatherIconDu = '';
-  int temperatureDu = 0;
-  String descriptionDu = '';
-  int conditionDu = 0;
-
-  // Gunningen
-  String cityNameGu = 'Gunningen';
-  String weatherIconGu = '';
-  int temperatureGu = 0;
-  String descriptionGu = '';
-  int conditionGu = 0;
-
-  // Weigheim
-  String cityNameWe = 'Weigheim';
-  String weatherIconWe = '';
-  int temperatureWe = 0;
-  String descriptionWe = '';
-  int conditionWe = 0;
-
   @override
   void initState() {
     super.initState();
-    updateUI();
+    getLocationData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return const SafeArea(
       child: Scaffold(
-        drawer: const NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text(
-            'Wetter',
-          ),
-        ),
         body: Padding(
-          padding: const EdgeInsets.all(
+          padding: EdgeInsets.all(
             kPadding,
           ),
-          child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  const Text(
-                    'Duchhausen',
-                    style: TextStyle(
-                      fontFamily: kSpartanMB,
-                      fontSize: kFontsizeTitle,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        weatherIconDu,
-                        style: const TextStyle(
-                          fontFamily: kSpartanMB,
-                          fontSize: kFontsizeTitle,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: kBoxWidth,
-                      ),
-                      Text(
-                        '$temperatureDu°C',
-                        style: const TextStyle(
-                          fontFamily: kSpartanMB,
-                          fontSize: kFontsizeTitle,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    descriptionDu,
-                    style: const TextStyle(
-                      fontFamily: kSpartanMB,
-                      fontSize: kFontsizeTitle,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: kBoxHeight,
-                  ),
-                  const Divider(
-                    thickness: kDividerThickness,
-                    color: Colors.black54,
-                  ),
-                  const SizedBox(
-                    height: kBoxHeight,
-                  ),
-                  const Text(
-                    'Gunningen',
-                    style: TextStyle(
-                      fontFamily: kSpartanMB,
-                      fontSize: kFontsizeTitle,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        weatherIconGu,
-                        style: const TextStyle(
-                          fontFamily: kSpartanMB,
-                          fontSize: kFontsizeTitle,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: kBoxWidth,
-                      ),
-                      Text(
-                        '$temperatureGu°C',
-                        style: const TextStyle(
-                          fontFamily: kSpartanMB,
-                          fontSize: kFontsizeTitle,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    descriptionGu,
-                    style: const TextStyle(
-                      fontFamily: kSpartanMB,
-                      fontSize: kFontsizeTitle,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: kBoxHeight,
-                  ),
-                  const Divider(
-                    thickness: kDividerThickness,
-                    color: Colors.black54,
-                  ),
-                  const SizedBox(
-                    height: kBoxHeight,
-                  ),
-                  const Text(
-                    'Weigheim',
-                    style: TextStyle(
-                      fontFamily: kSpartanMB,
-                      fontSize: kFontsizeTitle,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        weatherIconWe,
-                        style: const TextStyle(
-                          fontFamily: kSpartanMB,
-                          fontSize: kFontsizeTitle,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: kBoxWidth,
-                      ),
-                      Text(
-                        '$temperatureWe°C',
-                        style: const TextStyle(
-                          fontFamily: kSpartanMB,
-                          fontSize: kFontsizeTitle,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    descriptionWe,
-                    style: const TextStyle(
-                      fontFamily: kSpartanMB,
-                      fontSize: kFontsizeTitle,
-                    ),
-                  ),
-                ],
-              ),
+          child: Center(
+            child: SpinKitDoubleBounce(
+              color: Colors.white,
+              size: kSizeSpinKitDoubleBounce,
             ),
           ),
         ),
@@ -203,86 +40,22 @@ class WeatherScreenState extends State<WeatherScreen> {
     );
   }
 
-  // Update user interface
-  void updateUI() async {
-    WeatherService weatherServiceDu = WeatherService(
-      url: 'https://api.openweathermap.org/data/2.5/weather?'
-          'lat=$kLatitudeDu&'
-          'lon=$kLongitudeDu&'
-          'appid=$kApiKey&'
-          'units=metric&'
-          'lang=de',
+  // Get location data of Durchhausen, Gunningen and Weigheim
+  void getLocationData() async {
+    var weatherData = await WeatherService().getLocationWeather(context);
+
+    navigateToWeatherDetailScreen(
+      weatherData,
     );
+  }
 
-    WeatherService weatherServiceGu = WeatherService(
-      url: 'https://api.openweathermap.org/data/2.5/weather?'
-          'lat=$kLatitudeGu&'
-          'lon=$kLongitudeGu&'
-          'appid=$kApiKey&'
-          'units=metric&'
-          'lang=de',
-    );
-
-    WeatherService weatherServiceWe = WeatherService(
-      url: 'https://api.openweathermap.org/data/2.5/weather?'
-          'lat=$kLatitudeWe&'
-          'lon=$kLongitudeWe&'
-          'appid=$kApiKey&'
-          'units=metric&'
-          'lang=de',
-    );
-
-    var weatherDataDu = await weatherServiceDu.getWeatherData();
-    var weatherDataGu = await weatherServiceGu.getWeatherData();
-    var weatherDataWe = await weatherServiceWe.getWeatherData();
-
-    setState(() {
-      if (weatherDataDu == null) {
-        temperatureDu = 0;
-        weatherIconDu = '';
-        descriptionDu = 'Keine Wetterdaten verfügbar.';
-        cityNameDu = '';
-        return;
-      }
-      double temp = weatherDataDu['main']['temp'];
-      temperatureDu = temp.toInt();
-      conditionDu = weatherDataDu['weather'][0]['id'];
-      weatherIconDu = weatherServiceDu.getWeatherIcon(conditionDu);
-      descriptionDu = weatherDataDu['weather'][0]['description'];
-      cityNameDu = weatherDataDu['name'];
-    });
-
-    setState(() {
-      if (weatherDataGu == null) {
-        temperatureGu = 0;
-        weatherIconGu = '';
-        descriptionGu = 'Keine Wetterdaten verfügbar.';
-        cityNameGu = '';
-        return;
-      }
-      double temp = weatherDataGu['main']['temp'];
-      temperatureGu = temp.toInt();
-      conditionGu = weatherDataGu['weather'][0]['id'];
-      weatherIconGu = weatherServiceGu.getWeatherIcon(conditionGu);
-      descriptionGu = weatherDataGu['weather'][0]['description'];
-      cityNameGu = weatherDataGu['name'];
-    });
-
-    setState(() {
-      if (weatherDataWe == null) {
-        temperatureWe = 0;
-        weatherIconWe = '';
-        descriptionWe = 'Keine Wetterdaten verfügbar.';
-        cityNameWe = '';
-        return;
-      }
-      double temp = weatherDataWe['main']['temp'];
-      temperatureWe = temp.toInt();
-      conditionWe = weatherDataWe['weather'][0]['id'];
-      weatherIconWe = weatherServiceWe.getWeatherIcon(conditionWe);
-      descriptionWe = weatherDataWe['weather'][0]['description'];
-      cityNameWe = weatherDataWe['name'];
-    });
+  // Navigate to weather detail screen
+  void navigateToWeatherDetailScreen(dynamic weatherData) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return WeatherDetailScreen(
+        locationWeather: weatherData,
+      );
+    }));
   }
 
   // Show snack bar

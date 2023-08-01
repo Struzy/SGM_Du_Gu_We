@@ -497,7 +497,7 @@ class NavigationDrawer extends StatelessWidget {
             Icons.sunny,
           ),
           title: const Text(
-            'Wetter',
+            'Wetter Sportplätze',
           ),
           onTap: () {
             Navigator.pop(

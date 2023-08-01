@@ -1,26 +1,58 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import '../constants/api_key.dart';
+import 'location_service.dart';
+import 'networking_service.dart';
 
 class WeatherService {
-  WeatherService({required this.url});
+  // Get weather for Durchhausen, Gunningen and Weigheim
+  Future<dynamic> getLocationWeather(BuildContext context) async {
+    LocationService location = LocationService();
+    await location.getCurrentLocation();
 
-  final String url;
+    NetworkingService networkingServiceDu = NetworkingService(
+      context: context,
+      url: 'https://api.openweathermap.org/data/2.5/weather?'
+          'lat=${location.latitudeDu}&'
+          'lon=${location.longitudeDu}&'
+          'appid=$kApiKey&'
+          'units=metric&'
+          'lang=de',
+    );
 
-  // Retrieve weather data for the locations Durchhausen, Gunningen
-  // and Weigheim
-  Future getWeatherData() async {
-    http.Response response = await http.get(Uri.parse(url));
+    NetworkingService networkingServiceGu = NetworkingService(
+      context: context,
+      url: 'https://api.openweathermap.org/data/2.5/weather?'
+          'lat=${location.latitudeGu}&'
+          'lon=${location.longitudeGu}&'
+          'appid=$kApiKey&'
+          'units=metric&'
+          'lang=de',
+    );
 
-    if (response.statusCode == 200) {
-      String data = response.body;
+    NetworkingService networkingServiceWe = NetworkingService(
+      context: context,
+      url: 'https://api.openweathermap.org/data/2.5/weather?'
+          'lat=${location.latitudeWe}&'
+          'lon=${location.longitudeWe}&'
+          'appid=$kApiKey&'
+          'units=metric&'
+          'lang=de',
+    );
 
-      return jsonDecode(data);
-    } else {
-      print('Error ${response.statusCode}');
-    }
+    var weatherDataDu = await networkingServiceDu.getWeatherData();
+    var weatherDataGu = await networkingServiceGu.getWeatherData();
+    var weatherDataWe = await networkingServiceWe.getWeatherData();
+
+    var weatherData = [
+      weatherDataDu,
+      weatherDataGu,
+      weatherDataWe,
+    ];
+
+    return weatherData;
   }
 
-  // Retrieve weather icons
+  // Get weather icon for Durchhausen, Gunningen and Weigheim
   String getWeatherIcon(int condition) {
     if (condition < 300) {
       return '🌩';

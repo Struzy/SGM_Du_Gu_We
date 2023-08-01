@@ -1,0 +1,1 @@
+const double kSizeSpinKitDoubleBounce = 100.0;
