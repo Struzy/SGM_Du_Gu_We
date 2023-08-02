@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sgm_du_gu_we/screens/baar_cup_screen.dart';
 import 'package:sgm_du_gu_we/screens/chat_screen.dart';
 import 'package:sgm_du_gu_we/screens/email_verification_screen.dart';
@@ -31,16 +32,15 @@ import 'constants/font_family.dart';
 import 'constants/font_size.dart';
 import 'constants/text_field.dart';
 
-/*void main() => runApp(
-      SGMDuGuWe(),
-    );*/
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-    const SGMDuGuWe(),
-  );
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(const SGMDuGuWe());
+  });
 }
 
 class SGMDuGuWe extends StatelessWidget {
@@ -102,7 +102,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: SplashScreen.id,
+      initialRoute: MiscellaneousScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),

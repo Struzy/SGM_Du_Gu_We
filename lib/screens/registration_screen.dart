@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
 import '../constants/box_size.dart';
@@ -25,6 +27,7 @@ class RegistrationScreenState extends State<RegistrationScreen> {
   late String confirmPassword;
   bool isLoading = false;
   bool showSpinner = false;
+  bool isChecked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +115,29 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       ),
                     ),
                     const SizedBox(
+                      height: kBoxHeight,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Checkbox(
+                          activeColor: kSGMColorRed,
+                          value: isChecked,
+                          onChanged: (bool? newValue) {
+                            setState(() {
+                              isChecked = newValue!;
+                            });
+                          },
+                        ),
+                        const SizedBox(
+                          width: kBoxWidth,
+                        ),
+                        const Text(
+                          'Ich willige in die Datenverarbeitung gemäß der\nDatenschutzerklärung ein.',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
                       height: kBoxHeight + 20.0,
                     ),
                     ElevatedButton.icon(
@@ -139,32 +165,44 @@ class RegistrationScreenState extends State<RegistrationScreen> {
   Future<void> registerUser() async {
     {
       if (password == confirmPassword) {
-        setState(() {
-          isLoading = true;
-          showSpinner = true;
-        });
-        final newUser = await AuthenticationService.signUp(
-          userEmail: email,
-          password: password,
-          context: context,
-        );
-        if (newUser == null) {
+        if (isChecked == true) {
           setState(() {
-            isLoading = false;
-            showSpinner = false;
+            isLoading = true;
+            showSpinner = true;
           });
+          final newUser = await AuthenticationService.signUp(
+            userEmail: email,
+            password: password,
+            context: context,
+          );
+          if (newUser == null) {
+            setState(() {
+              isLoading = false;
+              showSpinner = false;
+            });
+          }
         } else {
-          navigateToEMailVerificationScreen();
-          setState(() {
-            isLoading = false;
-            showSpinner = false;
-          });
+          showSnackBar(
+            'Es wurde der Datenschutzerklärung nicht zugestimmt.',
+          );
         }
       } else {
         showSnackBar(
           'Passwörter stimmen nicht überein.',
         );
       }
+    }
+  }
+
+  // Launch url to privacy policy
+  void launchURL() async {
+    const url = 'http://www.sv-durchhausen.de/datenschutzerklaerung/';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      showSnackBar(
+        'Die Datenschutzerklärung konnte nicht geöffnet werden.',
+      );
     }
   }
 
