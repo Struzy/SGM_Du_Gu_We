@@ -8,8 +8,8 @@ const kPDFBaarCup = 'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.'
     'pdf?alt=media&token=f8ad65af-e2b8-4b4b-a0b5-dd86b0463668';
 
 const kPDFSongtexts = 'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.'
-    'appspot.com/o/Liedtexte%2FLiedtexte.pdf?alt=media&token=782402b0-9003-'
-    '4211-a033-40cc024667c0';
+    'appspot.com/o/Liedtexte%2FLiedtexte.pdf?alt=media&token=04cbf00e-d36e-4560'
+    '-b99d-9e39e44f3192';
 
 const kPDFPenaltyCatalog = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
     'duguwe.appspot.com/o/Strafenkatalog%2FStrafenkatalog%20SGM%202023.pdf?alt'
@@ -17,7 +17,7 @@ const kPDFPenaltyCatalog = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
 
 const kPDFPlayerStatistics = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
     'duguwe.appspot.com/o/Spielerstatistik%2F2022%20Spielerstatistik%20SVD%20'
-    'Gesamt.pdf?alt=media&token=7b3efaba-9fc7-4e0c-a751-a767cbe07ff6';
+    'Gesamt.pdf?alt=media&token=0a92f07e-ea97-44f0-a10a-b458b87c876a';
 
 const kPDFPreparationPlan = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
     'duguwe.appspot.com/o/Vorbereitungsplan%2FVorbereitungsplan%20SGM%20GDW%'
@@ -25,4 +25,4 @@ const kPDFPreparationPlan = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
 
 const kPDFSprinklePlan = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
     'duguwe.appspot.com/o/Abstreuplan%2FAbstreuplan_2021.pdf?alt=media&token='
-    '9255b858-aba7-4bbf-8e39-01f8482a7119';
+    '3f44d39e-a1b6-49b7-b918-15e1642c3195';

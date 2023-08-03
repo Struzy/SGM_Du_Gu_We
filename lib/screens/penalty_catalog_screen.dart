@@ -16,8 +16,6 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
   final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
   final PdfViewerController pdfViewerController = PdfViewerController();
 
-  late double zoomLevel;
-
   static final year = DateTime
       .now()
       .year;
@@ -25,7 +23,6 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
   @override
   void initState() {
     super.initState();
-    zoomLevel = 1.0;
   }
 
   @override
@@ -37,62 +34,11 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
           'Strafenkatalog SGM $year',
         ),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'zoomIn') {
-                zoomIn();
-              } else if (value == 'zoomOut') {
-                zoomOut();
-              } else if (value == 'previousPage') {
-                goToPreviousPage();
-              } else if (value == 'nextPage') {
-                goToNextPage();
-              } else if (value == 'bookmarkMenu') {
-                pdfViewerKey.currentState?.openBookmarkView();
-              }
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              const PopupMenuItem<String>(
-                value: 'zoomIn',
-                child: ListTile(
-                  title: Icon(
-                    Icons.zoom_in,
-                  ),
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'zoomOut',
-                child: ListTile(
-                  title: Icon(
-                    Icons.zoom_out,
-                  ),
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'previousPage',
-                child: ListTile(
-                  title: Icon(
-                    Icons.navigate_before,
-                  ),
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'nextPage',
-                child: ListTile(
-                  title: Icon(
-                    Icons.navigate_next,
-                  ),
-                ),
-              ),
-              const PopupMenuItem<String>(
-                value: 'bookmarkMenu',
-                child: ListTile(
-                  title: Icon(
-                    Icons.bookmark,
-                  ),
-                ),
-              ),
-            ],
+          IconButton(
+            onPressed: pdfViewerKey.currentState?.openBookmarkView,
+            icon: const Icon(
+              Icons.bookmark,
+            ),
           ),
         ],
       ),
@@ -101,32 +47,6 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
         key: pdfViewerKey,
       ),
     );
-  }
-
-  // Zoom the pdf in
-  void zoomIn() {
-    setState(() {
-      zoomLevel += 0.25;
-      pdfViewerController.zoomLevel = zoomLevel;
-    });
-  }
-
-  // Zoom the pdf out
-  void zoomOut() {
-    setState(() {
-      zoomLevel -= 0.25;
-      pdfViewerController.zoomLevel = zoomLevel;
-    });
-  }
-
-  // Go to the next pdf page
-  void goToNextPage() {
-    pdfViewerController.nextPage();
-  }
-
-  // Go to the previous pdf page
-  void goToPreviousPage() {
-    pdfViewerController.previousPage();
   }
 
   // Show snack bar
