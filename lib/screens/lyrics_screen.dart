@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../constants/box_size.dart';
-import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import '../constants/pdf_directory.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 class LyricsScreen extends StatefulWidget {
   const LyricsScreen({super.key});
@@ -13,53 +13,124 @@ class LyricsScreen extends StatefulWidget {
 }
 
 class LyricsScreenState extends State<LyricsScreen> {
-  bool isLoading = true;
+  final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
+  final PdfViewerController pdfViewerController = PdfViewerController();
+
+  late double zoomLevel;
+
+  @override
+  void initState() {
+    super.initState();
+    zoomLevel = 1.0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text('Liedtexte'),
+    return Scaffold(
+      drawer: const nav.NavigationDrawer(),
+      appBar: AppBar(
+        title: const Text(
+          'Liedtexte',
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(
-            kPadding,
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'zoomIn') {
+                zoomIn();
+              } else if (value == 'zoomOut') {
+                zoomOut();
+              } else if (value == 'previousPage') {
+                goToPreviousPage();
+              } else if (value == 'nextPage') {
+                goToNextPage();
+              } else if (value == 'bookmarkMenu') {
+                pdfViewerKey.currentState?.openBookmarkView();
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'zoomIn',
+                child: ListTile(
+                  title: Icon(
+                    Icons.zoom_in,
+                  ),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'zoomOut',
+                child: ListTile(
+                  title: Icon(
+                    Icons.zoom_out,
+                  ),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'previousPage',
+                child: ListTile(
+                  title: Icon(
+                    Icons.navigate_before,
+                  ),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'nextPage',
+                child: ListTile(
+                  title: Icon(
+                    Icons.navigate_next,
+                  ),
+                ),
+              ),
+              const PopupMenuItem<String>(
+                value: 'bookmarkMenu',
+                child: ListTile(
+                  title: Icon(
+                    Icons.bookmark,
+                  ),
+                ),
+              ),
+            ],
           ),
-          child: SingleChildScrollView(
-              child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Image.network(
-                  'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Liedtexte%2Flyrics1.PNG?alt=media&token=c9e1e397-cc64-49b9-8c71-7f352d4c55e9',
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      isLoading = false;
-                      return child;
-                    }
-                    return const CircularProgressIndicator();
-                  },
-                ),
-                const SizedBox(
-                  height: kBoxHeight + 20.0,
-                ),
-                Image.network(
-                  'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Liedtexte%2Flyrics2.PNG?alt=media&token=c34f9a8c-fccd-4f12-acc1-834100365ea8',
-                  loadingBuilder: (BuildContext context, Widget child,
-                      ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      isLoading = false;
-                      return child;
-                    }
-                    return const CircularProgressIndicator();
-                  },
-                ),
-              ],
-            ),
-          )),
+        ],
+      ),
+      body: SfPdfViewer.network(
+        kPDFSongtexts,
+        key: pdfViewerKey,
+      ),
+    );
+  }
+
+  // Zoom the pdf in
+  void zoomIn() {
+    setState(() {
+      zoomLevel += 0.25;
+      pdfViewerController.zoomLevel = zoomLevel;
+    });
+  }
+
+  // Zoom the pdf out
+  void zoomOut() {
+    setState(() {
+      zoomLevel -= 0.25;
+      pdfViewerController.zoomLevel = zoomLevel;
+    });
+  }
+
+  // Go to the next pdf page
+  void goToNextPage() {
+    pdfViewerController.nextPage();
+  }
+
+  // Go to the previous pdf page
+  void goToPreviousPage() {
+    pdfViewerController.previousPage();
+  }
+
+  // Show snack bar
+  void showSnackBar(String snackBarText) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          snackBarText,
         ),
       ),
     );

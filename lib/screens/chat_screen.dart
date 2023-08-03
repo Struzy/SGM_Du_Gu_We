@@ -6,7 +6,7 @@ import 'package:sgm_du_gu_we/constants/color.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 final firestore = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
@@ -35,7 +35,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          drawer: const NavigationDrawer(),
+          drawer: const nav.NavigationDrawer(),
           appBar: AppBar(
             title: AnimatedTextKit(
               animatedTexts: [

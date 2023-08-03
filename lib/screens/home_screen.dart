@@ -4,7 +4,7 @@ import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_family.dart';
 import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,7 +22,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: const NavigationDrawer(),
+        drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Hauptmenü'),
         ),

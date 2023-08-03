@@ -198,23 +198,6 @@ class NavigationDrawer extends StatelessWidget {
             Icons.sports,
           ),
           title: const Text(
-            'Kreisliga B2 Schwarzwald',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              SecondSquadLeagueScreen.id,
-            );
-          },
-        ),
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
             'Baarpokal',
           ),
           onTap: () {
@@ -232,20 +215,7 @@ class NavigationDrawer extends StatelessWidget {
             Icons.sports,
           ),
           title: const Text(
-            'Trainingsplanung',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-          },
-        ),
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Nominierungen',
+            'Trainingsbeteiligung',
           ),
           onTap: () {
             Navigator.pop(

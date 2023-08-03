@@ -11,7 +11,7 @@ import '../constants/elevated_button.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 bool isLoading = true;
 
@@ -62,7 +62,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: const NavigationDrawer(),
+        drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Offene Strafen'),
         ),

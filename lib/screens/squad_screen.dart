@@ -8,7 +8,7 @@ import '../constants/divider_thickness.dart';
 import '../constants/font_family.dart';
 import '../constants/font_size.dart';
 import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 List<Player> players = getPlayers();
 List<Player> filteredPlayers = List<Player>.from(players);
@@ -30,7 +30,7 @@ class SquadScreenState extends State<SquadScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: const NavigationDrawer(),
+        drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Kader'),
         ),

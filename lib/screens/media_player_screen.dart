@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sgm_du_gu_we/models/song_list.dart';
 import 'package:sgm_du_gu_we/constants/padding.dart';
 import '../models/song.dart';
-import '../widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 class MediaPlayerScreen extends StatefulWidget {
   const MediaPlayerScreen({super.key});
@@ -38,7 +38,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: const NavigationDrawer(),
+        drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
           title: const Text(
             'Media Player',
@@ -71,7 +71,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
+              /*IconButton(
                 icon: const Icon(
                   Icons.stop,
                 ),
@@ -88,7 +88,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
                   Icons.skip_next,
                 ),
                 onPressed: skipToNextSong,
-              ),
+              ),*/
             ],
           ),
         ),
@@ -97,7 +97,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
   }
 
   // Load songs
-  Future<List<String>> loadSongs() async {
+  /*Future<List<String>> loadSongs() async {
     List<Reference> references = await FirebaseStorage.instance.ref().child('Lieder').listAll().then((value) => value.items);
     return Future.value(references.map((ref) => ref.name).toList());
   }
@@ -154,5 +154,5 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
 List<Song> loadSongs() {
   SongList songList = SongList();
 
-  return songList.songList;
+  return songList.songList;*/
 }

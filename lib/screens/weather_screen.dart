@@ -7,7 +7,7 @@ import '../constants/font_family.dart';
 import '../constants/font_size.dart';
 import '../constants/padding.dart';
 import '../constants/spin_kit_double_bounce.dart';
-import '../widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -121,7 +121,7 @@ class WeatherDetailScreenState extends State<WeatherDetailScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: const NavigationDrawer(),
+        drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
           title: const Text(
             'Wetter Sportplätze',

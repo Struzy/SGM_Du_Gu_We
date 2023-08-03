@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/box_size.dart';
 import '../constants/circle_avatar.dart';
 import '../constants/color.dart';
@@ -20,10 +21,25 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  bool isObscurePassword = true;
   late String email;
   late String password;
   bool isLoading = false;
   bool showSpinner = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadSavedData();
+  }
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +77,7 @@ class LoginScreenState extends State<LoginScreen> {
                       height: kBoxHeight + 40.0,
                     ),
                     TextField(
+                      controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
@@ -78,15 +95,24 @@ class LoginScreenState extends State<LoginScreen> {
                       height: kBoxHeight,
                     ),
                     TextField(
-                      obscureText: true,
+                      controller: passwordController,
+                      obscureText: isObscurePassword,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.black,
                       ),
                       onChanged: (value) => password = value,
-                      decoration: const InputDecoration(
-                        icon: Icon(
+                      decoration: InputDecoration(
+                        icon: const Icon(
                           Icons.password,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isObscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: togglePasswordVisibility,
                         ),
                         hintText: 'Passwort eingeben',
                       ),
@@ -95,7 +121,10 @@ class LoginScreenState extends State<LoginScreen> {
                       height: kBoxHeight + 20.0,
                     ),
                     ElevatedButton.icon(
-                      onPressed: loginUser,
+                      onPressed: () {
+                        saveData(email, password);
+                        loginUser();
+                      },
                       icon: const Icon(
                         Icons.login,
                         color: Colors.black,
@@ -113,6 +142,35 @@ class LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  // Save email and password from current login
+  void saveData(String email, String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('saved_email', email);
+    prefs.setString('saved_password', password);
+  }
+
+  // Load saved email and password from the last login
+  void loadSavedData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedEmail = prefs.getString('saved_email');
+    String? savedPassword = prefs.getString('saved_password');
+    if (savedEmail != null && savedPassword != null) {
+      setState(() {
+        email = savedEmail;
+        password = savedPassword;
+        emailController.text = savedEmail;
+        passwordController.text = savedPassword;
+      });
+    }
+  }
+
+  // Change password visibility depending on the user
+  void togglePasswordVisibility() {
+    setState(() {
+      isObscurePassword = !isObscurePassword;
+    });
   }
 
   // Register user as well as handle potentially occurring exceptions

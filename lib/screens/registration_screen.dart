@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -21,6 +20,10 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class RegistrationScreenState extends State<RegistrationScreen> {
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  bool isObscurePassword = true;
+  bool isObscureConfirmPassword = true;
   final auth = FirebaseAuth.instance;
   late String email;
   late String password;
@@ -28,6 +31,13 @@ class RegistrationScreenState extends State<RegistrationScreen> {
   bool isLoading = false;
   bool showSpinner = false;
   bool isChecked = false;
+
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,15 +94,24 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       height: kBoxHeight,
                     ),
                     TextField(
-                      obscureText: true,
+                      controller: passwordController,
+                      obscureText: isObscurePassword,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.black,
                       ),
                       onChanged: (value) => password = value,
-                      decoration: const InputDecoration(
-                        icon: Icon(
+                      decoration: InputDecoration(
+                        icon: const Icon(
                           Icons.password,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isObscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: togglePasswordVisibility,
                         ),
                         hintText: 'Passwort eingeben',
                       ),
@@ -101,15 +120,24 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                       height: kBoxHeight,
                     ),
                     TextField(
-                      obscureText: true,
+                      controller: confirmPasswordController,
+                      obscureText: isObscureConfirmPassword,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.black,
                       ),
                       onChanged: (value) => confirmPassword = value,
-                      decoration: const InputDecoration(
-                        icon: Icon(
+                      decoration: InputDecoration(
+                        icon: const Icon(
                           Icons.repeat,
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isObscureConfirmPassword
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: toggleConfirmPasswordVisibility,
                         ),
                         hintText: 'Passwort bestätigen',
                       ),
@@ -159,6 +187,20 @@ class RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  // Change password visibility depending on the user
+  void togglePasswordVisibility() {
+    setState(() {
+      isObscurePassword = !isObscurePassword;
+    });
+  }
+
+  // Change password visibility depending on the user
+  void toggleConfirmPasswordVisibility() {
+    setState(() {
+      isObscureConfirmPassword = !isObscureConfirmPassword;
+    });
   }
 
   // Register user as well as handle potentially occurring exceptions

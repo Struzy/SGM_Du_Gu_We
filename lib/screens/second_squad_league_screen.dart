@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import '../widgets/navigation_drawer.dart';
+import '../widgets/navigation_drawer.dart' as nav;
 
 class SecondSquadLeagueScreen extends StatefulWidget {
   const SecondSquadLeagueScreen({super.key});
@@ -19,7 +18,7 @@ class SecondSquadLeagueScreenState extends State<SecondSquadLeagueScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        drawer: const NavigationDrawer(),
+        drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
           title: const Text('Kreisliga B2 Schwarzwald'),
         ),
