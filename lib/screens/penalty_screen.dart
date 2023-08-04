@@ -25,8 +25,7 @@ class PenaltyScreen extends StatefulWidget {
 }
 
 class PenaltyScreenState extends State<PenaltyScreen> {
-  Widget buildUser(Penalty penalty) =>
-      ListTile(
+  Widget buildUser(Penalty penalty) => ListTile(
         title: Text(
           penalty.name,
         ),
@@ -41,18 +40,13 @@ class PenaltyScreenState extends State<PenaltyScreen> {
             showModalBottomSheet(
               context: context,
               isScrollControlled: true,
-              builder: (context) =>
-                  SingleChildScrollView(
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery
-                            .of(context)
-                            .viewInsets
-                            .bottom,
-                      ),
-                      //TODO: child: const ,
-                    ),
+              builder: (context) => SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
                   ),
+                ),
+              ),
             );
           },
         ),
@@ -109,18 +103,14 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        builder: (context) =>
-                            SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  bottom: MediaQuery
-                                      .of(context)
-                                      .viewInsets
-                                      .bottom,
-                                ),
-                                child: const AddPenalty(),
-                              ),
+                        builder: (context) => SingleChildScrollView(
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
                             ),
+                            child: const AddPenalty(),
+                          ),
+                        ),
                       );
                     },
                     foregroundColor: Colors.black,
@@ -206,9 +196,7 @@ class AddPenaltyState extends State<AddPenalty> {
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime(
-                    DateTime
-                        .now()
-                        .year,
+                    DateTime.now().year,
                   ),
                   lastDate: DateTime(
                     2100,
@@ -217,14 +205,14 @@ class AddPenaltyState extends State<AddPenalty> {
 
                 if (pickedDate != null) {
                   String formattedDate =
-                  DateFormat('dd.MM.yyyy').format(pickedDate);
+                      DateFormat('dd.MM.yyyy').format(pickedDate);
 
                   setState(() {
                     controllerDate.text = formattedDate;
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
+                    const SnackBar(
                       content: Text(
                         'Es wurde kein Datum ausgewählt.',
                       ),
@@ -260,7 +248,7 @@ class AddPenaltyState extends State<AddPenalty> {
               value: dropdownValueOffenses,
               elevation: kElevation.toInt(),
               items:
-              getOffenses().map<DropdownMenuItem<String>>((String value) {
+                  getOffenses().map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(
@@ -364,11 +352,12 @@ List<String> getAmounts() {
 }
 
 // Create penalty
-Future createPenalty({required String date,
-  required String name,
-  required String offense,
-  required String amount,
-  required bool isPayed}) async {
+Future createPenalty(
+    {required String date,
+    required String name,
+    required String offense,
+    required String amount,
+    required bool isPayed}) async {
   final docPenalty = FirebaseFirestore.instance.collection('penalties').doc();
 
   final penalty = Penalty(
@@ -385,11 +374,10 @@ Future createPenalty({required String date,
 }
 
 // Read all penalties
-Stream<List<Penalty>> readPenalties() =>
-    FirebaseFirestore.instance
-        .collection('penalties')
-        .snapshots()
-        .map((snapshot) =>
+Stream<List<Penalty>> readPenalties() => FirebaseFirestore.instance
+    .collection('penalties')
+    .snapshots()
+    .map((snapshot) =>
         snapshot.docs.map((doc) => Penalty.fromJson(doc.data())).toList());
 
 // Update penalty

@@ -8,6 +8,8 @@ import '../constants/container_size.dart';
 import '../constants/divider_thickness.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
+import '../constants/sgm_logo_directory.dart';
+import '../constants/social_network_logo.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -46,7 +48,7 @@ class MainScreenState extends State<MainScreen> {
                     radius: kRadius,
                     child: ClipOval(
                       child: Image.network(
-                        'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/App%20Icon%2Fsgm_du_gu_we.PNG?alt=media&token=b532fa33-870a-4e75-b3d9-2dbf0e7a43f0',
+                        kSGMLogo,
                         fit: BoxFit.cover,
                         loadingBuilder: loadingBuilder,
                       ),
@@ -105,7 +107,7 @@ class MainScreenState extends State<MainScreen> {
                       width: kContainerWidth,
                       child: ClipOval(
                         child: Image.network(
-                          'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Logos%2FInstagram_logo_2022.svg.png?alt=media&token=4f08d604-3f98-4455-a0b2-3a12160053d0',
+                          kInstagramIcon,
                           fit: BoxFit.cover,
                           loadingBuilder: loadingBuilder,
                         ),
@@ -120,7 +122,7 @@ class MainScreenState extends State<MainScreen> {
                       width: kContainerWidth,
                       child: ClipOval(
                         child: Image.network(
-                          'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Logos%2FFacebook_Home_logo_old.svg.png?alt=media&token=3082cfd9-1614-4bd9-8637-463a5e6d7806',
+                          kFacebookLogo,
                           fit: BoxFit.cover,
                           loadingBuilder: loadingBuilder,
                         ),

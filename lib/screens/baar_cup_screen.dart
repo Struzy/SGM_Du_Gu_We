@@ -29,13 +29,16 @@ class BaarCupScreenState extends State<BaarCupScreen> {
         title: const Text(
           'Baar-Pokal Tuningen 2023',
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            onPressed: pdfViewerKey.currentState?.openBookmarkView,
             icon: const Icon(
               Icons.bookmark,
+              semanticLabel: 'Bookmark',
             ),
-          )
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
+          ),
         ],
       ),
       body: SfPdfViewer.network(

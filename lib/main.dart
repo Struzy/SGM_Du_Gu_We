@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:sgm_du_gu_we/screens/baar_cup_screen.dart';
 import 'package:sgm_du_gu_we/screens/chat_screen.dart';
 import 'package:sgm_du_gu_we/screens/email_verification_screen.dart';
+import 'package:sgm_du_gu_we/screens/finance_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_league_screen.dart';
 import 'package:sgm_du_gu_we/screens/first_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/football_club_screen.dart';
@@ -49,6 +50,7 @@ class SGMDuGuWe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: true,
       theme: ThemeData(
         fontFamily: kSourceSansPro,
         scaffoldBackgroundColor: kSGMColorGreenLight,
@@ -102,7 +104,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: SplashScreen.id,
+      initialRoute: FinanceScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
@@ -131,6 +133,7 @@ class SGMDuGuWe extends StatelessWidget {
         GalleryScreen.id: (context) => const GalleryScreen(),
         MediaPlayerScreen.id: (context) => const MediaPlayerScreen(),
         WeatherScreen.id: (context) => const WeatherScreen(),
+        FinanceScreen.id: (context) => const FinanceScreen(),
       },
     );
   }

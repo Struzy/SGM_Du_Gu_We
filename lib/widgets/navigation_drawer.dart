@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/screens/finance_screen.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
 import 'package:sgm_du_gu_we/screens/weather_screen.dart';
 import '../constants/color.dart';
@@ -45,8 +46,8 @@ class NavigationDrawer extends StatelessWidget {
           top: 24 + MediaQuery.of(context).padding.top,
           bottom: 24,
         ),
-        child: Column(
-          children: const [
+        child: const Column(
+          children: [
             CircleAvatar(
               radius: 52,
               backgroundImage: NetworkImage(
@@ -74,6 +75,7 @@ class NavigationDrawer extends StatelessWidget {
       );
 
   Widget buildMenuItems(BuildContext context) => Column(children: [
+        // Hauptmenü
         ListTile(
           leading: const Icon(
             Icons.home,
@@ -91,6 +93,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Fußballverein
         ListTile(
           leading: const Icon(
             Icons.sports_soccer,
@@ -108,6 +112,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Kader
         ListTile(
           leading: const Icon(
             Icons.person,
@@ -125,6 +131,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // 1. Mannschaft
         ListTile(
           leading: const Icon(
             Icons.person,
@@ -142,6 +150,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // 2. Mannschaft
         ListTile(
           leading: const Icon(
             Icons.person,
@@ -159,12 +169,14 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Kreisliga B2 Württemberg
         ListTile(
           leading: const Icon(
             Icons.sports,
           ),
           title: const Text(
-            'Kreisliga A2 Schwarzwald',
+            'Kreisliga B2 Württemberg',
           ),
           onTap: () {
             Navigator.pop(
@@ -176,12 +188,14 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Kreisliga C3 Württemberg
         ListTile(
           leading: const Icon(
             Icons.sports,
           ),
           title: const Text(
-            'Kreisliga B2 Schwarzwald',
+            'Kreisliga C3 Württemberg',
           ),
           onTap: () {
             Navigator.pop(
@@ -193,6 +207,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Baarpokal
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -210,6 +226,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Trainingsbeteiligung
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -223,6 +241,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Strafen
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -240,6 +260,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Urlaub
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -253,6 +275,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Strafenkatalog
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -270,6 +294,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Vorbereitungsplan
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -287,6 +313,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Abstreuplan
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -304,6 +332,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Mediathek
         ListTile(
           leading: const Icon(
             Icons.library_music,
@@ -321,6 +351,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Videothek
         ListTile(
           leading: const Icon(
             Icons.video_collection,
@@ -334,6 +366,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Galerie
         ListTile(
           leading: const Icon(
             Icons.image,
@@ -351,6 +385,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Liedtexte
         ListTile(
           leading: const Icon(
             Icons.lyrics,
@@ -368,6 +404,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Finanzen
         ListTile(
           leading: const Icon(
             Icons.euro,
@@ -379,8 +417,14 @@ class NavigationDrawer extends StatelessWidget {
             Navigator.pop(
               context,
             );
+            Navigator.pushNamed(
+              context,
+              FinanceScreen.id,
+            );
           },
         ),
+
+        // Spielerstatistik
         ListTile(
           leading: const Icon(
             Icons.sports,
@@ -398,6 +442,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Chat
         ListTile(
           leading: const Icon(
             Icons.chat,
@@ -415,6 +461,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Einstellungen
         ListTile(
           leading: const Icon(
             Icons.settings,
@@ -428,6 +476,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Sonstiges
         ListTile(
           leading: const Icon(
             Icons.miscellaneous_services,
@@ -445,6 +495,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Impressum
         ListTile(
           leading: const Icon(
             Icons.contact_mail,
@@ -462,6 +514,8 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
+        // Wetter Sportplätze
         ListTile(
           leading: const Icon(
             Icons.sunny,
@@ -479,9 +533,12 @@ class NavigationDrawer extends StatelessWidget {
             );
           },
         ),
+
         const Divider(
           color: Colors.black54,
         ),
+
+        // Abmelden
         ListTile(
           leading: const Icon(
             Icons.logout,

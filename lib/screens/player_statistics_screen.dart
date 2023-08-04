@@ -30,12 +30,15 @@ class PlayerStatisticsScreenState extends State<PlayerStatisticsScreen> {
         title: const Text(
           'Ewige Spielerliste',
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            onPressed: pdfViewerKey.currentState?.openBookmarkView,
             icon: const Icon(
               Icons.bookmark,
+              semanticLabel: 'Bookmark',
             ),
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
           ),
         ],
       ),

@@ -29,12 +29,14 @@ class LyricsScreenState extends State<LyricsScreen> {
         title: const Text(
           'Liedtexte',
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            onPressed: pdfViewerKey.currentState?.openBookmarkView,
             icon: const Icon(
               Icons.bookmark,
             ),
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../constants/url.dart';
 import '../widgets/navigation_drawer.dart' as nav;
 
 class FirstSquadScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class FirstSquadScreenState extends State<FirstSquadScreen> {
             Expanded(
               child: WebView(
                 initialUrl:
-                    'https://www.fussball.de/mannschaft/sgm-durchhausen-gunningen-weigheim-sv-durchhausen-wuerttemberg/-/saison/2223/team-id/011MIEEOIG000000VTVG0001VTR8C1K7#!/',
+                kFirstSquadUrl,
                 javascriptMode: JavascriptMode.unrestricted,
                 onProgress: (int newProgress) {
                   setState(() {

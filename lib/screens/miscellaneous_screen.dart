@@ -29,12 +29,15 @@ class MiscellaneousScreenState extends State<MiscellaneousScreen> {
         title: const Text(
           'Anweisung Abstreuwagen',
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            onPressed: pdfViewerKey.currentState?.openBookmarkView,
             icon: const Icon(
               Icons.bookmark,
+              semanticLabel: 'Bookmark',
             ),
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
           ),
         ],
       ),

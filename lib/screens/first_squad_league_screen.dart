@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../constants/url.dart';
 import '../widgets/navigation_drawer.dart' as nav;
 
 class FirstSquadLeagueScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class FirstSquadLeagueScreenState extends State<FirstSquadLeagueScreen> {
       child: Scaffold(
         drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
-          title: const Text('Kreisliga A2 Schwarzwald'),
+          title: const Text('Kreisliga B2 Württemberg'),
         ),
         body: Column(
           children: [
@@ -32,7 +33,7 @@ class FirstSquadLeagueScreenState extends State<FirstSquadLeagueScreen> {
             Expanded(
               child: WebView(
                 initialUrl:
-                    'https://www.fussball.de/spieltagsuebersicht/kreisliga-a2-bezirk-schwarzwald-kl-kreisliga-a-herren-saison2223-wuerttemberg/-/staffel/02IL01JN30000004VS5489B3VVETK79U-G#!/',
+                kFirstSquadLeagueUrl,
                 javascriptMode: JavascriptMode.unrestricted,
                 onProgress: (int newProgress) {
                   setState(() {

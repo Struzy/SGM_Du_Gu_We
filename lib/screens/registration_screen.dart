@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/constants/sgm_logo_directory.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
@@ -63,10 +64,10 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                     Hero(
                       tag: 'logo',
                       child: CircleAvatar(
-                        radius: kRadius * 1.2,
+                        radius: kRadius * 1.25,
                         child: ClipOval(
                           child: Image.network(
-                            'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/App%20Icon%2Fsgm_du_gu_we.PNG?alt=media&token=b532fa33-870a-4e75-b3d9-2dbf0e7a43f0',
+                            kSGMLogo,
                             fit: BoxFit.cover,
                             loadingBuilder: loadingBuilder,
                           ),

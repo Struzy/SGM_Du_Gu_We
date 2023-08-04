@@ -29,12 +29,15 @@ class PreparationPlanScreenState extends State<PreparationPlanScreen> {
         title: const Text(
           'Vorbereitungsplan Hinrunde 23/24',
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            onPressed: pdfViewerKey.currentState?.openBookmarkView,
             icon: const Icon(
               Icons.bookmark,
+              semanticLabel: 'Bookmark',
             ),
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
           ),
         ],
       ),

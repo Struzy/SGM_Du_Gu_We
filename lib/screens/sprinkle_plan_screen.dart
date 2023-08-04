@@ -30,12 +30,15 @@ class SprinklePlanScreenState extends State<SprinklePlanScreen> {
         title: const Text(
           'Abstreuplan Saison 23/24',
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            onPressed: pdfViewerKey.currentState?.openBookmarkView,
             icon: const Icon(
               Icons.bookmark,
+              semanticLabel: 'Bookmark',
             ),
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
           ),
         ],
       ),

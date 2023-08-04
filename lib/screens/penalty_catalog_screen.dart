@@ -33,12 +33,15 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
         title: Text(
           'Strafenkatalog SGM $year',
         ),
-        actions: [
+        actions: <Widget>[
           IconButton(
-            onPressed: pdfViewerKey.currentState?.openBookmarkView,
             icon: const Icon(
               Icons.bookmark,
+              semanticLabel: 'Bookmark',
             ),
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
           ),
         ],
       ),
