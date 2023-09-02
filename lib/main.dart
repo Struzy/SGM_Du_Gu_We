@@ -26,6 +26,7 @@ import 'package:sgm_du_gu_we/screens/second_squad_screen.dart';
 import 'package:sgm_du_gu_we/screens/splash_screen.dart';
 import 'package:sgm_du_gu_we/screens/sprinkle_plan_screen.dart';
 import 'package:sgm_du_gu_we/screens/squad_screen.dart';
+import 'package:sgm_du_gu_we/screens/vacation_screen.dart';
 import 'package:sgm_du_gu_we/screens/weather_screen.dart';
 import 'constants/color.dart';
 import 'constants/elevated_button.dart';
@@ -104,7 +105,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: FinanceScreen.id,
+      initialRoute: VacationScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
@@ -134,6 +135,7 @@ class SGMDuGuWe extends StatelessWidget {
         MediaPlayerScreen.id: (context) => const MediaPlayerScreen(),
         WeatherScreen.id: (context) => const WeatherScreen(),
         FinanceScreen.id: (context) => const FinanceScreen(),
+        VacationScreen.id: (context) => const VacationScreen(),
       },
     );
   }
