@@ -27,6 +27,17 @@ class SquadScreenState extends State<SquadScreen> {
   bool isLoading = true;
 
   @override
+  void initState() {
+    super.initState();
+    filteredPlayers.sort((a, b) {
+      final startDateComparison =
+      a.name.compareTo(b.name);
+
+      return startDateComparison;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -50,7 +61,7 @@ class SquadScreenState extends State<SquadScreen> {
                   icon: Icon(
                     Icons.search,
                   ),
-                  hintText: 'Kader durchsuchen...',
+                  hintText: 'Nach Namen durchsuchen...',
                 ),
                 onChanged: (value) {
                   filterPlayers(value);
@@ -109,8 +120,8 @@ class SquadScreenState extends State<SquadScreen> {
   void filterPlayers(String searchQuery) {
     if (searchQuery.isNotEmpty) {
       filteredPlayers = players
-          .where((player) => player.name.contains(
-                searchQuery,
+          .where((player) => player.name.toLowerCase().contains(
+                searchQuery.toLowerCase(),
               ))
           .toList();
     } else {

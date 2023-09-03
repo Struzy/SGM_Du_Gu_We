@@ -16,7 +16,8 @@ import '../models/vacation.dart';
 import '../widgets/navigation_drawer.dart' as nav;
 
 List<Player> players = getPlayers();
-List<Player> filteredPlayers = List<Player>.from(players);
+List<Vacation> vacations = [];
+List<Vacation> filteredVacations = List<Vacation>.from(vacations);
 
 // Type used by the popup menu below
 enum SampleItem { itemOne, itemTwo }
@@ -199,8 +200,11 @@ class VacationScreenState extends State<VacationScreen> {
                   icon: Icon(
                     Icons.search,
                   ),
-                  hintText: 'Urlaubsliste durchsuchen...',
+                  hintText: 'Nach Namen durchsuchen...',
                 ),
+                onChanged: (value) {
+                  filterVacations(value);
+                },
               ),
               const SizedBox(
                 height: kBoxHeight,
@@ -222,11 +226,22 @@ class VacationScreenState extends State<VacationScreen> {
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    final vacations = snapshot.data!;
+                    vacations = snapshot.data!;
+
+                    vacations.sort((a, b) {
+                      final startDateComparison =
+                          a.startDate.compareTo(b.startDate);
+                      if (startDateComparison != 0) {
+                        return startDateComparison;
+                      }
+
+                      // If start dates are the same, compare by name
+                      return a.name.compareTo(b.name);
+                    });
 
                     return Expanded(
                       child: ListView(
-                        children: vacations.map(buildVacation).toList(),
+                        children: filteredVacations.map(buildVacation).toList(),
                       ),
                     );
                   }
@@ -279,16 +294,16 @@ class VacationScreenState extends State<VacationScreen> {
 
   // Filter the list based on a search query
   // This function will take the search query as input and update the list
-  // players accordingly
-  void filterPlayers(String searchQuery) {
+  // vacations accordingly
+  void filterVacations(String searchQuery) {
     if (searchQuery.isNotEmpty) {
-      filteredPlayers = players
-          .where((player) => player.name.contains(
-                searchQuery,
+      filteredVacations = vacations
+          .where((vacation) => vacation.name.toLowerCase().contains(
+                searchQuery.toLowerCase(),
               ))
           .toList();
     } else {
-      filteredPlayers = List<Player>.from(players);
+      filteredVacations = List<Vacation>.from(vacations);
     }
     setState(() {
       // Update the UI with the filtered list
@@ -466,6 +481,24 @@ class AddVacationState extends State<AddVacation> {
                   );
                 }
               },
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                );
+              },
+              icon: const Icon(
+                Icons.cancel,
+                color: Colors.black,
+                size: kIcon,
+              ),
+              label: const Text(
+                'Abbrechen',
+              ),
             ),
             const SizedBox(
               height: kBoxHeight,
@@ -700,6 +733,24 @@ class UpdateVacationState extends State<UpdateVacation> {
                   );
                 }
               },
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(
+                  context,
+                );
+              },
+              icon: const Icon(
+                Icons.cancel,
+                color: Colors.black,
+                size: kIcon,
+              ),
+              label: const Text(
+                'Abbrechen',
+              ),
             ),
             const SizedBox(
               height: kBoxHeight,

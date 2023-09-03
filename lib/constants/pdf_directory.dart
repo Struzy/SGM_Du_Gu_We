@@ -24,5 +24,5 @@ const kPDFPreparationPlan = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
     '2023_24.pdf?alt=media&token=ee70a8ad-21aa-4c0a-a197-316632104255';
 
 const kPDFSprinklePlan = 'https://firebasestorage.googleapis.com/v0/b/sgm-'
-    'duguwe.appspot.com/o/Abstreuplan%2FAbstreuplan_2021.pdf?alt=media&token='
-    '3f44d39e-a1b6-49b7-b918-15e1642c3195';
+    'duguwe.appspot.com/o/Abstreuplan%2FAbstreuplan_2023.pdf?alt=media&token='
+    '2ce0ab3d-0a79-4f11-898e-bba51013b224';
