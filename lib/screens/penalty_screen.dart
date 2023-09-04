@@ -1,19 +1,29 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:sgm_du_gu_we/models/offense.dart';
-import '../models/amount.dart';
+import 'package:sgm_du_gu_we/models/amount.dart';
+import '../constants/box_size.dart';
+import '../constants/circle_avatar.dart';
+import '../constants/color.dart';
+import '../constants/divider_thickness.dart';
+import '../constants/elevated_button.dart';
+import '../constants/font_family.dart';
+import '../constants/font_size.dart';
+import '../constants/padding.dart';
+import '../models/Player.dart';
+import '../models/offense.dart';
 import '../models/penalty.dart';
 import '../models/player_list.dart';
-import '../constants/box_size.dart';
-import '../constants/color.dart';
-import '../constants/elevated_button.dart';
-import '../constants/font_size.dart';
-import '../constants/icon_size.dart';
-import '../constants/padding.dart';
+import '../services/database_delete_service.dart';
+import '../services/database_read_service.dart';
+import '../widgets/add_penalty.dart';
 import '../widgets/navigation_drawer.dart' as nav;
+import '../widgets/update_penalty.dart';
 
-bool isLoading = true;
+List<Player> players = getPlayers();
+List<Penalty> penalties = [];
+List<Penalty> filteredPenalties = List<Penalty>.from(penalties);
+
+// Type used by the popup menu below
+enum SampleItem { itemOne, itemTwo }
 
 class PenaltyScreen extends StatefulWidget {
   const PenaltyScreen({super.key});
@@ -25,31 +35,158 @@ class PenaltyScreen extends StatefulWidget {
 }
 
 class PenaltyScreenState extends State<PenaltyScreen> {
-  Widget buildUser(Penalty penalty) => ListTile(
+  SampleItem? selectedMenu;
+  final TextEditingController searchController = TextEditingController();
+
+  bool isLoading = true;
+
+  Widget buildPenalty(Penalty penalty) => ListTile(
+        leading: Image.network(
+          getPath(penalty.name).first.profilePicture,
+          fit: BoxFit.cover,
+          loadingBuilder: (BuildContext context, Widget child,
+              ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              isLoading = false;
+              return child;
+            }
+            return const CircularProgressIndicator();
+          },
+        ),
         title: Text(
           penalty.name,
         ),
         subtitle: Text(
           penalty.date,
         ),
-        trailing: IconButton(
-          icon: const Icon(
-            Icons.more_vert,
-          ),
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (context) => SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
+        trailing: PopupMenuButton<SampleItem>(
+          onSelected: (SampleItem item) {
+            setState(() {
+              selectedMenu = item;
+            });
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<SampleItem>>[
+            PopupMenuItem<SampleItem>(
+              value: SampleItem.itemOne,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                  );
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => SingleChildScrollView(
+                      child: Container(
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                        child: UpdatePenalty(
+                          id: penalty.id,
+                          date: penalty.date,
+                          name: penalty.name,
+                          offense: penalty.offense,
+                          amount: penalty.amount,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Aktualisieren',
+                  style: TextStyle(
+                    color: Colors.black,
                   ),
                 ),
               ),
-            );
-          },
+            ),
+            PopupMenuItem<SampleItem>(
+              value: SampleItem.itemTwo,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                  );
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text(
+                        'Löschen',
+                      ),
+                      content: const Text(
+                        'Wollen Sie wirklich den Eintrag löschen?',
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(
+                              context,
+                              'JA',
+                            );
+                            try {
+                              deletePenalty(
+                                id: penalty.id,
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Strafe konnte nicht gelöscht werden.',
+                                  ),
+                                ),
+                              );
+                            }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Strafe wurde erfolgreich gelöscht.',
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'JA',
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(
+                              context,
+                              'NEIN',
+                            );
+                          },
+                          child: const Text(
+                            'NEIN',
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Löschen',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PenaltyDetailScreen(
+                profilePicture: getPath(penalty.name).first.profilePicture,
+                date: penalty.date,
+                name: penalty.name,
+                offense: penalty.offense,
+                amount: penalty.amount,
+              ),
+            ),
+          );
+        },
       );
 
   @override
@@ -58,7 +195,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
       child: Scaffold(
         drawer: const nav.NavigationDrawer(),
         appBar: AppBar(
-          title: const Text('Offene Strafen'),
+          title: const Text('Strafen'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(
@@ -68,6 +205,25 @@ class PenaltyScreenState extends State<PenaltyScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              TextField(
+                controller: searchController,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.black,
+                ),
+                decoration: const InputDecoration(
+                  icon: Icon(
+                    Icons.search,
+                  ),
+                  hintText: 'Nach Namen durchsuchen...',
+                ),
+                onChanged: (value) {
+                  filterPenalties(value);
+                },
+              ),
+              const SizedBox(
+                height: kBoxHeight,
+              ),
               StreamBuilder<List<Penalty>>(
                 stream: readPenalties(),
                 builder: (context, snapshot) {
@@ -85,11 +241,20 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    final penalties = snapshot.data!;
+                    penalties = snapshot.data!;
+                    penalties.sort((a, b) {
+                      final dateComparison = b.date.compareTo(a.date);
+                      if (dateComparison != 0) {
+                        return dateComparison;
+                      }
+
+                      // If start dates are the same, compare by name
+                      return a.name.compareTo(b.name);
+                    });
 
                     return Expanded(
                       child: ListView(
-                        children: penalties.map(buildUser).toList(),
+                        children: filteredPenalties.map(buildPenalty).toList(),
                       ),
                     );
                   }
@@ -128,208 +293,158 @@ class PenaltyScreenState extends State<PenaltyScreen> {
       ),
     );
   }
+
+  // Get path of profile picture
+  List<Player> getPath(String name) {
+    List<Player> path = players
+        .where((player) => player.name.contains(
+              name,
+            ))
+        .toList();
+
+    return path;
+  }
+
+  // Filter the list based on a search query
+  // This function will take the search query as input and update the list
+  // penalties accordingly
+  void filterPenalties(String searchQuery) {
+    if (searchQuery.isNotEmpty) {
+      filteredPenalties = penalties
+          .where((penalty) => penalty.name.toLowerCase().contains(
+                searchQuery.toLowerCase(),
+              ))
+          .toList();
+    } else {
+      filteredPenalties = List<Penalty>.from(penalties);
+    }
+    setState(() {
+      // Update the UI with the filtered list
+    });
+  }
 }
 
-class AddPenalty extends StatefulWidget {
-  const AddPenalty({super.key});
+class PenaltyDetailScreen extends StatelessWidget {
+  PenaltyDetailScreen(
+      {super.key,
+      required this.profilePicture,
+      required this.date,
+      required this.name,
+      required this.offense,
+      required this.amount});
 
-  @override
-  AddPenaltyState createState() => AddPenaltyState();
-}
+  final String profilePicture;
+  final String date;
+  final String name;
+  final String offense;
+  final String amount;
 
-class AddPenaltyState extends State<AddPenalty> {
-  TextEditingController controllerDate = TextEditingController();
-
-  String dropdownValueNames = getNames().first;
-  String dropdownValueOffenses = getOffenses().first;
-  String dropdownValueAmounts = getAmounts().first;
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(
-        0xff394E36,
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(
-          kPadding,
-        ),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(
-              20.0,
-            ),
-            topRight: Radius.circular(
-              20.0,
-            ),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Strafeninformationen',
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Strafe hinzufügen',
-              style: TextStyle(
-                fontSize: kFontsizeSubtitle,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(
-              height: kBoxHeight,
-            ),
-            TextField(
-              controller: controllerDate,
-              autofocus: true,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black54,
-              ),
-              onChanged: (value) {},
-              decoration: const InputDecoration(
-                icon: Icon(Icons.calendar_today),
-                hintText: 'Datum eingeben',
-              ),
-              readOnly: true,
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(
-                    DateTime.now().year,
-                  ),
-                  lastDate: DateTime(
-                    2100,
-                  ),
-                );
-
-                if (pickedDate != null) {
-                  String formattedDate =
-                      DateFormat('dd.MM.yyyy').format(pickedDate);
-
-                  setState(() {
-                    controllerDate.text = formattedDate;
-                  });
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Es wurde kein Datum ausgewählt.',
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
-            const SizedBox(
-              height: kBoxHeight,
-            ),
-            DropdownButton<String>(
-              value: dropdownValueNames,
-              elevation: kElevation.toInt(),
-              items: getNames().map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                  ),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownValueNames = value!;
-                });
-              },
-            ),
-            const SizedBox(
-              height: kBoxHeight,
-            ),
-            DropdownButton<String>(
-              value: dropdownValueOffenses,
-              elevation: kElevation.toInt(),
-              items:
-                  getOffenses().map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 12.0,
+        body: Padding(
+          padding: const EdgeInsets.all(
+            kPadding,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: kRadius,
+                  child: ClipOval(
+                    child: Image.network(
+                      profilePicture,
+                      width: kRadius * 2,
+                      height: kRadius * 2,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          isLoading = false;
+                          return child;
+                        }
+                        return const CircularProgressIndicator(
+                          color: kSGMColorGreen,
+                        );
+                      },
                     ),
                   ),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownValueOffenses = value!;
-                });
-              },
-            ),
-            const SizedBox(
-              height: kBoxHeight,
-            ),
-            DropdownButton<String>(
-              value: dropdownValueAmounts,
-              elevation: kElevation.toInt(),
-              items: getAmounts().map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
+                ),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontFamily: kPacifico,
+                    fontSize: kFontsizeTitle,
+                    fontWeight: FontWeight.bold,
                   ),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownValueAmounts = value!;
-                });
-              },
+                ),
+                const SizedBox(
+                  height: 20.0,
+                  width: 150.0,
+                  child: Divider(
+                    thickness: kDividerThickness,
+                    color: Colors.black54,
+                  ),
+                ),
+                Text(
+                  '$date',
+                  style: const TextStyle(
+                    fontSize: kFontsizeSubtitle,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                Text(
+                  '$offense',
+                  style: const TextStyle(
+                    fontSize: kFontsizeSubtitle,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+                Text(
+                  '$amount',
+                  style: const TextStyle(
+                    fontSize: kFontsizeSubtitle,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: kBoxHeight,
+                ),
+              ],
             ),
-            const SizedBox(
-              height: kBoxHeight,
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                createPenalty(
-                  date: controllerDate.text,
-                  name: dropdownValueNames,
-                  offense: dropdownValueOffenses,
-                  amount: dropdownValueAmounts,
-                  isPayed: false,
-                );
-                Navigator.pop(context);
-              },
-              icon: const Icon(
-                Icons.add,
-                color: Colors.black,
-                size: kIcon,
-              ),
-              label: const Text(
-                'Hinzufügen',
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
-// Get players for the dropdown menu item
-List<String> getNames() {
+// Get all the players
+List<Player> getPlayers() {
   PlayerList playerList = PlayerList();
-  List<String> list = [];
 
-  for (var player in playerList.playerList) {
-    list.add(player.name);
-  }
-
-  return list;
+  return playerList.playerList;
 }
 
-// Get offenses for the dropdown menu item
+// Get all the offenses
 List<String> getOffenses() {
   Offense offenses = Offense();
+
   List<String> list = [];
 
   for (var offense in offenses.offensesList) {
@@ -339,9 +454,10 @@ List<String> getOffenses() {
   return list;
 }
 
-// Get offenses for the dropdown menu item
+// Get all the amounts
 List<String> getAmounts() {
   Amount amounts = Amount();
+
   List<String> list = [];
 
   for (var amount in amounts.amountsList) {
@@ -349,47 +465,4 @@ List<String> getAmounts() {
   }
 
   return list;
-}
-
-// Create penalty
-Future createPenalty(
-    {required String date,
-    required String name,
-    required String offense,
-    required String amount,
-    required bool isPayed}) async {
-  final docPenalty = FirebaseFirestore.instance.collection('penalties').doc();
-
-  final penalty = Penalty(
-      id: docPenalty.id,
-      date: date,
-      name: name,
-      offense: offense,
-      amount: amount,
-      isPayed: isPayed);
-
-  final json = penalty.toJson();
-
-  await docPenalty.set(json);
-}
-
-// Read all penalties
-Stream<List<Penalty>> readPenalties() => FirebaseFirestore.instance
-    .collection('penalties')
-    .snapshots()
-    .map((snapshot) =>
-        snapshot.docs.map((doc) => Penalty.fromJson(doc.data())).toList());
-
-// Update penalty
-void updatePenalty() {
-  final penalty = FirebaseFirestore.instance.collection('penalties').doc();
-  penalty.update({
-    'forename': 'Manuel',
-  });
-}
-
-// Delete penalty
-void deletePenalty() {
-  final penalty = FirebaseFirestore.instance.collection('penalties').doc();
-  penalty.delete();
 }

@@ -5,7 +5,6 @@ class Penalty {
     required this.name,
     required this.offense,
     required this.amount,
-    required this.isPayed,
   });
 
   final String id;
@@ -13,7 +12,6 @@ class Penalty {
   final String name;
   final String offense;
   final String amount;
-  bool isPayed = false;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -21,7 +19,6 @@ class Penalty {
         'name': name,
         'offense': offense,
         'amount': amount,
-        'isPayed': isPayed,
       };
 
   static Penalty fromJson(Map<String, dynamic> json) => Penalty(
@@ -30,7 +27,6 @@ class Penalty {
         name: json['name'],
         offense: json['offense'],
         amount: json['amount'],
-        isPayed: json['isPayed'],
       );
 }
 //(json['date'] as Timestamp).toDate()

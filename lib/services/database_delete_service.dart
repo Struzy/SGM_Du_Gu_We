@@ -1,0 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+/////////////////////////////////// VACATION ///////////////////////////////////
+void deleteVacation({required String id}) {
+  final vacation = FirebaseFirestore.instance.collection('vacations').doc(id);
+  vacation.delete();
+}
+/////////////////////////////////// VACATION ///////////////////////////////////
+
+/////////////////////////////////// PENALTY ////////////////////////////////////
+void deletePenalty({required String id}) {
+  final penalty = FirebaseFirestore.instance.collection('penalties').doc(id);
+  penalty.delete();
+}
+/////////////////////////////////// PENALTY ////////////////////////////////////
