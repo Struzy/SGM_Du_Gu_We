@@ -151,26 +151,25 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
             const SizedBox(
               height: kBoxHeight,
             ),
-            DropdownButton<String>(
-              value: dropdownValueOffense,
-              elevation: kElevation.toInt(),
-              items:
-              getOffenses().map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: const TextStyle(
-                      fontSize: 12.0,
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: DropdownButton<String>(
+                value: dropdownValueOffense,
+                elevation: kElevation.toInt(),
+                items: getOffenses().map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
                     ),
-                  ),
-                );
-              }).toList(),
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownValueOffense = value!;
-                });
-              },
+                  );
+                }).toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    dropdownValueOffense = value!;
+                  });
+                },
+              ),
             ),
             const SizedBox(
               height: kBoxHeight,

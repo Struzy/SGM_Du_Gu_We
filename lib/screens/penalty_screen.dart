@@ -249,12 +249,15 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                       }
 
                       // If start dates are the same, compare by name
-                      return a.name.compareTo(b.name);
+                      return b.name.compareTo(a.name);
                     });
 
                     return Expanded(
-                      child: ListView(
-                        children: filteredPenalties.map(buildPenalty).toList(),
+                      child: RefreshIndicator(
+                        onRefresh: refreshData,
+                        child: ListView(
+                          children: filteredPenalties.map(buildPenalty).toList(),
+                        ),
                       ),
                     );
                   }
@@ -320,6 +323,13 @@ class PenaltyScreenState extends State<PenaltyScreen> {
     }
     setState(() {
       // Update the UI with the filtered list
+    });
+  }
+
+  // Refresh list view by pulling down the screen
+  Future refreshData() async {
+    setState(() {
+      readPenalties();
     });
   }
 }

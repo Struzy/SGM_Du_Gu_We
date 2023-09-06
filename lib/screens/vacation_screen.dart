@@ -251,8 +251,12 @@ class VacationScreenState extends State<VacationScreen> {
                     });
 
                     return Expanded(
-                      child: ListView(
-                        children: filteredVacations.map(buildVacation).toList(),
+                      child: RefreshIndicator(
+                        onRefresh: refreshData,
+                        child: ListView(
+                          children:
+                              filteredVacations.map(buildVacation).toList(),
+                        ),
                       ),
                     );
                   }
@@ -318,6 +322,13 @@ class VacationScreenState extends State<VacationScreen> {
     }
     setState(() {
       // Update the UI with the filtered list
+    });
+  }
+
+  // Refresh list view by pulling down the screen
+  Future refreshData() async {
+    setState(() {
+      readVacations();
     });
   }
 }

@@ -1,10 +1,6 @@
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:sgm_du_gu_we/models/song_list.dart';
 import 'package:sgm_du_gu_we/constants/padding.dart';
-import '../models/song.dart';
 import '../widgets/navigation_drawer.dart' as nav;
 
 class MediaPlayerScreen extends StatefulWidget {
@@ -17,21 +13,12 @@ class MediaPlayerScreen extends StatefulWidget {
 }
 
 class MediaPlayerScreenState extends State<MediaPlayerScreen> {
-  AudioPlayer audioPlayer = AudioPlayer();
-  String currentSong = '';
-  bool isPlaying = false;
-  bool isLoading = false;
+  final assetsAudioPlayer = AssetsAudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    audioPlayer = AudioPlayer();
-  }
-
-  @override
-  void dispose() {
-    audioPlayer.dispose();
-    super.dispose();
+    loadAudioFromWeb(assetsAudioPlayer);
   }
 
   @override
@@ -48,111 +35,38 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
           padding: const EdgeInsets.all(
             kPadding,
           ),
-          child: ListView.builder(
-            //itemCount: songs.length,
-            itemBuilder: (context, index) {
-              //final song = songs[index];
-              return ListTile(
-                //leading: CachedNetworkImage(
-                  //imageUrl: song.coverPath,
-                  //placeholder: (context, url) =>
-                  //const CircularProgressIndicator(),
-                  //errorWidget: (context, url, error) => const Icon(
-                    //Icons.error,
-                  //),
-                //),
-                //title: Text(song.title,),
-                //onTap: () => playSong(song.songPath),
-              );
-            },
-          ),
-        ),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              /*IconButton(
-                icon: const Icon(
-                  Icons.stop,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                StreamBuilder(
+                  stream: assetsAudioPlayer.current,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return CircularProgressIndicator();
+                    final Playing? playing = snapshot.data;
+                    return Text('dummy');
+                  },
                 ),
-                onPressed: stopSong,
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.pause,
+                SizedBox(height: 20.0),
+                // Play/Pause Button
+                IconButton(
+                  icon: Icon(Icons.play_arrow),
+                  onPressed: () {
+                    assetsAudioPlayer.playOrPause();
+                  },
                 ),
-                onPressed: pauseSong,
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.skip_next,
-                ),
-                onPressed: skipToNextSong,
-              ),*/
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  // Load songs
-  /*Future<List<String>> loadSongs() async {
-    List<Reference> references = await FirebaseStorage.instance.ref().child('Lieder').listAll().then((value) => value.items);
-    return Future.value(references.map((ref) => ref.name).toList());
+  void loadAudioFromWeb(AssetsAudioPlayer assetsAudioPlayer) {
+    final audio = Audio.network(
+      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Lieder%2FSGM_Wir_sind_die_SGM.mp3?alt=media&token=0f44daf8-8a96-4b47-9a0b-10f2b0b0c03f', // Replace with your audio URL
+    );
+    assetsAudioPlayer.open(audio);
   }
-
-  // Play song
-  Future<void> playSong(String songUrl) async {
-    if (isPlaying) {
-      await audioPlayer.stop();
-    }
-    int result = await audioPlayer.play(songUrl);
-    if (result == 1) {
-      setState(() {
-        isPlaying = true;
-        currentSong = songUrl;
-      });
-    }
-  }
-
-  // Pause song
-  Future<void> pauseSong() async {
-    if (isPlaying) {
-      await audioPlayer.pause();
-      setState(() {
-        isPlaying = false;
-      });
-    }
-  }
-
-  // Stop song
-  Future<void> stopSong() async {
-    if (isPlaying) {
-      await audioPlayer.stop();
-      setState(() {
-        isPlaying = false;
-        currentSong = '';
-      });
-    }
-  }
-
-  // Skip to next song
-  Future<void> skipToNextSong() async {
-    //int currentIndex = songList.indexOf(currentSong);
-    //if (currentIndex < songList.length - 1) {
-      //String nextSong = songList[currentIndex + 1];
-      //await playSong(nextSong);
-    } //else {
-      // If it's the last song, stop playing
-      //stopSong();
-    }
-  //}
-//}
-
-// Get all the songs
-List<Song> loadSongs() {
-  SongList songList = SongList();
-
-  return songList.songList;*/
 }
