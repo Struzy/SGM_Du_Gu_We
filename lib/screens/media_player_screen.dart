@@ -19,6 +19,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
   void initState() {
     super.initState();
     loadAudioFromWeb(assetsAudioPlayer);
+    print(assetsAudioPlayer.current);
   }
 
   @override
@@ -65,7 +66,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
 
   void loadAudioFromWeb(AssetsAudioPlayer assetsAudioPlayer) {
     final audio = Audio.network(
-      'https://firebasestorage.googleapis.com/v0/b/sgm-duguwe.appspot.com/o/Lieder%2FSGM_Wir_sind_die_SGM.mp3?alt=media&token=0f44daf8-8a96-4b47-9a0b-10f2b0b0c03f', // Replace with your audio URL
+      'gs://sgm-duguwe.appspot.com/Lieder/SGM_Wir_sind_die_SGM.mp3', // Replace with your audio URL
     );
     assetsAudioPlayer.open(audio);
   }

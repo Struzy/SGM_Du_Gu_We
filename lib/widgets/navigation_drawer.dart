@@ -23,6 +23,7 @@ import '../screens/second_squad_screen.dart';
 import '../screens/sprinkle_plan_screen.dart';
 import '../screens/squad_screen.dart';
 import '../screens/vacation_screen.dart';
+import '../screens/video_player_screen.dart';
 import '../services/authentication_service.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -368,6 +369,10 @@ class NavigationDrawer extends StatelessWidget {
           onTap: () {
             Navigator.pop(
               context,
+            );
+            Navigator.pushNamed(
+              context,
+              VideoPlayerScreen.id,
             );
           },
         ),
