@@ -1,49 +1,47 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
+import '../constants/music_directory.dart';
+import '../constants/sgm_logo_directory.dart';
 
 class AudioList {
   final audios = <Audio>[
     Audio.network(
-      'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/springtide/Sounds_strange_weird_but_unmistakably_romantic_Vol1/springtide_-_03_-_We_Are_Heading_to_the_East.mp3',
+      kWeAreTheSGM,
       metas: Metas(
         id: 'Online',
-        title: 'Online',
-        artist: 'Florent Champigny',
-        album: 'OnlineAlbum',
-        image: const MetasImage.network(
-            'https://image.shutterstock.com/image-vector/pop-music-text-art-colorful-600w-515538502.jpg'),
+        title: 'Wir sind die SGM',
+        artist: 'SGM Du/Gu/We',
+        album: 'SGM Durchhausen/Gunningen',
+        image: const MetasImage.network(kSGMLogo),
       ),
     ),
     Audio.network(
-      'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/springtide/Sounds_strange_weird_but_unmistakably_romantic_Vol1/springtide_-_03_-_We_Are_Heading_to_the_East.mp3',
+      kTheBoysInGreenWhite,
       metas: Metas(
         id: 'Online',
-        title: 'Online',
-        artist: 'Florent Champigny',
-        album: 'OnlineAlbum',
-        image: const MetasImage.network(
-            'https://image.shutterstock.com/image-vector/pop-music-text-art-colorful-600w-515538502.jpg'),
+        title: 'Die Boys in grün weiß',
+        artist: 'SVD',
+        album: 'SV Durchhausen',
+        image: const MetasImage.network(kSVDLogo),
       ),
     ),
     Audio.network(
-      'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/springtide/Sounds_strange_weird_but_unmistakably_romantic_Vol1/springtide_-_03_-_We_Are_Heading_to_the_East.mp3',
+      kTheBoysInGreenWhiteRetroVersion,
       metas: Metas(
         id: 'Online',
-        title: 'Online',
-        artist: 'Florent Champigny',
-        album: 'OnlineAlbum',
-        image: const MetasImage.network(
-            'https://image.shutterstock.com/image-vector/pop-music-text-art-colorful-600w-515538502.jpg'),
+        title: 'Die Boys in grün weiß (Retro Version)',
+        artist: 'SVD',
+        album: 'SV Durchhausen',
+        image: const MetasImage.network(kSVDLogo),
       ),
     ),
     Audio.network(
-      'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/Music_for_Video/springtide/Sounds_strange_weird_but_unmistakably_romantic_Vol1/springtide_-_03_-_We_Are_Heading_to_the_East.mp3',
+      kWeAreTheSVD,
       metas: Metas(
         id: 'Online',
-        title: 'Online',
-        artist: 'Florent Champigny',
-        album: 'OnlineAlbum',
-        image: const MetasImage.network(
-            'https://image.shutterstock.com/image-vector/pop-music-text-art-colorful-600w-515538502.jpg'),
+        title: 'Wir sind der SVD',
+        artist: 'SVD',
+        album: 'SV Durchhausen',
+        image: const MetasImage.network(kSVDLogo),
       ),
     ),
   ];

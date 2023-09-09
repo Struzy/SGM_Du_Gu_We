@@ -1,10 +1,15 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
+import 'package:sgm_du_gu_we/constants/font_size.dart';
 import 'package:sgm_du_gu_we/constants/padding.dart';
 import 'package:video_player/video_player.dart';
 import '../constants/box_size.dart';
+import '../constants/circle_avatar.dart';
+import '../constants/timer.dart';
 import '../models/video.dart';
 import '../models/video_list.dart';
+import '../widgets/build_video.dart';
 import '../widgets/navigation_drawer.dart' as nav;
 
 List<Video> videos = getVideos();
@@ -22,34 +27,19 @@ class VideoPlayerScreen extends StatefulWidget {
 class VideoPlayerScreenState extends State<VideoPlayerScreen> {
   final TextEditingController searchController = TextEditingController();
   bool isLoading = true;
-  late VideoPlayerController controller;
-  final url = getVideos().first.url;
 
   @override
   void initState() {
     super.initState();
     filteredVideos.sort((a, b) {
-      final titleComparison =
-      a.title.compareTo(b.title);
+      final titleComparison = a.title.compareTo(b.title);
 
       return titleComparison;
     });
-    controller = VideoPlayerController.networkUrl(url)
-      ..addListener(() => setState(() {}))
-      ..setLooping(true)
-      ..initialize().then((_) => controller.play());
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isMuted = controller.value.volume == 0;
-
     return SafeArea(
       child: Scaffold(
         drawer: const nav.NavigationDrawer(),
@@ -83,25 +73,25 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 height: kBoxHeight,
               ),
               Expanded(
-                child: /*ListView.builder(
+                child: ListView.builder(
                   itemCount: filteredVideos.length,
                   itemBuilder: (context, index) {
-                    final player = filteredVideos[index];
+                    final video = filteredVideos[index];
 
                     return ListTile(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SquadDetailScreen(
-                              profilePicture: player.profilePicture,
-                              name: player.name,
+                            builder: (context) => VideoPlayerDetailScreen(
+                              title: video.title,
+                              url: video.url,
                             ),
                           ),
                         );
                       },
                       leading: Image.network(
-                        player.profilePicture,
+                        video.thumbNail,
                         fit: BoxFit.cover,
                         loadingBuilder: (BuildContext context, Widget child,
                             ImageChunkEvent? loadingProgress) {
@@ -113,28 +103,15 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
                         },
                       ),
                       title: Text(
-                        player.name,
+                        video.title,
+                      ),
+                      subtitle: Text(
+                        video.author,
                       ),
                     );
                   },
-                ),*/
-              ),
-              VideoPlayerWidget(controller: controller),
-              const SizedBox(
-                height: 32,
-              ),
-              if (controller.value.isInitialized)
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: kSGMColorGreen,
-                  child: IconButton(
-                    onPressed: () => controller.setVolume(isMuted ? 1 : 0),
-                    icon: Icon(
-                      isMuted ? Icons.volume_mute : Icons.volume_up,
-                      color: Colors.black,
-                    ),
-                  ),
                 ),
+              ),
             ],
           ),
         ),
@@ -149,8 +126,8 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
     if (searchQuery.isNotEmpty) {
       filteredVideos = videos
           .where((video) => video.title.toLowerCase().contains(
-        searchQuery.toLowerCase(),
-      ))
+                searchQuery.toLowerCase(),
+              ))
           .toList();
     } else {
       filteredVideos = List<Video>.from(videos);
@@ -161,78 +138,125 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
   }
 }
 
+class VideoPlayerDetailScreen extends StatefulWidget {
+  const VideoPlayerDetailScreen(
+      {super.key, required this.url, required this.title});
+
+  final String title;
+  final Uri url;
+
+  @override
+  State<VideoPlayerDetailScreen> createState() =>
+      VideoPlayerDetailScreenState();
+}
+
+class VideoPlayerDetailScreenState extends State<VideoPlayerDetailScreen> {
+  VideoPlayerController controller =
+      VideoPlayerController.networkUrl(Uri.parse(''));
+  late StreamController<Duration> timeController;
+  late Timer timer;
+
+  @override
+  void initState() {
+    super.initState();
+    filteredVideos.sort((a, b) {
+      final titleComparison = a.title.compareTo(b.title);
+
+      return titleComparison;
+    });
+    controller = VideoPlayerController.networkUrl(widget.url)
+      ..addListener(() => setState(() {}))
+      ..setLooping(true)
+      ..initialize().then((_) => controller.play());
+    timer = Timer.periodic(
+        const Duration(
+          seconds: kTimerVideo,
+        ), (_) {
+      if (mounted) {
+        timeController.add(controller.value.position);
+      }
+    });
+    timeController = StreamController<Duration>();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    timeController.close();
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isMuted = controller.value.volume == 0;
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.title,
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              controller.value.isInitialized
+                  ? Container(
+                      alignment: Alignment.center,
+                      child: buildVideo(controller),
+                    )
+                  : const CircularProgressIndicator(),
+              const SizedBox(
+                height: kBoxHeight,
+              ),
+              if (controller.value.isInitialized)
+                StreamBuilder<Duration>(
+                  stream: timeController.stream,
+                  builder: (context, snapshot) {
+                    final position = snapshot.data ?? Duration.zero;
+                    final remaining = controller.value.duration - position;
+                    return Text(
+                      '${formatDuration(position)}/${formatDuration(remaining)}',
+                      style: const TextStyle(
+                        fontSize: kFontsizeSubtitle,
+                      ),
+                    );
+                  },
+                ),
+              const SizedBox(
+                height: kBoxHeight + 40.0,
+              ),
+              CircleAvatar(
+                radius: kRadiusVideoPlayButton,
+                backgroundColor: kSGMColorGreen,
+                child: IconButton(
+                  onPressed: () => controller.setVolume(isMuted ? 1 : 0),
+                  icon: Icon(
+                    isMuted ? Icons.volume_mute : Icons.volume_up,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Format duration of current playing video
+String formatDuration(Duration duration) {
+  final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+  final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+  return '$minutes:$seconds';
+}
+
 // Get all the videos
 List<Video> getVideos() {
   VideoList videoList = VideoList();
 
   return videoList.videoList;
-}
-
-class VideoPlayerWidget extends StatelessWidget {
-  const VideoPlayerWidget({super.key, required this.controller});
-
-  final VideoPlayerController controller;
-
-  @override
-  Widget build(BuildContext context) => controller.value.isInitialized
-      ? Container(
-          alignment: Alignment.topCenter,
-          child: buildVideo(),
-        )
-      : const CircularProgressIndicator();
-
-  Widget buildVideo() => Stack(
-        children: <Widget>[
-          buildVideoPlayer(),
-          Positioned.fill(child: BasicOverlayWidget(controller: controller)),
-        ],
-      );
-
-  Widget buildVideoPlayer() => AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
-        child: VideoPlayer(
-          controller,
-        ),
-      );
-}
-
-class BasicOverlayWidget extends StatelessWidget {
-  const BasicOverlayWidget({super.key, required this.controller});
-
-  final VideoPlayerController controller;
-
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () =>
-            controller.value.isPlaying ? controller.pause() : controller.play(),
-        child: Stack(
-          children: <Widget>[
-            buildPlay(),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: buildIndicator(),
-            ),
-          ],
-        ),
-      );
-
-  Widget buildIndicator() => VideoProgressIndicator(
-        controller,
-        allowScrubbing: true,
-      );
-
-  Widget buildPlay() => controller.value.isPlaying
-      ? Container()
-      : Container(
-          alignment: Alignment.center,
-          color: Colors.black26,
-          child: const Icon(
-            Icons.play_arrow,
-            color: Colors.white,
-            size: 80,
-          ),
-        );
 }

@@ -46,7 +46,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(const SGMDuGuWe());
+    runApp(
+      const SGMDuGuWe(),
+    );
   });
 }
 
@@ -57,6 +59,7 @@ class SGMDuGuWe extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: true,
+      // Set to false if application is completed
       theme: ThemeData(
         fontFamily: kSourceSansPro,
         scaffoldBackgroundColor: kSGMColorGreenLight,
@@ -110,7 +113,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: LoginScreen.id,
+      initialRoute: VideoPlayerScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),
