@@ -155,10 +155,6 @@ class BankAccountBalanceDuGuState extends State<BankAccountBalanceDuGu>
                           formatBalance(balanceAnimation.value);
 
                       return GestureDetector(
-                        /*onTap: () {
-                          double modifiedBalance = double.parse(myValue);
-                          updateBalance(modifiedBalance);
-                        },*/
                         onTap: () {
                           showModalBottomSheet(
                             context: context,

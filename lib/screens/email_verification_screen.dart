@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
+import '../constants/font_family.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
 import '../constants/timer.dart';
@@ -111,6 +112,7 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     'Abbrechen',
                     style: TextStyle(
                       color: Colors.black54,
+                      fontFamily: kSpartanMB,
                     ),
                   ),
                   onPressed: () {

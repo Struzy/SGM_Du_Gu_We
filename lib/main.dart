@@ -113,7 +113,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: MediaPlayerScreen.id,
+      initialRoute: HomeScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),

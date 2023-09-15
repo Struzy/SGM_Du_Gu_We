@@ -120,6 +120,10 @@ flutter:
       fonts:
         - asset: fonts/SpartanMB-Black.otf
           weight: 900
+
+    - family: AssetAudioPlayer
+      fonts:
+        - asset: fonts/AssetAudioPlayer.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
