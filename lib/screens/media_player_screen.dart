@@ -8,7 +8,6 @@ import '../constants/duration.dart';
 import '../constants/font_family.dart';
 import '../constants/image.dart';
 import '../models/audio_list.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 import '../widgets/playing_controls.dart';
 import '../widgets/position_seek.dart';
 import '../widgets/songs_selector.dart';

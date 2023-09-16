@@ -56,7 +56,7 @@ class SongsSelector extends StatelessWidget {
             },
             child: const Center(
               child: Text(
-                'Alle als Playlist',
+                'Alle als Playlist abspielen',
                 style: TextStyle(
                   color: Colors.black,
                   fontFamily: kSpartanMB,

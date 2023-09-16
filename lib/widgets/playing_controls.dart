@@ -67,15 +67,13 @@ class PlayingControls extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
           onTap: () {
             if (toggleLoop != null) toggleLoop!();
           },
           child: loopIcon(context),
-        ),
-        const SizedBox(
-          width: kBoxWidthPlayingControls,
         ),
         TextButton(
           onPressed: isPlaylist ? onPrevious : null,
@@ -84,9 +82,6 @@ class PlayingControls extends StatelessWidget {
             size: kPlayingControlIcons,
             color: Colors.black,
           ),
-        ),
-        const SizedBox(
-          width: kBoxWidthPlayingControls,
         ),
         TextButton(
           onPressed: onPlay,
@@ -98,9 +93,6 @@ class PlayingControls extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        const SizedBox(
-          width: kBoxWidthPlayingControls,
-        ),
         TextButton(
           onPressed: isPlaylist ? onNext : null,
           child: const Icon(
@@ -108,9 +100,6 @@ class PlayingControls extends StatelessWidget {
             size: kPlayingControlIcons,
             color: Colors.black,
           ),
-        ),
-        const SizedBox(
-          width: kBoxWidthStopControl,
         ),
         if (onStop != null)
           TextButton(
