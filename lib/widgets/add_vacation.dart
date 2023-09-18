@@ -215,7 +215,7 @@ class AddVacationState extends State<AddVacation> {
                   );
                 } else {
                   try {
-                    createVacation(
+                    DatabaseCreateService.createVacation(
                       startDate: controllerStartDate.text,
                       endDate: controllerEndDate.text,
                       name: dropdownValueName,

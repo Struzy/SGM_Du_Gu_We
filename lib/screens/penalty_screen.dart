@@ -124,7 +124,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                               'JA',
                             );
                             try {
-                              deletePenalty(
+                              DatabaseDeleteService.deletePenalty(
                                 id: penalty.id,
                               );
                             } catch (e) {
@@ -225,7 +225,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                 height: kBoxHeight,
               ),
               StreamBuilder<List<Penalty>>(
-                stream: readPenalties(),
+                stream: DatabaseReadService.readPenalties(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -329,7 +329,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
   // Refresh list view by pulling down the screen
   Future refreshData() async {
     setState(() {
-      readPenalties();
+      DatabaseReadService.readPenalties();
     });
   }
 }

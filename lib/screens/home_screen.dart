@@ -4,6 +4,7 @@ import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_family.dart';
 import '../constants/padding.dart';
+import '../constants/squad_directory.dart';
 import '../widgets/navigation_drawer.dart' as nav;
 
 class HomeScreen extends StatefulWidget {
@@ -91,7 +92,7 @@ class HomeScreenState extends State<HomeScreen> {
                     height: kBoxHeight,
                   ),
                   Image.network(
-                    'https://images.media.fussball.de/userfiles/n/E/W/anvdDGNaRVzrCCDy2r5T70_t3.jpg',
+                    kFirstSquadImage,
                     loadingBuilder: loadingBuilder,
                   ),
                   const SizedBox(
@@ -108,7 +109,7 @@ class HomeScreenState extends State<HomeScreen> {
                     height: kBoxHeight,
                   ),
                   Image.network(
-                    'https://images.media.fussball.de/userfiles/w/e/K/sVNqBzZhx5ySXy1Fjc9i10_t3.jpg',
+                    kSecondSquadImage,
                     loadingBuilder: loadingBuilder,
                   ),
                 ],

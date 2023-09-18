@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sgm_du_gu_we/widgets/info_bar.dart';
 
 class AuthenticationService {
   // Sign up user
@@ -42,11 +43,31 @@ class AuthenticationService {
   }
 
   // Get current user
-  static User? getUser() {
+  static User? getUser(BuildContext context) {
     try {
       return FirebaseAuth.instance.currentUser;
     } on FirebaseAuthException {
+      InfoBar.showInfoBar(
+        context: context,
+        info: 'Es ist zurzeit kein Anwender angemeldet.',
+      );
       return null;
+    }
+  }
+
+  // Delete user account
+  static Future<void> deleteUser(
+      {required User? user, required BuildContext context}) async {
+    if (user != null) {
+      try {
+        await user.delete();
+        await FirebaseAuth.instance.signOut();
+      } catch (e) {
+        InfoBar.showInfoBar(
+          context: context,
+          info: 'Das Benutzerkonto konnte nicht gelöscht werden.',
+        );
+      }
     }
   }
 
@@ -157,7 +178,7 @@ class AuthenticationService {
         break;
       case 'weak-password':
         errorMessage =
-        'Der angegebene Wert für die Benutzereigenschaft password ist zu schwach. Es muss eine Zeichenfolge mit mindestens sechs Zeichen sein.';
+            'Der angegebene Wert für die Benutzereigenschaft password ist zu schwach. Es muss eine Zeichenfolge mit mindestens sechs Zeichen sein.';
         break;
       case 'wrong-password':
         errorMessage =
@@ -260,7 +281,7 @@ class AuthenticationService {
         break;
       case 'user-disabled':
         errorMessage =
-        'Der Benutzer zur angegebenen E-Mail ist deaktiviert worden.';
+            'Der Benutzer zur angegebenen E-Mail ist deaktiviert worden.';
         break;
       case 'user-not-found':
         errorMessage =

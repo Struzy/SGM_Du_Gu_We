@@ -215,7 +215,7 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
             ElevatedButton.icon(
               onPressed: () {
                 try {
-                  updatePenalty(
+                  DatabaseUpdateService.updatePenalty(
                       id: widget.id,
                       date: widget.date,
                       name: widget.name,

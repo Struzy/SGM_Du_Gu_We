@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/screens/finance_screen.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
+import 'package:sgm_du_gu_we/screens/settings_screen.dart';
 import 'package:sgm_du_gu_we/screens/weather_screen.dart';
 import '../constants/color.dart';
 import '../screens/baar_cup_screen.dart';
@@ -483,6 +484,10 @@ class NavigationDrawer extends StatelessWidget {
           onTap: () {
             Navigator.pop(
               context,
+            );
+            Navigator.pushNamed(
+              context,
+              SettingsScreen.id,
             );
           },
         ),

@@ -1,13 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/screens/finance_screen.dart';
+import 'package:sgm_du_gu_we/widgets/info_bar.dart';
 import '../constants/box_size.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
 
 class UpdateBalance extends StatefulWidget {
-  const UpdateBalance({super.key});
+  const UpdateBalance(
+      {super.key,
+      required this.title,
+      required this.hintText,
+      required this.balanceType, required this.info});
+
+  final String title;
+  final String hintText;
+  final String balanceType;
+  final String info;
 
   @override
   UpdateBalanceState createState() => UpdateBalanceState();
@@ -41,9 +51,9 @@ class UpdateBalanceState extends State<UpdateBalance> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Kontostand aktualisieren',
-              style: TextStyle(
+            Text(
+              widget.title,
+              style: const TextStyle(
                 fontSize: kFontsizeSubtitle,
                 fontWeight: FontWeight.bold,
               ),
@@ -61,9 +71,11 @@ class UpdateBalanceState extends State<UpdateBalance> {
               onChanged: (value) {
                 balance = value;
               },
-              decoration: const InputDecoration(
-                icon: Icon(Icons.account_balance),
-                hintText: 'Neuen Kontostand angeben',
+              decoration: InputDecoration(
+                icon: const Icon(
+                  Icons.account_balance,
+                ),
+                hintText: widget.hintText,
               ),
             ),
             const SizedBox(
@@ -72,8 +84,12 @@ class UpdateBalanceState extends State<UpdateBalance> {
             ElevatedButton.icon(
               onPressed: () {
                 updateBalance(
-                  type: 'bankAccountBalanceDuGu',
+                  type: widget.balanceType,
                   newValue: balance,
+                );
+                InfoBar.showInfoBar(
+                  context: context,
+                  info: widget.info,
                 );
                 Navigator.pushNamed(
                   context,

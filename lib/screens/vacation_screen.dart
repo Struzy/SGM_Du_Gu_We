@@ -121,7 +121,7 @@ class VacationScreenState extends State<VacationScreen> {
                               'JA',
                             );
                             try {
-                              deleteVacation(
+                              DatabaseDeleteService.deleteVacation(
                                 id: vacation.id,
                               );
                             } catch (e) {
@@ -221,7 +221,7 @@ class VacationScreenState extends State<VacationScreen> {
                 height: kBoxHeight,
               ),
               StreamBuilder<List<Vacation>>(
-                stream: readVacations(),
+                stream: DatabaseReadService.readVacations(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -328,7 +328,7 @@ class VacationScreenState extends State<VacationScreen> {
   // Refresh list view by pulling down the screen
   Future refreshData() async {
     setState(() {
-      readVacations();
+      DatabaseReadService.readVacations();
     });
   }
 }

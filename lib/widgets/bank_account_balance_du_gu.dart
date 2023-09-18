@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sgm_du_gu_we/widgets/info_bar.dart';
 import 'package:sgm_du_gu_we/widgets/update_balance.dart';
+import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_size.dart';
+import '../services/balance_format_service.dart';
 
 // Widget for the bank account balance of Durchhausen/Gunningen
 class BankAccountBalanceDuGu extends StatefulWidget {
@@ -51,8 +54,9 @@ class BankAccountBalanceDuGuState extends State<BankAccountBalanceDuGu>
         }
       });
     } catch (e) {
-      showSnackBar(
-        'Betrag konnte nicht geladen werden.',
+      InfoBar.showInfoBar(
+        context: context,
+        info: 'Betrag konnte nicht geladen werden.',
       );
     }
   }
@@ -83,7 +87,14 @@ class BankAccountBalanceDuGuState extends State<BankAccountBalanceDuGu>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Kontostand Durchhausen/Gunningen:',
+                'Kontostand',
+                style: TextStyle(
+                  fontSize: kFontsizeSubtitle,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Text(
+                'Durchhausen/Gunningen:',
                 style: TextStyle(
                   fontSize: kFontsizeSubtitle,
                   fontWeight: FontWeight.bold,
@@ -100,14 +111,15 @@ class BankAccountBalanceDuGuState extends State<BankAccountBalanceDuGu>
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: kSGMColorBlue,
-                      width: 5.0,
+                      width: borderWidth,
                     ),
                   ),
                   child: Center(
                     child: AnimatedBuilder(
                       animation: balanceAnimation,
                       builder: (context, child) {
-                        String formattedBalance = formatBalance(balance);
+                        String formattedBalance =
+                            BalanceFormatService.formatBalance(balance);
                         return GestureDetector(
                           onTap: () {
                             showModalBottomSheet(
@@ -116,10 +128,17 @@ class BankAccountBalanceDuGuState extends State<BankAccountBalanceDuGu>
                               builder: (context) => SingleChildScrollView(
                                 child: Container(
                                   padding: EdgeInsets.only(
-                                    bottom:
-                                        MediaQuery.of(context).viewInsets.bottom,
+                                    bottom: MediaQuery.of(context)
+                                        .viewInsets
+                                        .bottom,
                                   ),
-                                  child: const UpdateBalance(),
+                                  child: const UpdateBalance(
+                                    title: 'Kontostand Du/Gu aktualisieren',
+                                    hintText: 'Neuen Kontostand angeben',
+                                    balanceType: 'bankAccountBalanceDuGu',
+                                    info:
+                                        'Kontostand erfolgreich aktualisiert.',
+                                  ),
                                 ),
                               ),
                             );
@@ -142,23 +161,6 @@ class BankAccountBalanceDuGuState extends State<BankAccountBalanceDuGu>
           ),
         );
       },
-    );
-  }
-
-  // Helper function to format the balance using German spelling and the Euro sign
-  String formatBalance(double balance) {
-    final formatter = NumberFormat("#,##0.00 \u20AC", "de_DE");
-    return formatter.format(balance);
-  }
-
-  // Show snack bar
-  void showSnackBar(String snackBarText) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          snackBarText,
-        ),
-      ),
     );
   }
 }

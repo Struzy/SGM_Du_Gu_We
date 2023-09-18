@@ -200,7 +200,7 @@ class AddPenaltyState extends State<AddPenalty> {
             ElevatedButton.icon(
               onPressed: () {
                 try {
-                  createPenalty(
+                  DatabaseCreateService.createPenalty(
                       date: controllerDate.text,
                       name: dropdownValueName,
                       offense: dropdownValueOffense,

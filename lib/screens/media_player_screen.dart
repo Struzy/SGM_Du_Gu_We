@@ -168,7 +168,7 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
                         return Column(
                           children: [
                             PositionSeekWidget(
-                              currentPosition: infos.currentPosition,
+                              currentPosition: infos!.currentPosition,
                               duration: infos.duration,
                               seekTo: (to) {
                                 audioPlayer.seek(to);

@@ -228,7 +228,7 @@ class UpdateVacationState extends State<UpdateVacation> {
                   );
                 } else {
                   try {
-                    updateVacation(
+                    DatabaseUpdateService.updateVacation(
                         id: widget.id,
                         startDate: controllerStartDate.text,
                         endDate: controllerEndDate.text,

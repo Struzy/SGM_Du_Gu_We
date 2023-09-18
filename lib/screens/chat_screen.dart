@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
+import 'package:sgm_du_gu_we/services/authentication_service.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/padding.dart';
@@ -22,13 +23,13 @@ class ChatScreen extends StatefulWidget {
 
 class ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
-  late User loggedInUser;
+  late User? loggedInUser;
   late String messageText;
 
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
+    loggedInUser = AuthenticationService.getUser(context);
   }
 
   @override
@@ -92,7 +93,7 @@ class ChatScreenState extends State<ChatScreen> {
                             messageTextController.clear();
                             firestore.collection('messages').add({
                               'text': messageText,
-                              'sender': loggedInUser.email,
+                              'sender': loggedInUser?.email,
                             });
                           },
                           foregroundColor: Colors.black,
@@ -110,24 +111,6 @@ class ChatScreenState extends State<ChatScreen> {
             ),
           )),
     );
-  }
-
-  // Get current user
-  void getCurrentUser() async {
-    try {
-      final user = await auth.currentUser;
-      if (user != null) {
-        loggedInUser = user;
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Es ist zurzeit kein Anwender angemeldet.',
-          ),
-        ),
-      );
-    }
   }
 
   // Listen to Cloud Firestore and get messages instantly
