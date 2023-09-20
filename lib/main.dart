@@ -39,7 +39,14 @@ import 'constants/text_field.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyDnOKl18AsK_K3tP7Oogul-aYS1fC0xrt8',
+      appId: '1:785053102637:android:f89d7a1c61f303b1727ea4',
+      messagingSenderId: '785053102637',
+      projectId: 'sgm-duguwe',
+    ),
+  );
   AssetsAudioPlayer.setupNotificationsOpenAction((notification) {
     return true;
   });
@@ -114,7 +121,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: SettingsScreen.id,
+      initialRoute: SplashScreen.id,
       routes: {
         SplashScreen.id: (context) => const SplashScreen(),
         MainScreen.id: (context) => const MainScreen(),

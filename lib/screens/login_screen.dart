@@ -1,12 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sgm_du_gu_we/constants/sgm_logo_directory.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
+import 'package:sgm_du_gu_we/widgets/reset_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/box_size.dart';
 import '../constants/circle_avatar.dart';
 import '../constants/color.dart';
+import '../constants/font_family.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
 import '../services/authentication_service.dart';
@@ -133,6 +134,34 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                       label: const Text(
                         'Anmelden',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: kBoxHeight,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => SingleChildScrollView(
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom,
+                              ),
+                              child: const ResetPassword(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'Passwort vergessen?',
+                        style: TextStyle(
+                          color: kSGMColorBlue,
+                          fontFamily: kSpartanMB,
+                          decoration: TextDecoration.underline,
+                        ),
                       ),
                     ),
                   ],

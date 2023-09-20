@@ -55,6 +55,26 @@ class AuthenticationService {
     }
   }
 
+  // Reset password for current user
+  static Future<void> resetPassword(
+      {required String email, required BuildContext context}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: email,
+      );
+      InfoBar.showInfoBar(
+        context: context,
+        info: 'E-Mail wurde versendet.',
+      );
+    } catch (e) {
+      InfoBar.showInfoBar(
+        context: context,
+        info:
+            'Eingegebene E-Mail ist ungültig oder der Benutzer existiert nicht.',
+      );
+    }
+  }
+
   // Delete user account
   static Future<void> deleteUser(
       {required User? user, required BuildContext context}) async {

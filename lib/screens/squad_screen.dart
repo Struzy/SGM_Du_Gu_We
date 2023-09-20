@@ -30,8 +30,7 @@ class SquadScreenState extends State<SquadScreen> {
   void initState() {
     super.initState();
     filteredPlayers.sort((a, b) {
-      final startDateComparison =
-      a.name.compareTo(b.name);
+      final startDateComparison = a.name.compareTo(b.name);
 
       return startDateComparison;
     });
