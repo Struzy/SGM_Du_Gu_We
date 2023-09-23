@@ -55,12 +55,12 @@ class EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Email-Verifikation'),
-        ),
-        body: Padding(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Email-Verifikation'),
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(
             kPadding,
           ),

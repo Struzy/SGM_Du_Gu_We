@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/font_size.dart';
 import '../constants/box_size.dart';
+import '../constants/box_decoration.dart';
 import '../constants/color.dart';
 import '../constants/font_family.dart';
 import '../constants/padding.dart';
@@ -21,13 +22,13 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const nav.NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text('Hauptmenü'),
-        ),
-        body: Padding(
+    return Scaffold(
+      drawer: const nav.NavigationDrawer(),
+      appBar: AppBar(
+        title: const Text('Hauptmenü'),
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(
             kPadding,
           ),
@@ -82,7 +83,7 @@ class HomeScreenState extends State<HomeScreen> {
                     height: kBoxHeight,
                   ),
                   const Text(
-                    'Durchhausen/Gunningen:',
+                    '1. Mannschaft:',
                     style: TextStyle(
                       fontSize: kFontsizeSubtitle,
                       fontWeight: FontWeight.bold,
@@ -91,15 +92,28 @@ class HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Image.network(
-                    kFirstSquadImage,
-                    loadingBuilder: loadingBuilder,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        kBorderRadiusContainer,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        kBorderRadiusContainer,
+                      ),
+                      child: Image.network(
+                        kFirstSquadImage,
+                        loadingBuilder: loadingBuilder,
+
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: kBoxHeight + 20.0,
                   ),
                   const Text(
-                    'Weigheim:',
+                    '2. Mannschaft:',
                     style: TextStyle(
                       fontSize: kFontsizeSubtitle,
                       fontWeight: FontWeight.bold,
@@ -108,9 +122,21 @@ class HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Image.network(
-                    kSecondSquadImage,
-                    loadingBuilder: loadingBuilder,
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        kBorderRadiusContainer,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        kBorderRadiusContainer,
+                      ),
+                      child: Image.network(
+                        kSecondSquadImage,
+                        loadingBuilder: loadingBuilder,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -122,14 +148,14 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   // Loading builder
-  Widget loadingBuilder(BuildContext context, Widget child,
-      ImageChunkEvent? loadingProgress) {
+  Widget loadingBuilder(
+      BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
     if (loadingProgress == null) {
       isLoading = false;
       return child;
     }
     return const CircularProgressIndicator(
-      color: kSGMColorGreen,
+      color: kSGMColorBlue,
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class PreparationPlanScreen extends StatefulWidget {
   const PreparationPlanScreen({super.key});
@@ -24,7 +23,6 @@ class PreparationPlanScreenState extends State<PreparationPlanScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const nav.NavigationDrawer(),
       appBar: AppBar(
         title: const Text(
           'Vorbereitungsplan Hinrunde 23/24',
@@ -41,9 +39,11 @@ class PreparationPlanScreenState extends State<PreparationPlanScreen> {
           ),
         ],
       ),
-      body: SfPdfViewer.network(
-        kPDFPreparationPlan,
-        key: pdfViewerKey,
+      body: SafeArea(
+        child: SfPdfViewer.network(
+          kPDFPreparationPlan,
+          key: pdfViewerKey,
+        ),
       ),
     );
   }

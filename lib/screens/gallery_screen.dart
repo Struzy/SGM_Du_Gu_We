@@ -3,9 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sgm_du_gu_we/models/album_list.dart';
 import '../models/album.dart';
 import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart' as nav;
-
-List<Album> albums = getAlbums();
 
 class GalleryScreen extends StatefulWidget {
   const GalleryScreen({super.key});
@@ -17,17 +14,18 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class GalleryScreenState extends State<GalleryScreen> {
+  List<Album> albums = getAlbums();
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const nav.NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text(
-            'Galerie',
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Galerie',
         ),
-        body: Padding(
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(
             kPadding,
           ),

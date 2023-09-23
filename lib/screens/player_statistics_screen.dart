@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class PlayerStatisticsScreen extends StatefulWidget {
   const PlayerStatisticsScreen({super.key});
@@ -25,7 +23,6 @@ class PlayerStatisticsScreenState extends State<PlayerStatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const nav.NavigationDrawer(),
       appBar: AppBar(
         title: const Text(
           'Ewige Spielerliste',
@@ -42,9 +39,11 @@ class PlayerStatisticsScreenState extends State<PlayerStatisticsScreen> {
           ),
         ],
       ),
-      body: SfPdfViewer.network(
-        kPDFPlayerStatistics,
-        key: pdfViewerKey,
+      body: SafeArea(
+        child: SfPdfViewer.network(
+          kPDFPlayerStatistics,
+          key: pdfViewerKey,
+        ),
       ),
     );
   }

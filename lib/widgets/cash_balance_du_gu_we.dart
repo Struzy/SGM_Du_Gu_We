@@ -110,7 +110,7 @@ class CashBalanceDuGuWeState extends State<CashBalanceDuGuWe>
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: kSGMColorBlue,
-                      width: borderWidth,
+                      width: kBorderWidth,
                     ),
                   ),
                   child: Center(

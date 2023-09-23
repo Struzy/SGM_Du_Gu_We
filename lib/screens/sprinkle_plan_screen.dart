@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
 import '../widgets/navigation_drawer.dart' as nav;
@@ -42,9 +41,11 @@ class SprinklePlanScreenState extends State<SprinklePlanScreen> {
           ),
         ],
       ),
-      body: SfPdfViewer.network(
-        kPDFSprinklePlan,
-        key: pdfViewerKey,
+      body: SafeArea(
+        child: SfPdfViewer.network(
+          kPDFSprinklePlan,
+          key: pdfViewerKey,
+        ),
       ),
     );
   }

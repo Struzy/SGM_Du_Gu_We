@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/box_size.dart';
 import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class ImprintScreen extends StatelessWidget {
   const ImprintScreen({super.key});
@@ -10,21 +9,20 @@ class ImprintScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const nav.NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text('Impressum'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Impressum'),
+      ),
+      body: const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(
             kPadding,
           ),
           child: SingleChildScrollView(
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const <Widget>[
+                children: <Widget>[
                   Text(
                     'Entwickler der Applikation',
                     style: TextStyle(

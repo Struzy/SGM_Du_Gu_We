@@ -58,14 +58,14 @@ class MediaPlayerScreenState extends State<MediaPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Mediathek',
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Mediathek',
         ),
-        body: Padding(
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(
             kPadding,
           ),

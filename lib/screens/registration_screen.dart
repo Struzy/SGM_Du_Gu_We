@@ -42,14 +42,14 @@ class RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Registrierung',
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Registrierung',
         ),
-        body: ModalProgressHUD(
+      ),
+      body: SafeArea(
+        child: ModalProgressHUD(
           color: kSGMColorGreen,
           inAsyncCall: showSpinner,
           child: Padding(

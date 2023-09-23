@@ -111,7 +111,7 @@ class BankAccountBalanceDuGuState extends State<BankAccountBalanceDuGu>
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: kSGMColorBlue,
-                      width: borderWidth,
+                      width: kBorderWidth,
                     ),
                   ),
                   child: Center(

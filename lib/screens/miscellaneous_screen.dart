@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class MiscellaneousScreen extends StatefulWidget {
   const MiscellaneousScreen({super.key});
@@ -24,7 +23,6 @@ class MiscellaneousScreenState extends State<MiscellaneousScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const nav.NavigationDrawer(),
       appBar: AppBar(
         title: const Text(
           'Anweisung Abstreuwagen',
@@ -41,9 +39,11 @@ class MiscellaneousScreenState extends State<MiscellaneousScreen> {
           ),
         ],
       ),
-      body: SfPdfViewer.network(
-        kPDFMiscellaneous,
-        key: pdfViewerKey,
+      body: SafeArea(
+        child: SfPdfViewer.network(
+          kPDFMiscellaneous,
+          key: pdfViewerKey,
+        ),
       ),
     );
   }

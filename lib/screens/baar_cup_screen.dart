@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class BaarCupScreen extends StatefulWidget {
   const BaarCupScreen({super.key});
@@ -24,7 +23,6 @@ class BaarCupScreenState extends State<BaarCupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const nav.NavigationDrawer(),
       appBar: AppBar(
         title: const Text(
           'Baar-Pokal Tuningen 2023',
@@ -41,19 +39,10 @@ class BaarCupScreenState extends State<BaarCupScreen> {
           ),
         ],
       ),
-      body: SfPdfViewer.network(
-        kPDFBaarCup,
-        key: pdfViewerKey,
-      ),
-    );
-  }
-
-  // Show snack bar
-  void showSnackBar(String snackBarText) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          snackBarText,
+      body: SafeArea(
+        child: SfPdfViewer.network(
+          kPDFBaarCup,
+          key: pdfViewerKey,
         ),
       ),
     );

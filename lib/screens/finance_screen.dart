@@ -4,7 +4,6 @@ import '../constants/padding.dart';
 import '../widgets/bank_account_balance_du_gu.dart';
 import '../widgets/bank_account_balance_we.dart';
 import '../widgets/cash_balance_du_gu_we.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class FinanceScreen extends StatefulWidget {
   const FinanceScreen({super.key});
@@ -18,40 +17,39 @@ class FinanceScreen extends StatefulWidget {
 class FinanceScreenState extends State<FinanceScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          drawer: const nav.NavigationDrawer(),
-          appBar: AppBar(
-            title: const Text(
-              'Finanzen',
-            ),
-            bottom: const TabBar(
-              indicatorColor: kSGMColorRed,
-              tabs: [
-                Tab(
-                  icon: Icon(
-                    Icons.account_balance,
-                    color: Colors.black,
-                  ),
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.euro,
-                    color: Colors.black,
-                  ),
-                ),
-                Tab(
-                  icon: Icon(
-                    Icons.account_balance,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Finanzen',
           ),
-          body: const Padding(
+          bottom: const TabBar(
+            indicatorColor: kSGMColorRed,
+            tabs: [
+              Tab(
+                icon: Icon(
+                  Icons.account_balance,
+                  color: Colors.black,
+                ),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.euro,
+                  color: Colors.black,
+                ),
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.account_balance,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: const SafeArea(
+          child: Padding(
             padding: EdgeInsets.all(
               kPadding,
             ),

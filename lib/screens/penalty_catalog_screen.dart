@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class PenaltyCatalogScreen extends StatefulWidget {
   const PenaltyCatalogScreen({super.key});
@@ -28,7 +27,6 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const nav.NavigationDrawer(),
       appBar: AppBar(
         title: Text(
           'Strafenkatalog SGM $year',
@@ -45,9 +43,11 @@ class PenaltyCatalogScreenState extends State<PenaltyCatalogScreen> {
           ),
         ],
       ),
-      body: SfPdfViewer.network(
-        kPDFPenaltyCatalog,
-        key: pdfViewerKey,
+      body: SafeArea(
+        child: SfPdfViewer.network(
+          kPDFPenaltyCatalog,
+          key: pdfViewerKey,
+        ),
       ),
     );
   }

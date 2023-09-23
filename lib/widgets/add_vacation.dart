@@ -1,15 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
-import '../screens/vacation_screen.dart';
-import '../services/database_create_service.dart';
+import '../models/Player.dart';
+import '../models/vacation.dart';
 
 class AddVacation extends StatefulWidget {
-  const AddVacation({super.key});
+  const AddVacation({super.key, required this.playerData});
+
+  final List<Player> playerData;
 
   @override
   AddVacationState createState() => AddVacationState();
@@ -22,13 +26,13 @@ class AddVacationState extends State<AddVacation> {
   DateTime? pickedEndDate;
   List<String> profilePictures = [];
   List<String> names = [];
-
-  String dropdownValueName = players.first.name;
+  String dropdownValueName = '';
 
   @override
   void initState() {
     super.initState();
-    for (var player in players) {
+    dropdownValueName = widget.playerData.first.name;
+    for (var player in widget.playerData) {
       profilePictures.add(player.profilePicture);
       names.add(player.name);
     }
@@ -48,10 +52,10 @@ class AddVacationState extends State<AddVacation> {
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
             topRight: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
           ),
         ),
@@ -215,7 +219,7 @@ class AddVacationState extends State<AddVacation> {
                   );
                 } else {
                   try {
-                    DatabaseCreateService.createVacation(
+                    createVacation(
                       startDate: controllerStartDate.text,
                       endDate: controllerEndDate.text,
                       name: dropdownValueName,
@@ -255,4 +259,16 @@ class AddVacationState extends State<AddVacation> {
       ),
     );
   }
+}
+
+// Create vacation
+Future createVacation(
+    {required String startDate,
+      required String endDate,
+      required String name}) async {
+  final docVacation = FirebaseFirestore.instance.collection('vacations').doc();
+  final penalty = Vacation(
+      id: docVacation.id, startDate: startDate, endDate: endDate, name: name);
+  final json = penalty.toJson();
+  await docVacation.set(json);
 }

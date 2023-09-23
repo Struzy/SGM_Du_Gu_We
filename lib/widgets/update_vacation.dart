@@ -1,25 +1,30 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
+import '../models/Player.dart';
+import '../screens/squad_screen.dart';
 import '../screens/vacation_screen.dart';
-import '../services/database_update_service.dart';
 
 class UpdateVacation extends StatefulWidget {
   const UpdateVacation(
       {super.key,
-        required this.id,
-        required this.startDate,
-        required this.endDate,
-        required this.name});
+      required this.id,
+      required this.startDate,
+      required this.endDate,
+      required this.name,
+      required this.playerData});
 
   final String id;
   final String startDate;
   final String endDate;
   final String name;
+  final List<Player> playerData;
 
   @override
   UpdateVacationState createState() => UpdateVacationState();
@@ -33,7 +38,7 @@ class UpdateVacationState extends State<UpdateVacation> {
   List<String> profilePictures = [];
   List<String> names = [];
 
-  String dropdownValueName = getPlayers().first.name;
+  String dropdownValueName = '';
 
   @override
   void initState() {
@@ -41,7 +46,7 @@ class UpdateVacationState extends State<UpdateVacation> {
     controllerStartDate.text = widget.startDate;
     controllerEndDate.text = widget.endDate;
     dropdownValueName = widget.name;
-    for (var player in players) {
+    for (var player in widget.playerData) {
       profilePictures.add(player.profilePicture);
       names.add(player.name);
     }
@@ -61,10 +66,10 @@ class UpdateVacationState extends State<UpdateVacation> {
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
             topRight: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
           ),
         ),
@@ -129,7 +134,7 @@ class UpdateVacationState extends State<UpdateVacation> {
 
                 if (pickedStartDate != null) {
                   String formattedDate =
-                  DateFormat('dd.MM.yyyy').format(pickedStartDate!);
+                      DateFormat('dd.MM.yyyy').format(pickedStartDate!);
 
                   setState(() {
                     controllerStartDate.text = formattedDate;
@@ -176,7 +181,7 @@ class UpdateVacationState extends State<UpdateVacation> {
 
                 if (pickedEndDate != null) {
                   String formattedDate =
-                  DateFormat('dd.MM.yyyy').format(pickedEndDate!);
+                      DateFormat('dd.MM.yyyy').format(pickedEndDate!);
 
                   setState(() {
                     controllerEndDate.text = formattedDate;
@@ -228,7 +233,7 @@ class UpdateVacationState extends State<UpdateVacation> {
                   );
                 } else {
                   try {
-                    DatabaseUpdateService.updateVacation(
+                    updateVacation(
                         id: widget.id,
                         startDate: controllerStartDate.text,
                         endDate: controllerEndDate.text,
@@ -268,4 +273,18 @@ class UpdateVacationState extends State<UpdateVacation> {
       ),
     );
   }
+}
+
+// Update vacation
+void updateVacation(
+    {required String id,
+    required String startDate,
+    required String endDate,
+    required String name}) {
+  final vacation = FirebaseFirestore.instance.collection('vacations').doc(id);
+  vacation.update({
+    'startDate': startDate,
+    'endDate': endDate,
+    'name': name,
+  });
 }

@@ -10,7 +10,6 @@ import '../constants/timer.dart';
 import '../models/video.dart';
 import '../models/video_list.dart';
 import '../widgets/build_video.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 List<Video> videos = getVideos();
 List<Video> filteredVideos = List<Video>.from(videos);
@@ -40,13 +39,12 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const nav.NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text('Videothek'),
-        ),
-        body: Padding(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Videothek'),
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(
             kPadding,
           ),
@@ -191,14 +189,14 @@ class VideoPlayerDetailScreenState extends State<VideoPlayerDetailScreen> {
   Widget build(BuildContext context) {
     final isMuted = controller.value.volume == 0;
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.title,
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          widget.title,
         ),
-        body: Center(
+      ),
+      body: SafeArea(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

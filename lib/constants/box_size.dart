@@ -4,3 +4,5 @@ const double kBoxWidthPlayingControls = 12.0;
 const double kBoxWidthStopControl = 45.0;
 const double kHeightMetasImage = 40.0;
 const double kWidthMetasImage = 40.0;
+const double kBoxHeightDetailScreen = 20.0;
+const double kBoxWidthDetailScreen = 150.0;

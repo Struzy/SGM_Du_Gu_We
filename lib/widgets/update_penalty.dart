@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
+import '../models/Player.dart';
 import '../screens/penalty_screen.dart';
-import '../services/database_update_service.dart';
 
 class UpdatePenalty extends StatefulWidget {
   const UpdatePenalty(
@@ -15,13 +17,15 @@ class UpdatePenalty extends StatefulWidget {
       required this.date,
       required this.name,
       required this.offense,
-      required this.amount});
+      required this.amount,
+      required this.playerData});
 
   final String id;
   final String date;
   final String name;
   final String offense;
   final String amount;
+  final List<Player> playerData;
 
   @override
   UpdatePenaltyState createState() => UpdatePenaltyState();
@@ -32,10 +36,9 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
   DateTime? pickedDate;
   List<String> profilePictures = [];
   List<String> names = [];
-
-  String dropdownValueName = players.first.name;
-  String dropdownValueOffense = getOffenses().first;
-  String dropdownValueAmount = getAmounts().first;
+  String dropdownValueName = '';
+  String dropdownValueOffense = '';
+  String dropdownValueAmount = '';
 
   @override
   void initState() {
@@ -44,7 +47,7 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
     dropdownValueName = widget.name;
     dropdownValueOffense = widget.offense;
     dropdownValueAmount = widget.amount;
-    for (var player in players) {
+    for (var player in widget.playerData) {
       profilePictures.add(player.profilePicture);
       names.add(player.name);
     }
@@ -64,10 +67,10 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
             topRight: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
           ),
         ),
@@ -132,7 +135,7 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
 
                 if (pickedDate != null) {
                   String formattedDate =
-                  DateFormat('dd.MM.yyyy').format(pickedDate!);
+                      DateFormat('dd.MM.yyyy').format(pickedDate!);
 
                   setState(() {
                     controllerDate.text = formattedDate;
@@ -156,7 +159,8 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
               child: DropdownButton<String>(
                 value: dropdownValueOffense,
                 elevation: kElevation.toInt(),
-                items: getOffenses().map<DropdownMenuItem<String>>((String value) {
+                items:
+                    getOffenses().map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
@@ -215,7 +219,7 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
             ElevatedButton.icon(
               onPressed: () {
                 try {
-                  DatabaseUpdateService.updatePenalty(
+                  updatePenalty(
                       id: widget.id,
                       date: widget.date,
                       name: widget.name,
@@ -255,4 +259,20 @@ class UpdatePenaltyState extends State<UpdatePenalty> {
       ),
     );
   }
+}
+
+// Update penalty
+void updatePenalty(
+    {required String id,
+    required String date,
+    required String name,
+    required String offense,
+    required String amount}) {
+  final penalty = FirebaseFirestore.instance.collection('penalties').doc(id);
+  penalty.update({
+    'date': date,
+    'name': name,
+    'offense': offense,
+    'amount': amount,
+  });
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class LyricsScreen extends StatefulWidget {
   const LyricsScreen({super.key});
@@ -24,7 +23,6 @@ class LyricsScreenState extends State<LyricsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const nav.NavigationDrawer(),
       appBar: AppBar(
         title: const Text(
           'Liedtexte',
@@ -40,9 +38,11 @@ class LyricsScreenState extends State<LyricsScreen> {
           ),
         ],
       ),
-      body: SfPdfViewer.network(
-        kPDFSongtexts,
-        key: pdfViewerKey,
+      body: SafeArea(
+        child: SfPdfViewer.network(
+          kPDFSongtexts,
+          key: pdfViewerKey,
+        ),
       ),
     );
   }

@@ -7,7 +7,6 @@ import 'package:sgm_du_gu_we/services/authentication_service.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/padding.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 final firestore = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
@@ -34,20 +33,19 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          drawer: const nav.NavigationDrawer(),
-          appBar: AppBar(
-            title: AnimatedTextKit(
-              animatedTexts: [
-                TypewriterAnimatedText(
-                  'Chat',
-                ),
-              ],
-            ),
-            actions: <Widget>[],
+    return Scaffold(
+        appBar: AppBar(
+          title: AnimatedTextKit(
+            animatedTexts: [
+              TypewriterAnimatedText(
+                'Chat',
+              ),
+            ],
           ),
-          body: Padding(
+          actions: const <Widget>[],
+        ),
+        body: SafeArea(
+          child: Padding(
             padding: const EdgeInsets.all(
               kPadding,
             ),
@@ -109,8 +107,8 @@ class ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
-          )),
-    );
+          ),
+        ));
   }
 
   // Listen to Cloud Firestore and get messages instantly

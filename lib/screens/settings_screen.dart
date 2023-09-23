@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import '../constants/box_size.dart';
 import '../constants/circle_avatar.dart';
 import '../constants/color.dart';
-import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
+import '../constants/margin.dart';
 import '../constants/padding.dart';
 import '../constants/sgm_logo_directory.dart';
+import '../models/Player.dart';
 import '../services/authentication_service.dart';
-import '../widgets/navigation_drawer.dart' as nav;
+import '../widgets/edit_profile.dart';
 import 'main_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class SettingsScreen extends StatefulWidget {
 class SettingsScreenState extends State<SettingsScreen> {
   late User? loggedInUser;
   bool isLoading = true;
+  List<Player> players = [];
 
   @override
   void initState() {
@@ -32,15 +34,14 @@ class SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const nav.NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text(
-            'Einstellungen',
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Einstellungen',
         ),
-        body: Padding(
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(
             kPadding,
           ),
@@ -53,60 +54,68 @@ class SettingsScreenState extends State<SettingsScreen> {
                     radius: kRadius,
                     child: ClipOval(
                       child: Image.network(
-                        kSGMLogo,
-                        fit: BoxFit.cover,
-                        loadingBuilder: loadingBuilder,
+                          kSGMLogo,
+                          fit: BoxFit.cover,
+                          loadingBuilder: loadingBuilder,
                       ),
                     ),
                   ),
                   const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        child: const Icon(
-                          Icons.email,
-                        ),
+                  const Card(
+                    margin: EdgeInsets.symmetric(
+                      vertical: kVerticalMargin,
+                      horizontal: kHorizontalMargin,
+                    ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.person,
+                        color: Colors.black,
                       ),
-                      Container(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          '${loggedInUser?.email}',
-                          style: const TextStyle(
-                            fontSize: kFontsizeSubtitle,
-                          ),
-                        ),
+                      title: Text(
+                        '',
                       ),
-                    ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.bottomLeft,
-                        child: const Icon(
-                          Icons.person,
-                        ),
+                  const Card(
+                    margin: EdgeInsets.symmetric(
+                      vertical: kVerticalMargin,
+                      horizontal: kHorizontalMargin,
+                    ),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.email,
+                        color: Colors.black,
                       ),
-                      Container(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          'Manuel Struzyna',
-                          style: const TextStyle(
-                            fontSize: kFontsizeSubtitle,
-                          ),
-                        ),
+                      title: Text(
+                        '',
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(
                     height: kBoxHeight,
                   ),
                   ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) =>
+                            SingleChildScrollView(
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                  MediaQuery
+                                      .of(context)
+                                      .viewInsets
+                                      .bottom,
+                                ),
+                                child: const EditProfile(),
+                              ),
+                            ),
+                      );
+                    },
                     icon: const Icon(
                       Icons.settings,
                       color: Colors.black,
@@ -123,53 +132,54 @@ class SettingsScreenState extends State<SettingsScreen> {
                     onPressed: () {
                       showDialog<String>(
                         context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text(
-                            'Benutzerkonto löschen',
-                          ),
-                          content: const Text(
-                            'Wollen Sie das Benutzerkonto wirklich löschen?',
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(
-                                  context,
-                                  'JA',
-                                );
-                                AuthenticationService.deleteUser(
-                                  user: loggedInUser,
-                                  context: context,
-                                );
-                                Navigator.pushNamed(
-                                  context,
-                                  MainScreen.id,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                      'Benutzerkonto erfolgreich gelöscht.',
-                                    ),
+                        builder: (BuildContext context) =>
+                            AlertDialog(
+                              title: const Text(
+                                'Benutzerkonto löschen',
+                              ),
+                              content: const Text(
+                                'Wollen Sie das Benutzerkonto wirklich löschen?',
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(
+                                      context,
+                                      'JA',
+                                    );
+                                    AuthenticationService.deleteUser(
+                                      user: loggedInUser,
+                                      context: context,
+                                    );
+                                    Navigator.pushNamed(
+                                      context,
+                                      MainScreen.id,
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Benutzerkonto erfolgreich gelöscht.',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'JA',
                                   ),
-                                );
-                              },
-                              child: const Text(
-                                'JA',
-                              ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(
+                                      context,
+                                      'NEIN',
+                                    );
+                                  },
+                                  child: const Text(
+                                    'NEIN',
+                                  ),
+                                ),
+                              ],
                             ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(
-                                  context,
-                                  'NEIN',
-                                );
-                              },
-                              child: const Text(
-                                'NEIN',
-                              ),
-                            ),
-                          ],
-                        ),
                       );
                     },
                     icon: const Icon(
@@ -181,25 +191,6 @@ class SettingsScreenState extends State<SettingsScreen> {
                       'Konto löschen',
                     ),
                   ),
-
-                  /*const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('dummy1'),
-                      Text('dummy2'),
-                    ],
-                  )*/
-
-                  /*const SizedBox(
-                    height: kBoxHeight,
-                  ),
-                  const Text(
-                    'Test',
-                    style: TextStyle(
-                      fontSize: kFontsizeSubtitle,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),*/
                 ],
               ),
             ),
@@ -209,8 +200,8 @@ class SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget loadingBuilder(
-      BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+  Widget loadingBuilder(BuildContext context, Widget child,
+      ImageChunkEvent? loadingProgress) {
     if (loadingProgress == null) {
       isLoading = false;
       return child;

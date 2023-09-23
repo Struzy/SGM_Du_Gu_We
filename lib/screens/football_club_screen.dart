@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../constants/url.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class FootballClubScreen extends StatefulWidget {
   const FootballClubScreen({super.key});
@@ -17,13 +16,12 @@ class FootballClubScreenState extends State<FootballClubScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const nav.NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text('Fußballverein'),
-        ),
-        body: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Fußballverein'),
+      ),
+      body: SafeArea(
+        child: Column(
           children: [
             LinearProgressIndicator(
               value: progress / 100,

@@ -111,7 +111,7 @@ class BankAccountBalanceWeState extends State<BankAccountBalanceWe>
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: kSGMColorBlue,
-                      width: borderWidth,
+                      width: kBorderWidth,
                     ),
                   ),
                   child: Center(

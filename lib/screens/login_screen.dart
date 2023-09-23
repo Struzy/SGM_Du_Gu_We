@@ -45,12 +45,12 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Anmeldung'),
-        ),
-        body: ModalProgressHUD(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Anmeldung'),
+      ),
+      body: SafeArea(
+        child: ModalProgressHUD(
           color: kSGMColorGreen,
           inAsyncCall: showSpinner,
           child: Padding(

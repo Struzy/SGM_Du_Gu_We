@@ -7,7 +7,6 @@ import '../constants/font_family.dart';
 import '../constants/font_size.dart';
 import '../constants/padding.dart';
 import '../constants/spin_kit_double_bounce.dart';
-import '../widgets/navigation_drawer.dart' as nav;
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -27,9 +26,9 @@ class WeatherScreenState extends State<WeatherScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
-      child: Scaffold(
-        body: Padding(
+    return const Scaffold(
+      body: SafeArea(
+        child: Padding(
           padding: EdgeInsets.all(
             kPadding,
           ),
@@ -119,15 +118,14 @@ class WeatherDetailScreenState extends State<WeatherDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        drawer: const nav.NavigationDrawer(),
-        appBar: AppBar(
-          title: const Text(
-            'Wetter Sportplätze',
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Wetter Sportplätze',
         ),
-        body: Padding(
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(
             kPadding,
           ),

@@ -1,15 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
 import '../constants/padding.dart';
+import '../models/Player.dart';
+import '../models/penalty.dart';
 import '../screens/penalty_screen.dart';
-import '../services/database_create_service.dart';
 
 class AddPenalty extends StatefulWidget {
-  const AddPenalty({super.key});
+  const AddPenalty({super.key, required this.playerData});
+
+  final List<Player> playerData;
 
   @override
   AddPenaltyState createState() => AddPenaltyState();
@@ -21,14 +26,15 @@ class AddPenaltyState extends State<AddPenalty> {
   List<String> profilePictures = [];
   List<String> names = [];
 
-  String dropdownValueName = players.first.name;
+  String dropdownValueName = '';
   String dropdownValueOffense = getOffenses().first;
   String dropdownValueAmount = getAmounts().first;
 
   @override
   void initState() {
     super.initState();
-    for (var player in players) {
+    dropdownValueName = widget.playerData.first.name;
+    for (var player in widget.playerData) {
       profilePictures.add(player.profilePicture);
       names.add(player.name);
     }
@@ -48,10 +54,10 @@ class AddPenaltyState extends State<AddPenalty> {
           color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
             topRight: Radius.circular(
-              20.0,
+              kBorderRadiusContainer,
             ),
           ),
         ),
@@ -200,7 +206,7 @@ class AddPenaltyState extends State<AddPenalty> {
             ElevatedButton.icon(
               onPressed: () {
                 try {
-                  DatabaseCreateService.createPenalty(
+                  createPenalty(
                       date: controllerDate.text,
                       name: dropdownValueName,
                       offense: dropdownValueOffense,
@@ -239,4 +245,21 @@ class AddPenaltyState extends State<AddPenalty> {
       ),
     );
   }
+}
+
+// Create penalty
+Future createPenalty(
+    {required String date,
+    required String name,
+    required String offense,
+    required String amount}) async {
+  final docPenalty = FirebaseFirestore.instance.collection('penalties').doc();
+  final penalty = Penalty(
+      id: docPenalty.id,
+      date: date,
+      name: name,
+      offense: offense,
+      amount: amount);
+  final json = penalty.toJson();
+  await docPenalty.set(json);
 }
