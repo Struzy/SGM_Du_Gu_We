@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/box_size.dart';
 import '../constants/circle_avatar.dart';
 import '../constants/color.dart';
+import '../constants/font_family.dart';
 import '../constants/icon_size.dart';
 import '../constants/margin.dart';
 import '../constants/padding.dart';
@@ -128,7 +129,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                   const SizedBox(
                     height: kBoxHeight,
                   ),
-                  ElevatedButton.icon(
+                  TextButton(
                     onPressed: () {
                       showDialog<String>(
                         context: context,
@@ -182,13 +183,12 @@ class SettingsScreenState extends State<SettingsScreen> {
                             ),
                       );
                     },
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.black,
-                      size: kIcon,
-                    ),
-                    label: const Text(
+                    child: const Text(
                       'Konto löschen',
+                      style: TextStyle(
+                        color: kSGMColorBlue,
+                        fontFamily: kSpartanMB,
+                      ),
                     ),
                   ),
                 ],

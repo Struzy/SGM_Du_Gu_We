@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sgm_du_gu_we/widgets/info_bar.dart';
 import 'package:sgm_du_gu_we/widgets/update_balance.dart';
 import '../constants/box_decoration.dart';
