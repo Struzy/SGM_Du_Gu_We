@@ -219,6 +219,31 @@ class VacationScreenState extends State<VacationScreen> {
       appBar: AppBar(
         title: const Text('Urlaub'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  bottom:
+                  MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: AddVacation(
+                  playerData: players,
+                ),
+              ),
+            ),
+          );
+        },
+        foregroundColor: Colors.black,
+        backgroundColor: kSGMColorRed,
+        elevation: kElevation,
+        child: const Icon(
+          Icons.add,
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,42 +277,12 @@ class VacationScreenState extends State<VacationScreen> {
                   const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '${filteredVacations.length.toString()} Urlaube',
-                        style: const TextStyle(
-                          fontSize: kFontsizeSubtitle,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      FloatingActionButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                ),
-                                child: AddVacation(
-                                  playerData: players,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        foregroundColor: Colors.black,
-                        backgroundColor: kSGMColorRed,
-                        elevation: kElevation,
-                        child: const Icon(
-                          Icons.add,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    '${filteredVacations.length.toString()} Urlaube',
+                    style: const TextStyle(
+                      fontSize: kFontsizeSubtitle,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(
                     height: kBoxHeight,
@@ -324,51 +319,46 @@ class VacationScreenState extends State<VacationScreen> {
                     ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(
-                    kPadding,
-                  ),
-                  child: StreamBuilder<List<Vacation>>(
-                    stream: readVacations(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Beim Laden der Einträge ist ein Fehler aufgetreten.',
-                            ),
+                child: StreamBuilder<List<Vacation>>(
+                  stream: readVacations(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Beim Laden der Einträge ist ein Fehler aufgetreten.',
                           ),
-                        );
-                      }
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        vacations = snapshot.data!;
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      vacations = snapshot.data!;
 
-                        vacations.sort((a, b) {
-                          final startDateComparison =
-                              a.startDate.compareTo(b.startDate);
-                          if (startDateComparison != 0) {
-                            return startDateComparison;
-                          }
+                      vacations.sort((a, b) {
+                        final startDateComparison =
+                            a.startDate.compareTo(b.startDate);
+                        if (startDateComparison != 0) {
+                          return startDateComparison;
+                        }
 
-                          // If start dates are the same, compare by name
-                          return a.name.compareTo(b.name);
-                        });
+                        // If start dates are the same, compare by name
+                        return a.name.compareTo(b.name);
+                      });
 
-                        return RefreshIndicator(
-                          onRefresh: refreshData,
-                          child: ListView(
-                            shrinkWrap: true,
-                            children:
-                                filteredVacations.map(buildVacation).toList(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                      return RefreshIndicator(
+                        onRefresh: refreshData,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children:
+                              filteredVacations.map(buildVacation).toList(),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),

@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/screens/squad_screen.dart';
 import 'package:sgm_du_gu_we/widgets/training_participation_long_term.dart';
 import 'package:sgm_du_gu_we/widgets/training_participation_short_term.dart';
 import '../constants/color.dart';
-import '../constants/padding.dart';
+import '../models/Player.dart';
+import '../widgets/info_bar.dart';
 
 class TrainingParticipationScreen extends StatefulWidget {
   const TrainingParticipationScreen({super.key});
@@ -16,6 +19,8 @@ class TrainingParticipationScreen extends StatefulWidget {
 
 class TrainingParticipationScreenState
     extends State<TrainingParticipationScreen> {
+  List<Player> players = [];
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -25,6 +30,25 @@ class TrainingParticipationScreenState
           title: const Text(
             'Trainingsbeteiligung',
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(
+                Icons.undo,
+              ),
+              onPressed: () async {
+                await undoPlayerAvailability(
+                  context: context,
+                );
+                setState(() {
+                  const TrainingParticipationShortTerm();
+                });
+                InfoBar.showInfoBar(
+                  context: context,
+                  info: 'Spielerverfügbarkeit wurde zurückgesetzt.',
+                );
+              },
+            ),
+          ],
           bottom: const TabBar(
             indicatorColor: kSGMColorRed,
             tabs: [
@@ -66,16 +90,11 @@ class TrainingParticipationScreenState
           ),
         ),
         body: const SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(
-              kPadding,
-            ),
-            child: TabBarView(
-              children: [
-                TrainingParticipationShortTerm(),
-                TrainingParticipationLongTerm(),
-              ],
-            ),
+          child: TabBarView(
+            children: [
+              TrainingParticipationShortTerm(),
+              TrainingParticipationLongTerm(),
+            ],
           ),
         ),
       ),
@@ -91,5 +110,27 @@ class TrainingParticipationScreenState
         ),
       ),
     );
+  }
+
+  // Update player availability
+  Future<void> undoPlayerAvailability({required BuildContext context}) async {
+    try {
+      readPlayers().listen((List<Player> playerData) {
+        players = playerData;
+      });
+
+      for (var player in players) {
+        final playerAvailability =
+            FirebaseFirestore.instance.collection('players').doc(player.id);
+        playerAvailability.update({
+          'isChecked': false,
+        });
+      }
+    } catch (e) {
+      InfoBar.showInfoBar(
+        context: context,
+        info: 'Spielerverfügbarkeit konnte nicht zurückgesetzt werden.',
+      );
+    }
   }
 }

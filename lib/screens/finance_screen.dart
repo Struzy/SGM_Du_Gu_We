@@ -28,21 +28,54 @@ class FinanceScreenState extends State<FinanceScreen> {
             indicatorColor: kSGMColorRed,
             tabs: [
               Tab(
-                icon: Icon(
-                  Icons.account_balance,
-                  color: Colors.black,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.account_balance,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      'Konto Du/Gu',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Tab(
-                icon: Icon(
-                  Icons.euro,
-                  color: Colors.black,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.euro,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      'Kasse Du/Gu/We',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Tab(
-                icon: Icon(
-                  Icons.account_balance,
-                  color: Colors.black,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.account_balance,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      'Konto We',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

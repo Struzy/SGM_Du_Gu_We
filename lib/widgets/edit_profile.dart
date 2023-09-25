@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/box_decoration.dart';
-import 'package:sgm_du_gu_we/models/user_profile.dart';
+import 'package:sgm_du_gu_we/screens/home_screen.dart';
+import 'package:sgm_du_gu_we/widgets/info_bar.dart';
 import '../constants/box_size.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
@@ -21,8 +21,9 @@ class EditProfile extends StatefulWidget {
 class EditProfileState extends State<EditProfile> {
   late User? loggedInUser;
   TextEditingController controllerName = TextEditingController();
-  late String name;
   List<Player> players = [];
+  late String name;
+  late String profilePicture;
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       color: const Color(
         0xff394E36,
@@ -58,7 +60,7 @@ class EditProfileState extends State<EditProfile> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'Profil bearbeiten',
+              'Benutzerkonto bearbeiten',
               style: TextStyle(
                 fontSize: kFontsizeSubtitle,
                 fontWeight: FontWeight.bold,
@@ -78,11 +80,8 @@ class EditProfileState extends State<EditProfile> {
                 icon: Icon(
                   Icons.person,
                 ),
-                hintText: 'Vollständigen Namen eingeben',
+                hintText: 'Vor- und Nachnamen eingeben',
               ),
-            ),
-            const SizedBox(
-              height: kBoxHeight,
             ),
             const SizedBox(
               height: kBoxHeight,
@@ -106,40 +105,42 @@ class EditProfileState extends State<EditProfile> {
               height: kBoxHeight,
             ),
             ElevatedButton.icon(
-              onPressed: () {
+              onPressed: () async {
+                for (final player in players) {
+                  if (player.name == loggedInUser?.displayName) {
+                    profilePicture = player.profilePicture;
+                    break;
+                  }
+                }
                 try {
-                  createUserProfile(
-                    profilePicture: getPath(controllerName.text),
-                    userName: controllerName.text,
-                    userEmail: loggedInUser!.email!,
+                  await loggedInUser!.updateDisplayName(name);
+                  await loggedInUser!.updatePhotoURL(profilePicture);
+                  await loggedInUser?.reload();
+                  InfoBar.showInfoBar(
+                    context: context,
+                    info: 'Benutzerkonto wurde erfolgreich aktualisiert.',
+                  );
+                  Navigator.pushNamed(
+                    context,
+                    HomeScreen.id,
                   );
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Profil konnte nicht erstellt werden.',
-                      ),
-                    ),
+                  InfoBar.showInfoBar(
+                    context: context,
+                    info: 'Benutzerkonto konnte nicht aktualisiert werden.',
+                  );
+                  Navigator.pop(
+                    context,
                   );
                 }
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Profil wurde erfolgreich hinzugefügt.',
-                    ),
-                  ),
-                );
-                Navigator.pop(
-                  context,
-                );
               },
               icon: const Icon(
-                Icons.add,
+                Icons.update,
                 color: Colors.black,
                 size: kIcon,
               ),
               label: const Text(
-                'Erstellen',
+                'Konto aktualisieren',
               ),
             ),
           ],
@@ -147,31 +148,4 @@ class EditProfileState extends State<EditProfile> {
       ),
     );
   }
-
-  // Get path of profile picture
-  List<Player> getPath(String name) {
-    List<Player> path = players
-        .where((player) => player.name.contains(
-              name,
-            ))
-        .toList();
-
-    return path;
-  }
-}
-
-// Create vacation
-Future createUserProfile(
-    {required profilePicture,
-    required String userName,
-    required String userEmail}) async {
-  final docUserProfile =
-      FirebaseFirestore.instance.collection('userProfiles').doc();
-  final userProfile = UserProfile(
-      id: docUserProfile.id,
-      profilePicture: profilePicture,
-      name: userName,
-      email: userEmail);
-  final json = userProfile.toJson();
-  await docUserProfile.set(json);
 }

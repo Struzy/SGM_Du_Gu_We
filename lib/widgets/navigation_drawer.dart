@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/screens/finance_screen.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
@@ -5,6 +6,7 @@ import 'package:sgm_du_gu_we/screens/settings_screen.dart';
 import 'package:sgm_du_gu_we/screens/training_participation_screen.dart';
 import 'package:sgm_du_gu_we/screens/weather_screen.dart';
 import '../constants/color.dart';
+import '../constants/sgm_logo_directory.dart';
 import '../screens/baar_cup_screen.dart';
 import '../screens/chat_screen.dart';
 import '../screens/first_squad_league_screen.dart';
@@ -28,8 +30,22 @@ import '../screens/vacation_screen.dart';
 import '../screens/video_player_screen.dart';
 import '../services/authentication_service.dart';
 
-class NavigationDrawer extends StatelessWidget {
+class NavigationDrawer extends StatefulWidget {
   const NavigationDrawer({super.key});
+
+  @override
+  State<NavigationDrawer> createState() => NavigationDrawerState();
+}
+
+class NavigationDrawerState extends State<NavigationDrawer> {
+  late User? loggedInUser;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
+  }
 
   @override
   Widget build(BuildContext context) => Drawer(
@@ -50,28 +66,36 @@ class NavigationDrawer extends StatelessWidget {
           top: 24 + MediaQuery.of(context).padding.top,
           bottom: 24,
         ),
-        child: const Column(
-          children: [
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
             CircleAvatar(
               radius: 52,
-              backgroundImage: NetworkImage(
-                  'https://cdn.fussball.de/public/02IV7D16VC000000VS5489B8VV1J2EVP.web'),
+              child: ClipOval(
+                child: Image.network(
+                  loggedInUser?.photoURL ?? kDefaultAvatarLogo,
+                  fit: BoxFit.cover,
+                  height: 104,
+                  width: 104,
+                  loadingBuilder: loadingBuilder,
+                ),
+              ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 12,
             ),
             Text(
-              'Manuel Struzyna',
-              style: TextStyle(
+              loggedInUser?.displayName ?? '',
+              style: const TextStyle(
                 fontSize: 28,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
             Text(
-              'manuel.struzyna@outlook.de',
-              style: TextStyle(
+              loggedInUser?.email ?? '',
+              style: const TextStyle(
                 fontSize: 16,
-                color: Colors.white,
+                color: Colors.black,
               ),
             ),
           ],
@@ -622,4 +646,16 @@ class NavigationDrawer extends StatelessWidget {
           },
         ),
       ]);
+
+  // Loading builder
+  Widget loadingBuilder(BuildContext context, Widget child,
+      ImageChunkEvent? loadingProgress) {
+    if (loadingProgress == null) {
+      isLoading = false;
+      return child;
+    }
+    return const CircularProgressIndicator(
+      color: kSGMColorGreen,
+    );
+  }
 }

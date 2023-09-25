@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/widgets/info_bar.dart';
 import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
+import '../constants/divider_thickness.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
+import '../constants/margin.dart';
 import '../constants/padding.dart';
 import '../models/Player.dart';
 import '../screens/squad_screen.dart';
@@ -23,6 +27,8 @@ class TrainingParticipationShortTermState
   bool isLoading = true;
   List<Player> players = [];
   List<Player> filteredPlayers = [];
+  List<Player> approvedPlayers = [];
+  List<Player> declinedPlayers = [];
 
   Widget buildPlayer(Player player) => ListTile(
         leading: Material(
@@ -43,11 +49,29 @@ class TrainingParticipationShortTermState
         ),
         title: Text(
           player.name,
+          style: TextStyle(
+            decoration: player.isChecked ? null : TextDecoration.lineThrough,
+            decorationColor: Colors.black,
+            decorationThickness: kDividerThickness,
+          ),
         ),
         subtitle: Text(
           player.miscellaneous,
         ),
-        onTap: () {},
+        trailing: Checkbox(
+          activeColor: kSGMColorRed,
+          value: player.isChecked,
+          onChanged: (newValue) {
+            setState(() {
+              player.isChecked = newValue!;
+            });
+            updatePlayerAvailability(
+              id: player.id,
+              checkboxStatus: player.isChecked,
+              context: context,
+            );
+          },
+        ),
       );
 
   @override
@@ -65,6 +89,10 @@ class TrainingParticipationShortTermState
       setState(() {
         players = playerData;
         filteredPlayers = List<Player>.from(players);
+        approvedPlayers = List<Player>.from(
+            players.where((player) => player.isChecked == true)).toList();
+        declinedPlayers = List<Player>.from(
+            players.where((player) => player.isChecked == false)).toList();
         isLoading = false;
       });
     });
@@ -97,18 +125,68 @@ class TrainingParticipationShortTermState
                     height: kBoxHeight,
                   ),
                   const Text(
-                    'Planungsliste',
+                    'Spielerliste',
                     style: TextStyle(
                       fontSize: kFontsizeTitle,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Text(
-                    '${filteredPlayers.length.toString()} Spieler',
-                    style: const TextStyle(
-                      fontSize: kFontsizeSubtitle,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      const Icon(
+                        Icons.person,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(
+                        width: kBoxWidth,
+                      ),
+                      Text(
+                        '${players.length.toString()} Spieler',
+                        style: const TextStyle(
+                          fontSize: kFontsizeSubtitle,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      const Icon(
+                        Icons.check,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(
+                        width: kBoxWidth,
+                      ),
+                      Text(
+                        '${approvedPlayers.length.toString()} Spieler',
+                        style: const TextStyle(
+                          fontSize: kFontsizeSubtitle,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      const Icon(
+                        Icons.close,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(
+                        width: kBoxWidth,
+                      ),
+                      Text(
+                        '${declinedPlayers.length.toString()} Spieler',
+                        style: const TextStyle(
+                          fontSize: kFontsizeSubtitle,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(
                     height: kBoxHeight,
@@ -145,49 +223,44 @@ class TrainingParticipationShortTermState
                     ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(
-                    kPadding,
-                  ),
-                  child: StreamBuilder<List<Player>>(
-                    stream: readPlayers(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Beim Laden der Einträge ist ein Fehler aufgetreten.',
-                            ),
+                child: StreamBuilder<List<Player>>(
+                  stream: readPlayers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Beim Laden der Einträge ist ein Fehler aufgetreten.',
                           ),
-                        );
-                      }
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        players = snapshot.data!;
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      players = snapshot.data!;
 
-                        players.sort((a, b) {
-                          final nameComparison = a.name.compareTo(b.name);
-                          if (nameComparison != 0) {
-                            return nameComparison;
-                          }
+                      players.sort((a, b) {
+                        final nameComparison = a.name.compareTo(b.name);
+                        if (nameComparison != 0) {
+                          return nameComparison;
+                        }
 
-                          // If start dates are the same, compare by name
-                          return a.name.compareTo(b.name);
-                        });
+                        // If start dates are the same, compare by name
+                        return a.name.compareTo(b.name);
+                      });
 
-                        return RefreshIndicator(
-                          onRefresh: refreshData,
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: filteredPlayers.map(buildPlayer).toList(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                      return RefreshIndicator(
+                        onRefresh: refreshData,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: filteredPlayers.map(buildPlayer).toList(),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),
@@ -220,5 +293,24 @@ class TrainingParticipationShortTermState
     setState(() {
       readPlayers();
     });
+  }
+}
+
+// Update player availability
+void updatePlayerAvailability(
+    {required String id,
+    required bool checkboxStatus,
+    required BuildContext context}) {
+  try {
+    final playerAvailability =
+        FirebaseFirestore.instance.collection('players').doc(id);
+    playerAvailability.update({
+      'isChecked': checkboxStatus,
+    });
+  } catch (e) {
+    InfoBar.showInfoBar(
+      context: context,
+      info: 'Spielerverfügbarkeit konnte nicht aktualisiert werden.',
+    );
   }
 }

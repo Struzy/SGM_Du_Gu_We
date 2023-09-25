@@ -223,6 +223,31 @@ class PenaltyScreenState extends State<PenaltyScreen> {
       appBar: AppBar(
         title: const Text('Strafen'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  bottom:
+                  MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: AddPenalty(
+                  playerData: players,
+                ),
+              ),
+            ),
+          );
+        },
+        foregroundColor: Colors.black,
+        backgroundColor: kSGMColorRed,
+        elevation: kElevation,
+        child: const Icon(
+          Icons.add,
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,42 +281,12 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                   const SizedBox(
                     height: kBoxHeight,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '${filteredPenalties.length.toString()} Strafen',
-                        style: const TextStyle(
-                          fontSize: kFontsizeSubtitle,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      FloatingActionButton(
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) => SingleChildScrollView(
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).viewInsets.bottom,
-                                ),
-                                child: AddPenalty(
-                                  playerData: players,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        foregroundColor: Colors.black,
-                        backgroundColor: kSGMColorRed,
-                        elevation: kElevation,
-                        child: const Icon(
-                          Icons.add,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    '${filteredPenalties.length.toString()} Strafen',
+                    style: const TextStyle(
+                      fontSize: kFontsizeSubtitle,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   const SizedBox(
                     height: kBoxHeight,
@@ -328,50 +323,45 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                     ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(
-                    kPadding,
-                  ),
-                  child: StreamBuilder<List<Penalty>>(
-                    stream: readPenalties(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Beim Laden der Einträge ist ein Fehler aufgetreten.',
-                            ),
+                child: StreamBuilder<List<Penalty>>(
+                  stream: readPenalties(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Beim Laden der Einträge ist ein Fehler aufgetreten.',
                           ),
-                        );
-                      }
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        penalties = snapshot.data!;
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      penalties = snapshot.data!;
 
-                        penalties.sort((a, b) {
-                          final dateComparison = a.date.compareTo(b.date);
-                          if (dateComparison != 0) {
-                            return dateComparison;
-                          }
+                      penalties.sort((a, b) {
+                        final dateComparison = a.date.compareTo(b.date);
+                        if (dateComparison != 0) {
+                          return dateComparison;
+                        }
 
-                          // If dates are the same, compare by name
-                          return a.name.compareTo(b.name);
-                        });
+                        // If dates are the same, compare by name
+                        return a.name.compareTo(b.name);
+                      });
 
-                        return RefreshIndicator(
-                          onRefresh: refreshData,
-                          child: ListView(
-                            shrinkWrap: true,
-                            children:
-                                filteredPenalties.map(buildPenalty).toList(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                      return RefreshIndicator(
+                        onRefresh: refreshData,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children:
+                              filteredPenalties.map(buildPenalty).toList(),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),

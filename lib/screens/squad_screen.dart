@@ -163,49 +163,44 @@ class SquadScreenState extends State<SquadScreen> {
                     ),
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(
-                    kPadding,
-                  ),
-                  child: StreamBuilder<List<Player>>(
-                    stream: readPlayers(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Beim Laden der Einträge ist ein Fehler aufgetreten.',
-                            ),
+                child: StreamBuilder<List<Player>>(
+                  stream: readPlayers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Beim Laden der Einträge ist ein Fehler aufgetreten.',
                           ),
-                        );
-                      }
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      } else {
-                        players = snapshot.data!;
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      players = snapshot.data!;
 
-                        players.sort((a, b) {
-                          final nameComparison = a.name.compareTo(b.name);
-                          if (nameComparison != 0) {
-                            return nameComparison;
-                          }
+                      players.sort((a, b) {
+                        final nameComparison = a.name.compareTo(b.name);
+                        if (nameComparison != 0) {
+                          return nameComparison;
+                        }
 
-                          // If start dates are the same, compare by name
-                          return a.name.compareTo(b.name);
-                        });
+                        // If start dates are the same, compare by name
+                        return a.name.compareTo(b.name);
+                      });
 
-                        return RefreshIndicator(
-                          onRefresh: refreshData,
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: filteredPlayers.map(buildPlayer).toList(),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                      return RefreshIndicator(
+                        onRefresh: refreshData,
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: filteredPlayers.map(buildPlayer).toList(),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ),

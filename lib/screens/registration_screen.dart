@@ -218,6 +218,12 @@ class RegistrationScreenState extends State<RegistrationScreen> {
             password: password,
             context: context,
           );
+          if (FirebaseAuth.instance.currentUser != null) {
+            Navigator.pushNamed(
+              context,
+              EmailVerificationScreen.id,
+            );
+          }
           if (newUser == null) {
             setState(() {
               isLoading = false;
