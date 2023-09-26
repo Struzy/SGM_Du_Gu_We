@@ -1,7 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
-import '../constants/box_size.dart';
-import '../constants/icon_size.dart';
+import 'package:sgm_du_gu_we/constants/box_size.dart';
+import 'package:sgm_du_gu_we/constants/color.dart';
+import 'package:sgm_du_gu_we/constants/icon_size.dart';
 import 'asset_audio_player_icons.dart';
 
 class PlayingControls extends StatelessWidget {
@@ -67,13 +68,15 @@ class PlayingControls extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         GestureDetector(
           onTap: () {
             if (toggleLoop != null) toggleLoop!();
           },
           child: loopIcon(context),
+        ),
+        const SizedBox(
+          width: kBoxWidth,
         ),
         TextButton(
           onPressed: isPlaylist ? onPrevious : null,
@@ -83,6 +86,9 @@ class PlayingControls extends StatelessWidget {
             color: Colors.black,
           ),
         ),
+        const SizedBox(
+          width: kBoxWidth,
+        ),
         TextButton(
           onPressed: onPlay,
           child: Icon(
@@ -90,8 +96,11 @@ class PlayingControls extends StatelessWidget {
                 ? AssetAudioPlayerIcons.pause
                 : AssetAudioPlayerIcons.play,
             size: kPlayingControlIcons,
-            color: Colors.black,
+            color: kSGMColorBlue,
           ),
+        ),
+        const SizedBox(
+          width: kBoxWidth,
         ),
         TextButton(
           onPressed: isPlaylist ? onNext : null,
@@ -100,6 +109,9 @@ class PlayingControls extends StatelessWidget {
             size: kPlayingControlIcons,
             color: Colors.black,
           ),
+        ),
+        const SizedBox(
+          width: kBoxWidth,
         ),
         if (onStop != null)
           TextButton(

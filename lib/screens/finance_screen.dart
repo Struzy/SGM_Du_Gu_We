@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
+import 'package:sgm_du_gu_we/constants/font_size.dart';
 import '../constants/padding.dart';
 import '../widgets/bank_account_balance_du_gu.dart';
 import '../widgets/bank_account_balance_we.dart';
@@ -39,6 +40,7 @@ class FinanceScreenState extends State<FinanceScreen> {
                       'Konto Du/Gu',
                       style: TextStyle(
                         color: Colors.black,
+                        fontSize: kFontsizeBody - 2,
                       ),
                     ),
                   ],
@@ -56,6 +58,7 @@ class FinanceScreenState extends State<FinanceScreen> {
                       'Kasse Du/Gu/We',
                       style: TextStyle(
                         color: Colors.black,
+                        fontSize: kFontsizeBody - 2,
                       ),
                     ),
                   ],
@@ -73,6 +76,7 @@ class FinanceScreenState extends State<FinanceScreen> {
                       'Konto We',
                       style: TextStyle(
                         color: Colors.black,
+                        fontSize: kFontsizeBody - 2,
                       ),
                     ),
                   ],

@@ -472,15 +472,15 @@ class PenaltyDetailScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 20.0,
-                  width: 150.0,
+                  height: kBoxHeightDetailScreen,
+                  width: kBoxWidthDetailScreen,
                   child: Divider(
                     thickness: kDividerThickness,
                     color: Colors.black54,
                   ),
                 ),
                 Text(
-                  '$date',
+                  date,
                   style: const TextStyle(
                     fontSize: kFontsizeSubtitle,
                     fontWeight: FontWeight.bold,
@@ -490,7 +490,7 @@ class PenaltyDetailScreen extends StatelessWidget {
                   height: kBoxHeight,
                 ),
                 Text(
-                  '$offense',
+                  offense,
                   style: const TextStyle(
                     fontSize: kFontsizeSubtitle,
                     fontWeight: FontWeight.bold,
@@ -500,14 +500,11 @@ class PenaltyDetailScreen extends StatelessWidget {
                   height: kBoxHeight,
                 ),
                 Text(
-                  '$amount',
+                  amount,
                   style: const TextStyle(
                     fontSize: kFontsizeSubtitle,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                const SizedBox(
-                  height: kBoxHeight,
                 ),
               ],
             ),

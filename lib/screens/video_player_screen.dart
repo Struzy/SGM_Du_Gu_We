@@ -4,15 +4,13 @@ import 'package:sgm_du_gu_we/constants/color.dart';
 import 'package:sgm_du_gu_we/constants/font_size.dart';
 import 'package:sgm_du_gu_we/constants/padding.dart';
 import 'package:video_player/video_player.dart';
+import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/circle_avatar.dart';
 import '../constants/timer.dart';
 import '../models/video.dart';
 import '../models/video_list.dart';
 import '../widgets/build_video.dart';
-
-List<Video> videos = getVideos();
-List<Video> filteredVideos = List<Video>.from(videos);
 
 class VideoPlayerScreen extends StatefulWidget {
   const VideoPlayerScreen({super.key});
@@ -24,12 +22,52 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class VideoPlayerScreenState extends State<VideoPlayerScreen> {
+  List<Video> videos = getVideos();
+  List<Video> filteredVideos = [];
   final TextEditingController searchController = TextEditingController();
   bool isLoading = true;
+
+  Widget buildVideo(Video video) => ListTile(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VideoPlayerDetailScreen(
+            videos: filteredVideos,
+            title: video.title,
+            url: video.url,
+          ),
+        ),
+      );
+    },
+    leading: Material(
+      shape: const CircleBorder(),
+      clipBehavior: Clip.antiAlias,
+      child: Image.network(
+        video.thumbNail,
+        fit: BoxFit.cover,
+        loadingBuilder: (BuildContext context, Widget child,
+            ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) {
+            isLoading = false;
+            return child;
+          }
+          return const CircularProgressIndicator();
+        },
+      ),
+    ),
+    title: Text(
+      video.title,
+    ),
+    subtitle: Text(
+      video.author,
+    ),
+  );
 
   @override
   void initState() {
     super.initState();
+    filteredVideos = List<Video>.from(videos);
     filteredVideos.sort((a, b) {
       final titleComparison = a.title.compareTo(b.title);
 
@@ -44,14 +82,14 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
         title: const Text('Videothek'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(
-            kPadding,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(
+                kPadding,
+              ),
+              child: TextField(
                 controller: searchController,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
@@ -67,51 +105,33 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   filterVideos(value);
                 },
               ),
-              const SizedBox(
-                height: kBoxHeight,
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: filteredVideos.length,
-                  itemBuilder: (context, index) {
-                    final video = filteredVideos[index];
-
-                    return ListTile(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VideoPlayerDetailScreen(
-                              title: video.title,
-                              url: video.url,
-                            ),
-                          ),
-                        );
-                      },
-                      leading: Image.network(
-                        video.thumbNail,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (BuildContext context, Widget child,
-                            ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            isLoading = false;
-                            return child;
-                          }
-                          return const CircularProgressIndicator();
-                        },
-                      ),
-                      title: Text(
-                        video.title,
-                      ),
-                      subtitle: Text(
-                        video.author,
-                      ),
-                    );
-                  },
+            ),
+            const SizedBox(
+              height: kBoxHeight,
+            ),
+            Expanded(
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(
+                      kBorderRadiusContainer,
+                    ),
+                    topRight: Radius.circular(
+                      kBorderRadiusContainer,
+                    ),
+                  ),
+                ),
+                child: RefreshIndicator(
+                  onRefresh: refreshData,
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: filteredVideos.map(buildVideo).toList(),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -134,12 +154,21 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
       // Update the UI with the filtered list
     });
   }
+
+  // Refresh list view by pulling down the screen
+  Future refreshData() async {
+    return videos;
+  }
 }
 
 class VideoPlayerDetailScreen extends StatefulWidget {
   const VideoPlayerDetailScreen(
-      {super.key, required this.url, required this.title});
+      {super.key,
+      required this.url,
+      required this.title,
+      required this.videos});
 
+  final List<Video> videos;
   final String title;
   final Uri url;
 
@@ -157,7 +186,7 @@ class VideoPlayerDetailScreenState extends State<VideoPlayerDetailScreen> {
   @override
   void initState() {
     super.initState();
-    filteredVideos.sort((a, b) {
+    widget.videos.sort((a, b) {
       final titleComparison = a.title.compareTo(b.title);
 
       return titleComparison;

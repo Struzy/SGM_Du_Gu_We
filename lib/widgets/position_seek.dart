@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/padding.dart';
-
 import '../constants/font_family.dart';
 
 class PositionSeekWidget extends StatefulWidget {
