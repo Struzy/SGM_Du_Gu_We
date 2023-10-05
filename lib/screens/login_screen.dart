@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sgm_du_gu_we/constants/sgm_logo_directory.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
+import 'package:sgm_du_gu_we/services/info_bar_service.dart';
+import 'package:sgm_du_gu_we/services/navigation_service.dart';
 import 'package:sgm_du_gu_we/widgets/reset_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/box_size.dart';
@@ -220,40 +222,32 @@ class LoginScreenState extends State<LoginScreen> {
         showSpinner = false;
       });
     } else if (user.emailVerified == false) {
-      navigateToEMailVerificationScreen();
+      NavigationService.navigateTo(
+        context: context,
+        screenId: EmailVerificationScreen.id,
+      );
       setState(() {
         isLoading = false;
         showSpinner = false;
       });
-      showSnackBar(
-        'E-Mail wurde noch nicht verifiziert.',
+      InfoBarService.showInfoBar(
+        context: context,
+        info: 'E-Mail wurde noch nicht verifiziert.',
       );
     } else if (user.emailVerified) {
-      navigateToHomeScreen();
+      NavigationService.navigateTo(
+        context: context,
+        screenId: HomeScreen.id,
+      );
       setState(() {
         isLoading = false;
         showSpinner = false;
       });
-      showSnackBar(
-        'Erfolgreich angemeldet.',
+      InfoBarService.showInfoBar(
+        context: context,
+        info: 'Erfolgreich angemeldet.',
       );
     }
-  }
-
-  // Navigate to email verification screen
-  void navigateToEMailVerificationScreen() {
-    Navigator.pushNamed(
-      context,
-      EmailVerificationScreen.id,
-    );
-  }
-
-  // Navigate to home screen
-  void navigateToHomeScreen() {
-    Navigator.pushNamed(
-      context,
-      HomeScreen.id,
-    );
   }
 
   // Loading builder
@@ -265,17 +259,6 @@ class LoginScreenState extends State<LoginScreen> {
     }
     return const CircularProgressIndicator(
       color: kSGMColorGreen,
-    );
-  }
-
-  // Show snack bar
-  void showSnackBar(String snackBarText) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          snackBarText,
-        ),
-      ),
     );
   }
 }

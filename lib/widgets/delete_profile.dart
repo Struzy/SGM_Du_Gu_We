@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sgm_du_gu_we/widgets/info_bar.dart';
+import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 
 import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
@@ -129,12 +129,12 @@ class DeleteProfileState extends State<DeleteProfile> {
                                 context,
                                 MainScreen.id,
                               );
-                              InfoBar.showInfoBar(
+                              InfoBarService.showInfoBar(
                                 context: context,
                                 info: 'Benutzerkonto erfolgreich gelöscht.',
                               );
                             } catch (e) {
-                              InfoBar.showInfoBar(
+                              InfoBarService.showInfoBar(
                                 context: context,
                                 info:
                                     'Das Benutzerkonto konnte nicht gelöscht werden.',

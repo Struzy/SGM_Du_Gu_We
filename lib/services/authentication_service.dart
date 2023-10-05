@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sgm_du_gu_we/widgets/info_bar.dart';
+import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 
 class AuthenticationService {
   // Sign up user
@@ -47,7 +47,7 @@ class AuthenticationService {
     try {
       return FirebaseAuth.instance.currentUser;
     } on FirebaseAuthException {
-      InfoBar.showInfoBar(
+      InfoBarService.showInfoBar(
         context: context,
         info: 'Es ist zurzeit kein Anwender angemeldet.',
       );
@@ -62,12 +62,12 @@ class AuthenticationService {
       await FirebaseAuth.instance.sendPasswordResetEmail(
         email: email,
       );
-      InfoBar.showInfoBar(
+      InfoBarService.showInfoBar(
         context: context,
         info: 'E-Mail wurde versendet.',
       );
     } catch (e) {
-      InfoBar.showInfoBar(
+      InfoBarService.showInfoBar(
         context: context,
         info:
             'Eingegebene E-Mail ist ungültig oder der Benutzer existiert nicht.',
@@ -83,7 +83,7 @@ class AuthenticationService {
         await user.delete();
         await FirebaseAuth.instance.signOut();
       } catch (e) {
-        InfoBar.showInfoBar(
+        InfoBarService.showInfoBar(
           context: context,
           info: 'Das Benutzerkonto konnte nicht gelöscht werden.',
         );

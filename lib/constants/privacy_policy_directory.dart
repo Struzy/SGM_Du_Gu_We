@@ -1,0 +1,1 @@
+const kPrivacyPolicy = 'www.sv-durchhausen.de/datenschutzerklaerung/';

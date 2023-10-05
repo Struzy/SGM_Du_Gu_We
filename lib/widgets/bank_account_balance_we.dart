@@ -7,7 +7,7 @@ import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_size.dart';
-import 'info_bar.dart';
+import '../services/info_bar_service.dart';
 
 // Widget for the bank account balance of Weigheim
 class BankAccountBalanceWe extends StatefulWidget {
@@ -54,7 +54,7 @@ class BankAccountBalanceWeState extends State<BankAccountBalanceWe>
         }
       });
     } catch (e) {
-      InfoBar.showInfoBar(
+      InfoBarService.showInfoBar(
         context: context,
         info: 'Betrag konnte nicht geladen werden.',
       );

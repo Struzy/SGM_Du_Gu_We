@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sgm_du_gu_we/widgets/info_bar.dart';
+import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
@@ -308,7 +308,7 @@ void updatePlayerAvailability(
       'isChecked': checkboxStatus,
     });
   } catch (e) {
-    InfoBar.showInfoBar(
+    InfoBarService.showInfoBar(
       context: context,
       info: 'Spielerverfügbarkeit konnte nicht aktualisiert werden.',
     );

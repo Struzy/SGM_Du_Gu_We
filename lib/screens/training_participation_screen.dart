@@ -5,7 +5,7 @@ import 'package:sgm_du_gu_we/widgets/training_participation_long_term.dart';
 import 'package:sgm_du_gu_we/widgets/training_participation_short_term.dart';
 import '../constants/color.dart';
 import '../models/Player.dart';
-import '../widgets/info_bar.dart';
+import '../services/info_bar_service.dart';
 
 class TrainingParticipationScreen extends StatefulWidget {
   const TrainingParticipationScreen({super.key});
@@ -42,7 +42,7 @@ class TrainingParticipationScreenState
                 setState(() {
                   const TrainingParticipationShortTerm();
                 });
-                InfoBar.showInfoBar(
+                InfoBarService.showInfoBar(
                   context: context,
                   info: 'Spielerverfügbarkeit wurde zurückgesetzt.',
                 );
@@ -127,7 +127,7 @@ class TrainingParticipationScreenState
         });
       }
     } catch (e) {
-      InfoBar.showInfoBar(
+      InfoBarService.showInfoBar(
         context: context,
         info: 'Spielerverfügbarkeit konnte nicht zurückgesetzt werden.',
       );

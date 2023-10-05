@@ -7,7 +7,7 @@ import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_size.dart';
 import '../services/balance_format_service.dart';
-import 'info_bar.dart';
+import '../services/info_bar_service.dart';
 
 // Widget for the cash balance of Durchhausen/Gunningen/Weigheim
 class CashBalanceDuGuWe extends StatefulWidget {
@@ -53,7 +53,7 @@ class CashBalanceDuGuWeState extends State<CashBalanceDuGuWe>
         }
       });
     } catch (e) {
-      InfoBar.showInfoBar(
+      InfoBarService.showInfoBar(
         context: context,
         info: 'Betrag konnte nicht geladen werden.',
       );

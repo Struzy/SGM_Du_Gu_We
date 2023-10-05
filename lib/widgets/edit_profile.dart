@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/box_decoration.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
-import 'package:sgm_du_gu_we/widgets/info_bar.dart';
+import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 import '../constants/box_size.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
@@ -116,7 +116,7 @@ class EditProfileState extends State<EditProfile> {
                   await loggedInUser!.updateDisplayName(name);
                   await loggedInUser!.updatePhotoURL(profilePicture);
                   await loggedInUser?.reload();
-                  InfoBar.showInfoBar(
+                  InfoBarService.showInfoBar(
                     context: context,
                     info: 'Benutzerkonto wurde erfolgreich aktualisiert.',
                   );
@@ -125,7 +125,7 @@ class EditProfileState extends State<EditProfile> {
                     HomeScreen.id,
                   );
                 } catch (e) {
-                  InfoBar.showInfoBar(
+                  InfoBarService.showInfoBar(
                     context: context,
                     info: 'Benutzerkonto konnte nicht aktualisiert werden.',
                   );
