@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/pdf_directory.dart';
 
-class MiscellaneousScreen extends StatefulWidget {
-  const MiscellaneousScreen({super.key});
+class OperationSpreaderTruckScreen extends StatefulWidget {
+  const OperationSpreaderTruckScreen({super.key});
 
-  static const String id = 'miscellaneous_screen';
+  static const String id = 'operation_spreader_truck_screen';
 
   @override
-  MiscellaneousScreenState createState() => MiscellaneousScreenState();
+  OperationSpreaderTruckScreenState createState() => OperationSpreaderTruckScreenState();
 }
 
-class MiscellaneousScreenState extends State<MiscellaneousScreen> {
+class OperationSpreaderTruckScreenState extends State<OperationSpreaderTruckScreen> {
   final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
   final PdfViewerController pdfViewerController = PdfViewerController();
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:sgm_du_gu_we/constants/box_decoration.dart';
+import 'package:sgm_du_gu_we/screens/home_screen.dart';
 import 'package:sgm_du_gu_we/services/weather_service.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
@@ -78,8 +80,6 @@ class WeatherDetailScreen extends StatefulWidget {
 
   final locationWeather;
 
-  static const String id = 'weather_screen';
-
   @override
   WeatherDetailScreenState createState() => WeatherDetailScreenState();
 }
@@ -122,6 +122,13 @@ class WeatherDetailScreenState extends State<WeatherDetailScreen> {
       appBar: AppBar(
         title: const Text(
           'Wetter Sportplätze',
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
         ),
       ),
       body: SafeArea(
@@ -192,7 +199,7 @@ class WeatherDetailScreenState extends State<WeatherDetailScreen> {
                     decoration: BoxDecoration(
                       color: kSGMColorGreen,
                       borderRadius: BorderRadius.circular(
-                        10.0,
+                        kBorderRadiusContainer,
                       ),
                     ),
                     child: Column(

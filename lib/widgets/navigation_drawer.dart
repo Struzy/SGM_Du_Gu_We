@@ -1,11 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:sgm_du_gu_we/constants/box_size.dart';
+import 'package:sgm_du_gu_we/constants/padding.dart';
 import 'package:sgm_du_gu_we/screens/finance_screen.dart';
 import 'package:sgm_du_gu_we/screens/home_screen.dart';
 import 'package:sgm_du_gu_we/screens/settings_screen.dart';
 import 'package:sgm_du_gu_we/screens/training_participation_screen.dart';
 import 'package:sgm_du_gu_we/screens/weather_screen.dart';
+import '../constants/circle_avatar.dart';
 import '../constants/color.dart';
+import '../constants/divider_thickness.dart';
+import '../constants/font_family.dart';
+import '../constants/font_size.dart';
 import '../constants/sgm_logo_directory.dart';
 import '../screens/baar_cup_screen.dart';
 import '../screens/chat_screen.dart';
@@ -63,38 +69,39 @@ class NavigationDrawerState extends State<NavigationDrawer> {
   Widget buildHeader(BuildContext context) => Container(
         color: kSGMColorGreen,
         padding: EdgeInsets.only(
-          top: 24 + MediaQuery.of(context).padding.top,
-          bottom: 24,
+          top: kPadding + MediaQuery.of(context).padding.top,
+          bottom: kPadding,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             CircleAvatar(
-              radius: 52,
+              radius: kRadiusBurgerMenu,
               child: ClipOval(
                 child: Image.network(
                   loggedInUser?.photoURL ?? kDefaultAvatarLogo,
                   fit: BoxFit.cover,
-                  height: 104,
-                  width: 104,
+                  height: kRadius,
+                  width: kRadius,
                   loadingBuilder: loadingBuilder,
                 ),
               ),
             ),
             const SizedBox(
-              height: 12,
+              height: kBoxHeight,
             ),
             Text(
               loggedInUser?.displayName ?? '',
               style: const TextStyle(
-                fontSize: 28,
+                fontSize: kFontsizeDisplayName,
+                fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
             Text(
               loggedInUser?.email ?? '',
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: kFontsizeEmail,
                 color: Colors.black,
               ),
             ),
@@ -102,484 +109,381 @@ class NavigationDrawerState extends State<NavigationDrawer> {
         ),
       );
 
+  Widget menuItem(
+          {required BuildContext context,
+          required IconData icon,
+          required String text,
+          required String id}) =>
+      ListTile(
+        leading: Icon(
+          icon,
+        ),
+        title: Text(
+          text,
+        ),
+        onTap: () {
+          Navigator.pop(
+            context,
+          );
+          Navigator.pushNamed(
+            context,
+            id,
+          );
+        },
+      );
+
   Widget buildMenuItems(BuildContext context) => Column(children: [
         // Hauptmenü
-        ListTile(
-          leading: const Icon(
-            Icons.home,
-          ),
-          title: const Text(
-            'Hauptmenü',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              HomeScreen.id,
-            );
-          },
-        ),
-
-        // Fußballverein
-        ListTile(
-          leading: const Icon(
-            Icons.sports_soccer,
-          ),
-          title: const Text(
-            'Fußballverein',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              FootballClubScreen.id,
-            );
-          },
-        ),
-
-        // Kader
-        ListTile(
-          leading: const Icon(
-            Icons.person,
-          ),
-          title: const Text(
-            'Kader',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              SquadScreen.id,
-            );
-          },
-        ),
-
-        // 1. Mannschaft
-        ListTile(
-          leading: const Icon(
-            Icons.person,
-          ),
-          title: const Text(
-            '1. Mannschaft',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              FirstSquadScreen.id,
-            );
-          },
-        ),
-
-        // 2. Mannschaft
-        ListTile(
-          leading: const Icon(
-            Icons.person,
-          ),
-          title: const Text(
-            '2. Mannschaft',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              SecondSquadScreen.id,
-            );
-          },
-        ),
-
-        // Kreisliga B2 Württemberg
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Kreisliga B2 Württemberg',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              FirstSquadLeagueScreen.id,
-            );
-          },
-        ),
-
-        // Kreisliga C3 Württemberg
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Kreisliga C3 Württemberg',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              SecondSquadLeagueScreen.id,
-            );
-          },
-        ),
-
-        // Baarpokal
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Baarpokal',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              BaarCupScreen.id,
-            );
-          },
-        ),
-
-        // Trainingsbeteiligung
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Trainingsbeteiligung',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              TrainingParticipationScreen.id,
-            );
-          },
-        ),
-
-        // Strafen
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Strafen',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              PenaltyScreen.id,
-            );
-          },
-        ),
-
-        // Urlaub
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Urlaub',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              VacationScreen.id,
-            );
-          },
-        ),
-
-        // Strafenkatalog
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Strafenkatalog',
-          ),
-          onTap: () async {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              PenaltyCatalogScreen.id,
-            );
-          },
-        ),
-
-        // Vorbereitungsplan
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Vorbereitungsplan',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              PreparationPlanScreen.id,
-            );
-          },
-        ),
-
-        // Abstreuplan
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Abstreuplan',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              SprinklePlanScreen.id,
-            );
-          },
-        ),
-
-        // Mediathek
-        ListTile(
-          leading: const Icon(
-            Icons.library_music,
-          ),
-          title: const Text(
-            'Mediathek',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              MediaPlayerScreen.id,
-            );
-          },
-        ),
-
-        // Videothek
-        ListTile(
-          leading: const Icon(
-            Icons.video_collection,
-          ),
-          title: const Text(
-            'Videothek',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              VideoPlayerScreen.id,
-            );
-          },
-        ),
-
-        // Galerie
-        ListTile(
-          leading: const Icon(
-            Icons.image,
-          ),
-          title: const Text(
-            'Galerie',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              GalleryScreen.id,
-            );
-          },
-        ),
-
-        // Liedtexte
-        ListTile(
-          leading: const Icon(
-            Icons.lyrics,
-          ),
-          title: const Text(
-            'Liedtexte',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              LyricsScreen.id,
-            );
-          },
-        ),
-
-        // Finanzen
-        ListTile(
-          leading: const Icon(
-            Icons.euro,
-          ),
-          title: const Text(
-            'Finanzen',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              FinanceScreen.id,
-            );
-          },
-        ),
-
-        // Spielerstatistik
-        ListTile(
-          leading: const Icon(
-            Icons.sports,
-          ),
-          title: const Text(
-            'Spielerstatistik',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              PlayerStatisticsScreen.id,
-            );
-          },
-        ),
-
-        // Chat
-        ListTile(
-          leading: const Icon(
-            Icons.chat,
-          ),
-          title: const Text(
-            'Chat',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              ChatScreen.id,
-            );
-          },
-        ),
-
-        // Einstellungen
-        ListTile(
-          leading: const Icon(
-            Icons.settings,
-          ),
-          title: const Text(
-            'Einstellungen',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              SettingsScreen.id,
-            );
-          },
-        ),
-
-        // Sonstiges
-        ListTile(
-          leading: const Icon(
-            Icons.miscellaneous_services,
-          ),
-          title: const Text(
-            'Sonstiges',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              MiscellaneousScreen.id,
-            );
-          },
-        ),
-
-        // Impressum
-        ListTile(
-          leading: const Icon(
-            Icons.contact_mail,
-          ),
-          title: const Text(
-            'Impressum',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              ImprintScreen.id,
-            );
-          },
-        ),
-
-        // Wetter Sportplätze
-        ListTile(
-          leading: const Icon(
-            Icons.sunny,
-          ),
-          title: const Text(
-            'Wetter Sportplätze',
-          ),
-          onTap: () {
-            Navigator.pop(
-              context,
-            );
-            Navigator.pushNamed(
-              context,
-              WeatherScreen.id,
-            );
-          },
+        menuItem(
+          context: context,
+          icon: Icons.home,
+          text: 'Hauptmenü',
+          id: HomeScreen.id,
         ),
 
         const Divider(
           color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Vereinsseite',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Fußballverein
+        menuItem(
+          context: context,
+          icon: Icons.sports_soccer,
+          text: 'Fußballverein',
+          id: FootballClubScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Kader, Statistiken & Mannschaften',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Kader
+        menuItem(
+          context: context,
+          icon: Icons.group,
+          text: 'Kader',
+          id: SquadScreen.id,
+        ),
+
+        // Spielerstatistik
+        menuItem(
+          context: context,
+          icon: Icons.assessment,
+          text: 'Spielerstatistik',
+          id: PlayerStatisticsScreen.id,
+        ),
+
+        // 1. Mannschaft
+        menuItem(
+          context: context,
+          icon: Icons.group,
+          text: '1. Mannschaft',
+          id: FirstSquadScreen.id,
+        ),
+
+        // 2. Mannschaft
+        menuItem(
+          context: context,
+          icon: Icons.group,
+          text: '2. Mannschaft',
+          id: SecondSquadScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Wettbewerbe',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Kreisliga B2 Württemberg
+        menuItem(
+          context: context,
+          icon: Icons.sports_soccer,
+          text: 'Kreisliga B2 Württemberg',
+          id: FirstSquadLeagueScreen.id,
+        ),
+
+        // Kreisliga C3 Württemberg
+        menuItem(
+          context: context,
+          icon: Icons.sports_soccer,
+          text: 'Kreisliga C3 Württemberg',
+          id: SecondSquadLeagueScreen.id,
+        ),
+
+        // Baarpokal
+        menuItem(
+          context: context,
+          icon: Icons.emoji_events,
+          text: 'Baarpokal',
+          id: BaarCupScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Kurz- u. langfristige Trainingsbeteiligungen',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Trainingsbeteiligung
+        menuItem(
+          context: context,
+          icon: Icons.event_available,
+          text: 'Trainingsbeteiligung',
+          id: TrainingParticipationScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Strafenkatalog u. offene Strafen',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Strafenkatalog
+        menuItem(
+          context: context,
+          icon: Icons.assignment,
+          text: 'Strafenkatalog',
+          id: PenaltyCatalogScreen.id,
+        ),
+
+        // Strafen
+        menuItem(
+          context: context,
+          icon: Icons.report_problem,
+          text: 'Strafen',
+          id: PenaltyScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Abwesenheiten',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Urlaub
+        menuItem(
+          context: context,
+          icon: Icons.beach_access,
+          text: 'Urlaub',
+          id: VacationScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Saisonpläne',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Vorbereitungsplan
+        menuItem(
+          context: context,
+          icon: Icons.assignment,
+          text: 'Vorbereitungsplan',
+          id: PreparationPlanScreen.id,
+        ),
+
+        // Abstreuplan
+        menuItem(
+          context: context,
+          icon: Icons.assignment,
+          text: 'Abstreuplan',
+          id: SprinklePlanScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Medien u. Liedtexte',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Mediathek
+        menuItem(
+          context: context,
+          icon: Icons.library_music,
+          text: 'Mediathek',
+          id: MediaPlayerScreen.id,
+        ),
+
+        // Liedtexte
+        menuItem(
+          context: context,
+          icon: Icons.lyrics,
+          text: 'Liedtexte',
+          id: LyricsScreen.id,
+        ),
+
+        // Videothek
+        menuItem(
+          context: context,
+          icon: Icons.video_collection,
+          text: 'Videothek',
+          id: VideoPlayerScreen.id,
+        ),
+
+        // Galerie
+        menuItem(
+          context: context,
+          icon: Icons.photo_library,
+          text: 'Galerie',
+          id: GalleryScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Kassen- u. Kontostände',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Finanzen
+        menuItem(
+          context: context,
+          icon: Icons.euro,
+          text: 'Finanzen',
+          id: FinanceScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Austausch',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Chat
+        menuItem(
+          context: context,
+          icon: Icons.chat,
+          text: 'Chat',
+          id: ChatScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+        const Text(
+          'Sonstiges',
+          style: TextStyle(
+            fontFamily: kSourceSansPro,
+            fontStyle: FontStyle.italic,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        // Wetter Sportplätze
+        menuItem(
+          context: context,
+          icon: Icons.sunny,
+          text: 'Wetter Sportplätze',
+          id: WeatherScreen.id,
+        ),
+
+        // Bedienung Abstreuwagen
+        menuItem(
+          context: context,
+          icon: Icons.library_books,
+          text: 'Bedienung Abstreuwagen',
+          id: OperationSpreaderTruckScreen.id,
+        ),
+
+        // Impressum
+        menuItem(
+          context: context,
+          icon: Icons.info,
+          text: 'Impressum',
+          id: ImprintScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
+        ),
+
+        // Einstellungen
+        menuItem(
+          context: context,
+          icon: Icons.settings,
+          text: 'Einstellungen',
+          id: SettingsScreen.id,
+        ),
+
+        const Divider(
+          color: Colors.black54,
+          height: kDividerThickness,
         ),
 
         // Abmelden
@@ -648,8 +552,8 @@ class NavigationDrawerState extends State<NavigationDrawer> {
       ]);
 
   // Loading builder
-  Widget loadingBuilder(BuildContext context, Widget child,
-      ImageChunkEvent? loadingProgress) {
+  Widget loadingBuilder(
+      BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
     if (loadingProgress == null) {
       isLoading = false;
       return child;

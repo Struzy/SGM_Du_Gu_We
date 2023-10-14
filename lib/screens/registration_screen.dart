@@ -6,7 +6,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
 import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 import 'package:sgm_du_gu_we/services/navigation_service.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../constants/box_size.dart';
 import '../constants/circle_avatar.dart';
 import '../constants/font_family.dart';
@@ -303,7 +303,13 @@ class PrivacyPolicy extends StatefulWidget {
 }
 
 class PrivacyPolicyState extends State<PrivacyPolicy> {
-  int progress = 0;
+  final GlobalKey<SfPdfViewerState> pdfViewerKey = GlobalKey();
+  final PdfViewerController pdfViewerController = PdfViewerController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -312,32 +318,33 @@ class PrivacyPolicyState extends State<PrivacyPolicy> {
         title: const Text(
           'Datenschutzerklärung',
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(
+              Icons.bookmark,
+              semanticLabel: 'Bookmark',
+            ),
+            onPressed: () {
+              pdfViewerKey.currentState?.openBookmarkView();
+            },
+          ),
+        ],
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            LinearProgressIndicator(
-              value: progress / 100,
-              backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-            ),
-            Expanded(
-              child: WebView(
-                initialUrl: kPrivacyPolicy,
-                javascriptMode: JavascriptMode.unrestricted,
-                onProgress: (int newProgress) {
-                  setState(() {
-                    progress = newProgress;
-                  });
-                },
-                onPageFinished: (String url) {
-                  setState(() {
-                    progress = 0;
-                  });
-                },
-              ),
-            ),
-          ],
+        child: SfPdfViewer.network(
+          kPrivacyPolicy,
+          key: pdfViewerKey,
+        ),
+      ),
+    );
+  }
+
+  // Show snack bar
+  void showSnackBar(String snackBarText) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          snackBarText,
         ),
       ),
     );

@@ -32,11 +32,14 @@ import 'package:sgm_du_gu_we/screens/training_participation_screen.dart';
 import 'package:sgm_du_gu_we/screens/vacation_screen.dart';
 import 'package:sgm_du_gu_we/screens/video_player_screen.dart';
 import 'package:sgm_du_gu_we/screens/weather_screen.dart';
+import 'package:sgm_du_gu_we/services/messaging_service.dart';
 import 'constants/color.dart';
 import 'constants/elevated_button.dart';
 import 'constants/font_family.dart';
 import 'constants/font_size.dart';
 import 'constants/text_field.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +51,7 @@ void main() async {
       projectId: 'sgm-duguwe',
     ),
   );
+  await MessagingService().initNotifications();
   AssetsAudioPlayer.setupNotificationsOpenAction((notification) {
     return true;
   });
@@ -122,41 +126,101 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: RegistrationScreen.id,
+      initialRoute: SplashScreen.id,
       routes: {
+        // Splash screen
         SplashScreen.id: (context) => const SplashScreen(),
+
+        // Hauptseite
         MainScreen.id: (context) => const MainScreen(),
+
+        // Registrierung
         RegistrationScreen.id: (context) => const RegistrationScreen(),
+
+        // Anmeldung
         LoginScreen.id: (context) => const LoginScreen(),
+
+        // E-Mail Verifikation
         EmailVerificationScreen.id: (context) =>
             const EmailVerificationScreen(),
+
+        // Hauptmenü
         HomeScreen.id: (context) => const HomeScreen(),
-        ImprintScreen.id: (context) => const ImprintScreen(),
+
+        // Fußballverein
+        FootballClubScreen.id: (context) => const FootballClubScreen(),
+
+        // Kader
+        SquadScreen.id: (context) => const SquadScreen(),
+
+        // Spielerstatistik
+        PlayerStatisticsScreen.id: (context) => const PlayerStatisticsScreen(),
+
+        // 1. Mannschaft
+        FirstSquadScreen.id: (context) => const FirstSquadScreen(),
+
+        // 2. Mannschaft
+        SecondSquadScreen.id: (context) => const SecondSquadScreen(),
+
+        // Kreisliga B2 Württemberg
         FirstSquadLeagueScreen.id: (context) => const FirstSquadLeagueScreen(),
+
+        // Kreisliga C3 Württemberg
         SecondSquadLeagueScreen.id: (context) =>
             const SecondSquadLeagueScreen(),
-        FootballClubScreen.id: (context) => const FootballClubScreen(),
-        FirstSquadScreen.id: (context) => const FirstSquadScreen(),
-        SecondSquadScreen.id: (context) => const SecondSquadScreen(),
-        PenaltyCatalogScreen.id: (context) => const PenaltyCatalogScreen(),
-        SprinklePlanScreen.id: (context) => const SprinklePlanScreen(),
-        PreparationPlanScreen.id: (context) => const PreparationPlanScreen(),
-        LyricsScreen.id: (context) => const LyricsScreen(),
-        MiscellaneousScreen.id: (context) => const MiscellaneousScreen(),
+
+        // Baarpokal
         BaarCupScreen.id: (context) => const BaarCupScreen(),
-        PlayerStatisticsScreen.id: (context) => const PlayerStatisticsScreen(),
-        ChatScreen.id: (context) => const ChatScreen(),
-        PenaltyScreen.id: (context) => const PenaltyScreen(),
-        SquadScreen.id: (context) => const SquadScreen(),
-        GalleryScreen.id: (context) => const GalleryScreen(),
-        MediaPlayerScreen.id: (context) => const MediaPlayerScreen(),
-        VideoPlayerScreen.id: (context) => const VideoPlayerScreen(),
-        WeatherScreen.id: (context) => const WeatherScreen(),
-        FinanceScreen.id: (context) => const FinanceScreen(),
-        VacationScreen.id: (context) => const VacationScreen(),
-        SettingsScreen.id: (context) => const SettingsScreen(),
+
+        // Trainingsbeteiligung
         TrainingParticipationScreen.id: (context) =>
             const TrainingParticipationScreen(),
+
+        // Strafenkatalog
+        PenaltyCatalogScreen.id: (context) => const PenaltyCatalogScreen(),
+
+        // Strafen
+        PenaltyScreen.id: (context) => const PenaltyScreen(),
+
+        // Urlaub
+        VacationScreen.id: (context) => const VacationScreen(),
+
+        // Vorbereitungsplan
+        PreparationPlanScreen.id: (context) => const PreparationPlanScreen(),
+
+        // Abstreuplan
+        SprinklePlanScreen.id: (context) => const SprinklePlanScreen(),
+
+        // Mediathek
+        MediaPlayerScreen.id: (context) => const MediaPlayerScreen(),
+
+        // Liedtexte
+        LyricsScreen.id: (context) => const LyricsScreen(),
+
+        // Videothek
+        VideoPlayerScreen.id: (context) => const VideoPlayerScreen(),
+
+        // Galerie
+        GalleryScreen.id: (context) => const GalleryScreen(),
+
+        // Finanzen
+        FinanceScreen.id: (context) => const FinanceScreen(),
+
+        // Chat
+        ChatScreen.id: (context) => const ChatScreen(),
+
+        // Wetter Sportplätze
+        WeatherScreen.id: (context) => const WeatherScreen(),
+
+        // Bedienung Abstreuwagen
+        OperationSpreaderTruckScreen.id: (context) =>
+            const OperationSpreaderTruckScreen(),
+
+        // Impressum
+        ImprintScreen.id: (context) => const ImprintScreen(),
+
+        // Einstellungen
+        SettingsScreen.id: (context) => const SettingsScreen(),
       },
     );
   }

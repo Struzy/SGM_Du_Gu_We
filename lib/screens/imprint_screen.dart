@@ -70,10 +70,10 @@ class ImprintScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'eingetragen im Vereinsregister am Amtsgericht Stuttgart (VR 460384),',
+                    'eingetragen im Vereinsregister am Amtsgericht Stuttgart',
                   ),
                   Text(
-                    'vormals Amtsgericht Spaichingen (VR 332)',
+                    '(VR 460384), vormals Amtsgericht Spaichingen (VR 332)',
                   ),
                   SizedBox(
                     height: kBoxHeight,
