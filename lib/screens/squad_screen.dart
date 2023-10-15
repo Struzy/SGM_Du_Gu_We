@@ -195,6 +195,7 @@ class SquadScreenState extends State<SquadScreen> {
                       return RefreshIndicator(
                         onRefresh: refreshData,
                         child: ListView(
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           children: filteredPlayers.map(buildPlayer).toList(),
                         ),

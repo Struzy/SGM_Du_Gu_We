@@ -356,6 +356,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                         onRefresh: refreshData,
                         child: ListView(
                           shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           children:
                               filteredPenalties.map(buildPenalty).toList(),
                         ),

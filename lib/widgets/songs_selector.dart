@@ -108,7 +108,7 @@ class SongsSelector extends StatelessWidget {
               onRefresh: refreshData,
               child: ListView(
                 shrinkWrap: true,
-                //physics: const NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: audios.map(buildAudio).toList(),
               ),
             ),

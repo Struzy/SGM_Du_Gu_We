@@ -256,6 +256,7 @@ class TrainingParticipationShortTermState
                         onRefresh: refreshData,
                         child: ListView(
                           shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           children: filteredPlayers.map(buildPlayer).toList(),
                         ),
                       );

@@ -353,6 +353,7 @@ class VacationScreenState extends State<VacationScreen> {
                         onRefresh: refreshData,
                         child: ListView(
                           shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           children:
                               filteredVacations.map(buildVacation).toList(),
                         ),

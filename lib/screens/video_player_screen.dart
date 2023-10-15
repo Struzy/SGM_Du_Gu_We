@@ -126,6 +126,7 @@ class VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   onRefresh: refreshData,
                   child: ListView(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     children: filteredVideos.map(buildVideo).toList(),
                   ),
                 ),

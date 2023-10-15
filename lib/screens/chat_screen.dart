@@ -2,7 +2,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sgm_du_gu_we/constants/color.dart';
 import 'package:sgm_du_gu_we/constants/divider_thickness.dart';
 import 'package:sgm_du_gu_we/services/authentication_service.dart';

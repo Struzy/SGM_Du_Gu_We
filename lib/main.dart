@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sgm_du_gu_we/screens/baar_cup_screen.dart';
@@ -17,6 +18,7 @@ import 'package:sgm_du_gu_we/screens/lyrics_screen.dart';
 import 'package:sgm_du_gu_we/screens/main_screen.dart';
 import 'package:sgm_du_gu_we/screens/media_player_screen.dart';
 import 'package:sgm_du_gu_we/screens/miscellaneous_screen.dart';
+import 'package:sgm_du_gu_we/screens/notification_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_catalog_screen.dart';
 import 'package:sgm_du_gu_we/screens/penalty_screen.dart';
 import 'package:sgm_du_gu_we/screens/player_statistics_screen.dart';
@@ -38,20 +40,15 @@ import 'constants/elevated_button.dart';
 import 'constants/font_family.dart';
 import 'constants/font_size.dart';
 import 'constants/text_field.dart';
+import 'models/firebase_options.dart';
 
-final navigatorKey = GlobalKey<NavigatorState>();
-
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyDnOKl18AsK_K3tP7Oogul-aYS1fC0xrt8',
-      appId: '1:785053102637:android:f89d7a1c61f303b1727ea4',
-      messagingSenderId: '785053102637',
-      projectId: 'sgm-duguwe',
-    ),
-  );
-  await MessagingService().initNotifications();
+  //await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
+  await MessagingService().setupFlutterNotifications();
+  FirebaseMessaging.onBackgroundMessage(
+      MessagingService().messagingBackgroundHandler);
   AssetsAudioPlayer.setupNotificationsOpenAction((notification) {
     return true;
   });
@@ -126,7 +123,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: SplashScreen.id,
+      initialRoute: NotificationScreen.id,
       routes: {
         // Splash screen
         SplashScreen.id: (context) => const SplashScreen(),
@@ -221,6 +218,9 @@ class SGMDuGuWe extends StatelessWidget {
 
         // Einstellungen
         SettingsScreen.id: (context) => const SettingsScreen(),
+
+        // Push-Benachrichtigungen
+        NotificationScreen.id: (context) => const NotificationScreen(),
       },
     );
   }
