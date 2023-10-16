@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/constants/icon_size.dart';
 import 'package:sgm_du_gu_we/screens/squad_screen.dart';
+import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 import 'package:sgm_du_gu_we/widgets/add_vacation.dart';
 import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
@@ -15,6 +17,7 @@ import '../constants/padding.dart';
 import '../models/Player.dart';
 import '../models/player_list.dart';
 import '../models/vacation.dart';
+import '../services/authentication_service.dart';
 import '../widgets/update_vacation.dart';
 
 // Type used by the popup menu below
@@ -36,6 +39,8 @@ class VacationScreenState extends State<VacationScreen> {
   List<Player> players = [];
   List<Vacation> vacations = [];
   List<Vacation> filteredVacations = [];
+  late User? loggedInUser;
+  bool isEntitled = false;
 
   Widget buildVacation(Vacation vacation) => ListTile(
         leading: Material(
@@ -74,24 +79,35 @@ class VacationScreenState extends State<VacationScreen> {
                   Navigator.pop(
                     context,
                   );
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                        ),
-                        child: UpdateVacation(
-                          id: vacation.id,
-                          startDate: vacation.startDate,
-                          endDate: vacation.endDate,
-                          name: vacation.name,
-                          playerData: players,
+                  loggedInUser?.displayName == vacation.name
+                      ? isEntitled = true
+                      : isEntitled = false;
+                  if (isEntitled) {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: UpdateVacation(
+                            id: vacation.id,
+                            startDate: vacation.startDate,
+                            endDate: vacation.endDate,
+                            name: vacation.name,
+                            playerData: players,
+                          ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    InfoBarService.showInfoBar(
+                      context: context,
+                      info:
+                          'Es liegt keine Berechtigung für das Aktualisieren des Urlaubs vor.',
+                    );
+                  }
                 },
                 child: const Text(
                   'Aktualisieren',
@@ -108,61 +124,72 @@ class VacationScreenState extends State<VacationScreen> {
                   Navigator.pop(
                     context,
                   );
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text(
-                        'Löschen',
-                      ),
-                      content: const Text(
-                        'Wollen Sie wirklich den Eintrag löschen?',
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(
-                              context,
-                              'JA',
-                            );
-                            try {
-                              deleteVacation(
-                                id: vacation.id,
+                  loggedInUser?.displayName == vacation.name
+                      ? isEntitled = true
+                      : isEntitled = false;
+                  if (isEntitled) {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text(
+                          'Löschen',
+                        ),
+                        content: const Text(
+                          'Wollen Sie wirklich den Eintrag löschen?',
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                                'JA',
                               );
-                            } catch (e) {
+                              try {
+                                deleteVacation(
+                                  id: vacation.id,
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Urlaub konnte nicht gelöscht werden.',
+                                    ),
+                                  ),
+                                );
+                              }
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                    'Urlaub konnte nicht gelöscht werden.',
+                                    'Urlaub wurde erfolgreich gelöscht.',
                                   ),
                                 ),
                               );
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Urlaub wurde erfolgreich gelöscht.',
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'JA',
+                            },
+                            child: const Text(
+                              'JA',
+                            ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(
-                              context,
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                                'NEIN',
+                              );
+                            },
+                            child: const Text(
                               'NEIN',
-                            );
-                          },
-                          child: const Text(
-                            'NEIN',
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
+                        ],
+                      ),
+                    );
+                  } else {
+                    InfoBarService.showInfoBar(
+                      context: context,
+                      info:
+                          'Es liegt keine Berechtigung für das Löschen des Urlaubs vor.',
+                    );
+                  }
                 },
                 child: const Text(
                   'Löschen',
@@ -192,6 +219,7 @@ class VacationScreenState extends State<VacationScreen> {
   @override
   void initState() {
     super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
     readVacations().listen((List<Vacation> vacationData) {
       vacationData.sort((a, b) {
         final dateComparison = a.startDate.compareTo(b.startDate);
@@ -227,11 +255,11 @@ class VacationScreenState extends State<VacationScreen> {
             builder: (context) => SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
-                  bottom:
-                  MediaQuery.of(context).viewInsets.bottom,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
                 ),
                 child: AddVacation(
                   playerData: players,
+                  isEntitled: isEntitled,
                 ),
               ),
             ),

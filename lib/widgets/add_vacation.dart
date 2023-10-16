@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/elevated_button.dart';
@@ -9,11 +11,13 @@ import '../constants/icon_size.dart';
 import '../constants/padding.dart';
 import '../models/Player.dart';
 import '../models/vacation.dart';
+import '../services/authentication_service.dart';
 
 class AddVacation extends StatefulWidget {
-  const AddVacation({super.key, required this.playerData});
+  AddVacation({super.key, required this.playerData, required this.isEntitled});
 
   final List<Player> playerData;
+  bool isEntitled;
 
   @override
   AddVacationState createState() => AddVacationState();
@@ -27,10 +31,12 @@ class AddVacationState extends State<AddVacation> {
   List<String> profilePictures = [];
   List<String> names = [];
   String dropdownValueName = '';
+  late User? loggedInUser;
 
   @override
   void initState() {
     super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
     dropdownValueName = widget.playerData.first.name;
     for (var player in widget.playerData) {
       profilePictures.add(player.profilePicture);
@@ -120,7 +126,7 @@ class AddVacationState extends State<AddVacation> {
 
                 if (pickedStartDate != null) {
                   String formattedDate =
-                  DateFormat('dd.MM.yyyy').format(pickedStartDate!);
+                      DateFormat('dd.MM.yyyy').format(pickedStartDate!);
 
                   setState(() {
                     controllerStartDate.text = formattedDate;
@@ -167,7 +173,7 @@ class AddVacationState extends State<AddVacation> {
 
                 if (pickedEndDate != null) {
                   String formattedDate =
-                  DateFormat('dd.MM.yyyy').format(pickedEndDate!);
+                      DateFormat('dd.MM.yyyy').format(pickedEndDate!);
 
                   setState(() {
                     controllerEndDate.text = formattedDate;
@@ -206,42 +212,53 @@ class AddVacationState extends State<AddVacation> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                if (pickedStartDate!.isAfter(pickedEndDate!)) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Das Enddatum liegt for dem Startdatum.',
-                      ),
-                    ),
-                  );
-                  Navigator.pop(
-                    context,
-                  );
-                } else {
-                  try {
-                    createVacation(
-                      startDate: controllerStartDate.text,
-                      endDate: controllerEndDate.text,
-                      name: dropdownValueName,
-                    );
-                  } catch (e) {
+                Navigator.pop(
+                  context,
+                );
+                loggedInUser?.displayName == dropdownValueName
+                    ? widget.isEntitled = true
+                    : widget.isEntitled = false;
+                if (widget.isEntitled) {
+                  if (pickedStartDate!.isAfter(pickedEndDate!)) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text(
-                          'Urlaub konnte nicht hinzugefügt werden.',
+                          'Das Enddatum liegt for dem Startdatum.',
                         ),
                       ),
                     );
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Urlaub wurde erfolgreich hinzugefügt.',
+                  } else {
+                    try {
+                      createVacation(
+                        startDate: controllerStartDate.text,
+                        endDate: controllerEndDate.text,
+                        name: dropdownValueName,
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Urlaub konnte nicht hinzugefügt werden.',
+                          ),
+                        ),
+                      );
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Urlaub wurde erfolgreich hinzugefügt.',
+                        ),
                       ),
-                    ),
-                  );
-                  Navigator.pop(
-                    context,
+                    );
+                    Navigator.pop(
+                      context,
+                    );
+                  }
+                } else {
+                  InfoBarService.showInfoBar(
+                    context: context,
+                    info:
+                        'Es liegt keine Berechtigung für das Hinzufügen eines Urlaubs vor.',
                   );
                 }
               },
@@ -264,8 +281,8 @@ class AddVacationState extends State<AddVacation> {
 // Create vacation
 Future createVacation(
     {required String startDate,
-      required String endDate,
-      required String name}) async {
+    required String endDate,
+    required String name}) async {
   final docVacation = FirebaseFirestore.instance.collection('vacations').doc();
   final penalty = Vacation(
       id: docVacation.id, startDate: startDate, endDate: endDate, name: name);

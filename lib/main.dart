@@ -123,7 +123,7 @@ class SGMDuGuWe extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: NotificationScreen.id,
+      initialRoute: SplashScreen.id,
       routes: {
         // Splash screen
         SplashScreen.id: (context) => const SplashScreen(),

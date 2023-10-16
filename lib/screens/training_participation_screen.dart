@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/screens/squad_screen.dart';
 import 'package:sgm_du_gu_we/widgets/training_participation_long_term.dart';
 import 'package:sgm_du_gu_we/widgets/training_participation_short_term.dart';
 import '../constants/color.dart';
 import '../models/Player.dart';
+import '../services/authentication_service.dart';
 import '../services/info_bar_service.dart';
 
 class TrainingParticipationScreen extends StatefulWidget {
@@ -20,6 +22,15 @@ class TrainingParticipationScreen extends StatefulWidget {
 class TrainingParticipationScreenState
     extends State<TrainingParticipationScreen> {
   List<Player> players = [];
+  late User? loggedInUser;
+  bool isEntitled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
+    isEntitled = assessEntitlement();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +47,24 @@ class TrainingParticipationScreenState
                 Icons.undo,
               ),
               onPressed: () async {
-                await undoPlayerAvailability(
-                  context: context,
-                );
-                setState(() {
-                  const TrainingParticipationShortTerm();
-                });
-                InfoBarService.showInfoBar(
-                  context: context,
-                  info: 'Spielerverfügbarkeit wurde zurückgesetzt.',
-                );
+                if (isEntitled) {
+                  await undoPlayerAvailability(
+                    context: context,
+                  );
+                  setState(() {
+                    const TrainingParticipationShortTerm();
+                  });
+                  InfoBarService.showInfoBar(
+                    context: context,
+                    info: 'Spielerverfügbarkeit wurde zurückgesetzt.',
+                  );
+                } else {
+                  InfoBarService.showInfoBar(
+                    context: context,
+                    info:
+                        'Es liegt keine Berechtigung für das Zurücksetzen der Spielerverfügbarkeit vor.',
+                  );
+                }
               },
             ),
           ],
@@ -101,15 +120,15 @@ class TrainingParticipationScreenState
     );
   }
 
-  // Show snack bar
-  void showSnackBar(String snackBarText) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          snackBarText,
-        ),
-      ),
-    );
+  // Check whether user is entitled to perform modifications
+  bool assessEntitlement() {
+    if (loggedInUser?.displayName == 'Christian Krauss' ||
+        loggedInUser?.displayName == 'Max Kleinhans' ||
+        loggedInUser?.displayName == 'Maurice Merz') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // Update player availability

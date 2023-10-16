@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/services/info_bar_service.dart';
 import '../constants/box_decoration.dart';
@@ -7,10 +8,10 @@ import '../constants/color.dart';
 import '../constants/divider_thickness.dart';
 import '../constants/font_size.dart';
 import '../constants/icon_size.dart';
-import '../constants/margin.dart';
 import '../constants/padding.dart';
 import '../models/Player.dart';
 import '../screens/squad_screen.dart';
+import '../services/authentication_service.dart';
 
 // Widget for the short term training participation
 class TrainingParticipationShortTerm extends StatefulWidget {
@@ -29,6 +30,8 @@ class TrainingParticipationShortTermState
   List<Player> filteredPlayers = [];
   List<Player> approvedPlayers = [];
   List<Player> declinedPlayers = [];
+  late User? loggedInUser;
+  bool isEntitled = false;
 
   Widget buildPlayer(Player player) => ListTile(
         leading: Material(
@@ -62,14 +65,29 @@ class TrainingParticipationShortTermState
           activeColor: kSGMColorRed,
           value: player.isChecked,
           onChanged: (newValue) {
-            setState(() {
-              player.isChecked = newValue!;
-            });
-            updatePlayerAvailability(
-              id: player.id,
-              checkboxStatus: player.isChecked,
-              context: context,
-            );
+            loggedInUser?.displayName == player.name
+                ? isEntitled = true
+                : isEntitled = false;
+            if (isEntitled) {
+              setState(() {
+                player.isChecked = newValue!;
+              });
+              updatePlayerAvailability(
+                id: player.id,
+                checkboxStatus: player.isChecked,
+                context: context,
+              );
+              InfoBarService.showInfoBar(
+                context: context,
+                info: 'Trainingsbeteiligung aktualisiert.',
+              );
+            } else {
+              InfoBarService.showInfoBar(
+                context: context,
+                info:
+                    'Es liegt keine Berechtigung für das Ändern der Trainingsbeteiligung vor.',
+              );
+            }
           },
         ),
       );
@@ -77,6 +95,7 @@ class TrainingParticipationShortTermState
   @override
   void initState() {
     super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
     readPlayers().listen((List<Player> playerData) {
       playerData.sort((a, b) {
         final nameComparison = a.name.compareTo(b.name);

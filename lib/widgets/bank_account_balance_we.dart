@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sgm_du_gu_we/services/balance_format_service.dart';
 import 'package:sgm_du_gu_we/widgets/update_balance.dart';
 import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_size.dart';
+import '../services/authentication_service.dart';
 import '../services/info_bar_service.dart';
 
 // Widget for the bank account balance of Weigheim
@@ -22,10 +23,13 @@ class BankAccountBalanceWeState extends State<BankAccountBalanceWe>
   late AnimationController animationController;
   late Animation<double> balanceAnimation;
   double balance = 0.0;
+  late User? loggedInUser;
+  bool isEntitled = false;
 
   @override
   void initState() {
     super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(
@@ -59,6 +63,7 @@ class BankAccountBalanceWeState extends State<BankAccountBalanceWe>
         info: 'Betrag konnte nicht geladen werden.',
       );
     }
+    isEntitled = assessEntitlement();
   }
 
   @override
@@ -122,25 +127,34 @@ class BankAccountBalanceWeState extends State<BankAccountBalanceWe>
                             BalanceFormatService.formatBalance(balance);
                         return GestureDetector(
                           onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) => SingleChildScrollView(
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                        .viewInsets
-                                        .bottom,
-                                  ),
-                                  child: const UpdateBalance(
-                                    title: 'Kontostand We aktualisieren',
-                                    hintText: 'Neuen Kontostand angeben',
-                                    balanceType: 'bankAccountBalanceWe',
-                                    info: 'Kontostand erfolgreich aktualisiert.',
+                            if (isEntitled) {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) => SingleChildScrollView(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom,
+                                    ),
+                                    child: const UpdateBalance(
+                                      title: 'Kontostand We aktualisieren',
+                                      hintText: 'Neuen Kontostand angeben',
+                                      balanceType: 'bankAccountBalanceWe',
+                                      info:
+                                          'Kontostand erfolgreich aktualisiert.',
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
+                            } else {
+                              InfoBarService.showInfoBar(
+                                context: context,
+                                info:
+                                    'Es liegt keine Berechtigung für das Ändern des Kontostandes vor.',
+                              );
+                            }
                           },
                           child: Text(
                             formattedBalance,
@@ -161,5 +175,14 @@ class BankAccountBalanceWeState extends State<BankAccountBalanceWe>
         );
       },
     );
+  }
+
+  // Check whether user is entitled to perform modifications
+  bool assessEntitlement() {
+    if (loggedInUser?.displayName == 'Martin Müller') {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

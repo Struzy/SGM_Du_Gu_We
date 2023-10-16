@@ -102,15 +102,4 @@ class FinanceScreenState extends State<FinanceScreen> {
       ),
     );
   }
-
-  // Show snack bar
-  void showSnackBar(String snackBarText) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          snackBarText,
-        ),
-      ),
-    );
-  }
 }

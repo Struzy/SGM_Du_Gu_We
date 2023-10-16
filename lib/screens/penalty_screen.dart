@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sgm_du_gu_we/models/amount.dart';
 import 'package:sgm_du_gu_we/screens/squad_screen.dart';
@@ -16,6 +17,8 @@ import '../models/Player.dart';
 import '../models/offense.dart';
 import '../models/penalty.dart';
 import '../models/player_list.dart';
+import '../services/authentication_service.dart';
+import '../services/info_bar_service.dart';
 import '../widgets/add_penalty.dart';
 import '../widgets/update_penalty.dart';
 
@@ -38,6 +41,8 @@ class PenaltyScreenState extends State<PenaltyScreen> {
   List<Player> players = [];
   List<Penalty> penalties = [];
   List<Penalty> filteredPenalties = [];
+  late User? loggedInUser;
+  bool isEntitled = false;
 
   Widget buildPenalty(Penalty penalty) => ListTile(
         leading: Material(
@@ -76,25 +81,33 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                   Navigator.pop(
                     context,
                   );
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                        ),
-                        child: UpdatePenalty(
-                          id: penalty.id,
-                          date: penalty.date,
-                          name: penalty.name,
-                          offense: penalty.offense,
-                          amount: penalty.amount,
-                          playerData: players,
+                  if (isEntitled) {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: UpdatePenalty(
+                            id: penalty.id,
+                            date: penalty.date,
+                            name: penalty.name,
+                            offense: penalty.offense,
+                            amount: penalty.amount,
+                            playerData: players,
+                          ),
                         ),
                       ),
-                    ),
-                  );
+                    );
+                  } else {
+                    InfoBarService.showInfoBar(
+                      context: context,
+                      info:
+                          'Es liegt keine Berechtigung für das Aktualisieren der Strafe vor.',
+                    );
+                  }
                 },
                 child: const Text(
                   'Aktualisieren',
@@ -111,61 +124,69 @@ class PenaltyScreenState extends State<PenaltyScreen> {
                   Navigator.pop(
                     context,
                   );
-                  showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                      title: const Text(
-                        'Löschen',
-                      ),
-                      content: const Text(
-                        'Wollen Sie wirklich den Eintrag löschen?',
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(
-                              context,
-                              'JA',
-                            );
-                            try {
-                              deletePenalty(
-                                id: penalty.id,
+                  if (isEntitled) {
+                    showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text(
+                          'Löschen',
+                        ),
+                        content: const Text(
+                          'Wollen Sie wirklich den Eintrag löschen?',
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                                'JA',
                               );
-                            } catch (e) {
+                              try {
+                                deletePenalty(
+                                  id: penalty.id,
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Strafe konnte nicht gelöscht werden.',
+                                    ),
+                                  ),
+                                );
+                              }
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
-                                    'Strafe konnte nicht gelöscht werden.',
+                                    'Strafe wurde erfolgreich gelöscht.',
                                   ),
                                 ),
                               );
-                            }
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Strafe wurde erfolgreich gelöscht.',
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'JA',
+                            },
+                            child: const Text(
+                              'JA',
+                            ),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(
-                              context,
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(
+                                context,
+                                'NEIN',
+                              );
+                            },
+                            child: const Text(
                               'NEIN',
-                            );
-                          },
-                          child: const Text(
-                            'NEIN',
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
+                        ],
+                      ),
+                    );
+                  } else {
+                    InfoBarService.showInfoBar(
+                      context: context,
+                      info:
+                          'Es liegt keine Berechtigung für das Löschen der Strafe vor.',
+                    );
+                  }
                 },
                 child: const Text(
                   'Löschen',
@@ -196,6 +217,7 @@ class PenaltyScreenState extends State<PenaltyScreen> {
   @override
   void initState() {
     super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
     readPenalties().listen((List<Penalty> penaltyData) {
       penaltyData.sort((a, b) {
         final dateComparison = a.date.compareTo(b.date);
@@ -225,21 +247,28 @@ class PenaltyScreenState extends State<PenaltyScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(
-                  bottom:
-                  MediaQuery.of(context).viewInsets.bottom,
-                ),
-                child: AddPenalty(
-                  playerData: players,
+          if (isEntitled) {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) => SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: AddPenalty(
+                    playerData: players,
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          } else {
+            InfoBarService.showInfoBar(
+              context: context,
+              info:
+                  'Es liegt keine Berechtigung für das Hinzufügen einer Strafe vor.',
+            );
+          }
         },
         foregroundColor: Colors.black,
         backgroundColor: kSGMColorRed,
@@ -406,6 +435,16 @@ class PenaltyScreenState extends State<PenaltyScreen> {
     setState(() {
       readPenalties();
     });
+  }
+
+  // Check whether user is entitled to perform modifications
+  bool assessEntitlement() {
+    if (loggedInUser?.displayName == 'Johannes Braun' ||
+        loggedInUser?.displayName == 'Kevin Meyhof') {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

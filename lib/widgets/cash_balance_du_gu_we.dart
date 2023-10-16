@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:sgm_du_gu_we/widgets/update_balance.dart';
 import '../constants/box_decoration.dart';
 import '../constants/box_size.dart';
 import '../constants/color.dart';
 import '../constants/font_size.dart';
+import '../services/authentication_service.dart';
 import '../services/balance_format_service.dart';
 import '../services/info_bar_service.dart';
 
@@ -22,10 +23,13 @@ class CashBalanceDuGuWeState extends State<CashBalanceDuGuWe>
   late AnimationController animationController;
   late Animation<double> balanceAnimation;
   double balance = 0.0;
+  late User? loggedInUser;
+  bool isEntitled = false;
 
   @override
   void initState() {
     super.initState();
+    loggedInUser = AuthenticationService.getUser(context);
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(
@@ -58,6 +62,7 @@ class CashBalanceDuGuWeState extends State<CashBalanceDuGuWe>
         info: 'Betrag konnte nicht geladen werden.',
       );
     }
+    isEntitled = assessEntitlement();
   }
 
   @override
@@ -121,25 +126,35 @@ class CashBalanceDuGuWeState extends State<CashBalanceDuGuWe>
                             BalanceFormatService.formatBalance(balance);
                         return GestureDetector(
                           onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (context) => SingleChildScrollView(
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                        .viewInsets
-                                        .bottom,
-                                  ),
-                                  child: const UpdateBalance(
-                                    title: 'Kassenstand Du/Gu/We aktualisieren',
-                                    hintText: 'Neuen Kassenstand angeben',
-                                    balanceType: 'cashBalanceDuGuWe',
-                                    info: 'Kassenstand erfolgreich aktualisiert.',
+                            if (isEntitled) {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) => SingleChildScrollView(
+                                  child: Container(
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom,
+                                    ),
+                                    child: const UpdateBalance(
+                                      title:
+                                          'Kassenstand Du/Gu/We aktualisieren',
+                                      hintText: 'Neuen Kassenstand angeben',
+                                      balanceType: 'cashBalanceDuGuWe',
+                                      info:
+                                          'Kassenstand erfolgreich aktualisiert.',
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
+                              );
+                            } else {
+                              InfoBarService.showInfoBar(
+                                context: context,
+                                info:
+                                    'Es liegt keine Berechtigung für das Ändern des Kassenstandes vor.',
+                              );
+                            }
                           },
                           child: Text(
                             formattedBalance,
@@ -160,5 +175,16 @@ class CashBalanceDuGuWeState extends State<CashBalanceDuGuWe>
         );
       },
     );
+  }
+
+  // Check whether user is entitled to perform modifications
+  bool assessEntitlement() {
+    if (loggedInUser?.displayName == 'Johannes Braun' ||
+        loggedInUser?.displayName == 'Kevin Meyhof' ||
+        loggedInUser?.displayName == 'Martin Müller') {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
